@@ -8,9 +8,9 @@ Claude Code is fantastic, but some of its best features—like the structured mu
 
 We wanted to use those same battle-tested workflows, prompts, and helper scripts in **Cursor, Gemini, Qwen, or custom local agents**. 
 
-This repository extracts those prompt patterns and translates them into the open Agent Skills format (`SKILL.md`). You can install them in seconds using:
+This repository extracts those prompt patterns and translates them into the open Agent Skills format (`SKILL.md`). You can install the entire collection in seconds:
 ```bash
-npx skills add mhenke/claude-code-unplugged/skills/<skill-name>
+npx skills add mhenke/claude-code-unplugged
 ```
 
 No platform lock-in. No proprietary runtimes. Just great agent prompts and scripts that work anywhere.
@@ -19,44 +19,60 @@ No platform lock-in. No proprietary runtimes. Just great agent prompts and scrip
 
 ## 📦 What's inside?
 
-We've organized the extractions into a flat `skills/` directory:
+Skills live at the repo root, each in their own directory. Here's the full library:
 
 ### 🚀 Workflows & Prompt Skills
 Modular agent instructions that teach your AI assistant how to perform complex, multi-step engineering tasks:
-*   [frontend-design](file:///home/mhenke/Projects/claude-code-unplugged/skills/frontend-design/SKILL.md) — Guides agents to build gorgeous, responsive UIs with curated HSL colors, Google Fonts, and smooth micro-animations instead of basic browser defaults.
-*   [commit-commands](file:///home/mhenke/Projects/claude-code-unplugged/skills/commit-commands/SKILL.md) — Ported versions of `/commit`, `/commit-push-pr`, and `/clean_gone` translated into clean, step-by-step instructions.
-*   [code-review](file:///home/mhenke/Projects/claude-code-unplugged/skills/code-review/SKILL.md) — The parallel agent PR review logic. Instructs your agent to spawn parallel review personas (CLAUDE.md checkers, bug hunters, logic validators) to score and comment on code.
-*   [feature-dev](file:///home/mhenke/Projects/claude-code-unplugged/skills/feature-dev/SKILL.md) — A 7-phase software engineering cycle: Codebase Exploration ➡️ Clarifying Questions ➡️ Architecture Blueprints ➡️ Implementation ➡️ Review.
+*   [frontend-design](./frontend-design/SKILL.md) — Guides agents to build gorgeous, responsive UIs with curated HSL colors, Google Fonts, and smooth micro-animations instead of basic browser defaults.
+*   [commit-commands](./commit-commands/SKILL.md) — Ported versions of `/commit`, `/commit-push-pr`, and `/clean_gone` translated into clean, step-by-step instructions.
+*   [code-review](./code-review/SKILL.md) — Parallel agent PR review logic: spawns multiple reviewer personas (guidelines checkers, bug hunters, logic validators) to score and comment on code.
+*   [feature-dev](./feature-dev/SKILL.md) — A 7-phase software engineering cycle: Codebase Exploration ➡️ Clarifying Questions ➡️ Architecture Blueprints ➡️ Implementation ➡️ Review.
+*   [github-management](./github-management/SKILL.md) — Automation scripts to auto-detect duplicate issues, close stale issues, manage labels, and run sweeps.
 
 ### 🎭 Agent Personas & Output Styles
 Instruct your coding assistant to act as a specific sub-agent or write in a different mode:
-*   [pr-review-toolkit](file:///home/mhenke/Projects/claude-code-unplugged/skills/pr-review-toolkit/SKILL.md) — Specialised reviewer personas: *Silent Failure Hunter*, *Code Simplifier*, *PR Test Analyzer*, and *Type Design Analyzer*.
-*   [explanatory-output-style](file:///home/mhenke/Projects/claude-code-unplugged/skills/explanatory-output-style/SKILL.md) — Puts the model into an educational mode, requiring it to explain implementation choices with formatted `★ Insight` boxes before and after code edits.
-*   [learning-output-style](file:///home/mhenke/Projects/claude-code-unplugged/skills/learning-output-style/SKILL.md) — A hybrid learning mode. Instead of doing all the work, the agent is instructed to write boilerplate, identify key design files, and request 5-10 line code contributions from you.
+*   [pr-review-toolkit](./pr-review-toolkit/SKILL.md) — Specialised reviewer personas: *Silent Failure Hunter*, *Code Simplifier*, *PR Test Analyzer*, and *Type Design Analyzer*.
+*   [explanatory-output-style](./explanatory-output-style/SKILL.md) — Puts the model into an educational mode, requiring it to explain implementation choices with formatted `★ Insight` boxes before and after code edits.
+*   [learning-output-style](./learning-output-style/SKILL.md) — A hybrid learning mode: the agent writes boilerplate, identifies key design files, and requests small code contributions from you to encourage learning.
+*   [ralph-wiggum](./ralph-wiggum/SKILL.md) — Iterative self-enforcing feedback loop. The agent tracks its own promise-completion state and loops until done.
 
 ### 🛠️ Automation & Helper Scripts
-Executable scripts bundled inside respective skill folders that your agent can run locally using its terminal/bash tool:
-*   [security-guidance](file:///home/mhenke/Projects/claude-code-unplugged/skills/security-guidance/SKILL.md) — Instructs the model to run a regex pattern-based security warning script (`python3 scripts/security_reminder_hook.py`) on edits to check for secrets, raw `innerHTML`, or unsafe serialization.
-*   [github-management](file:///home/mhenke/Projects/claude-code-unplugged/skills/github-management/SKILL.md) — Automation scripts copied directly from the Claude Code repository to auto-detect duplicate issues, close stale issues, manage labels, and run sweeps.
+Executable scripts bundled inside respective skill folders that your agent can run locally:
+*   [security-guidance](./security-guidance/SKILL.md) — Runs a regex-based security scanner (`scripts/security_reminder_hook.py`) on edits, checking for secrets, raw `innerHTML`, unsafe serialization, and more.
+
+### 🔌 Plugin & Agent Development
+Skills for building new plugins, agents, hooks, and skills for AI coding assistants:
+*   [plugin-dev](./plugin-dev/SKILL.md) — Comprehensive guide for developing new CLI plugins from scratch.
+*   [plugin-structure](./plugin-structure/SKILL.md) — Plugin directory layout, manifest config, component organization, and naming conventions.
+*   [plugin-settings](./plugin-settings/SKILL.md) — Patterns for user-configurable plugin settings via `.agent/plugin-name.local.md` files with YAML frontmatter.
+*   [agent-development](./agent-development/SKILL.md) — Agent structure, system prompts, triggering conditions, and development best practices.
+*   [hook-development](./hook-development/SKILL.md) — Creating PreToolUse/PostToolUse/Stop hooks with prompt-based enforcement patterns.
+*   [hookify](./hookify/SKILL.md) — Extensible user-configured prompt hooks with a full rule engine and examples.
+*   [command-development](./command-development/SKILL.md) — Slash command structure, YAML frontmatter fields, dynamic arguments, and user interaction patterns.
+*   [skill-development](./skill-development/SKILL.md) — Skill structure, progressive disclosure patterns, and best practices for writing new skills.
+*   [mcp-integration](./mcp-integration/SKILL.md) — Integrating Model Context Protocol (MCP) servers into plugins for external tool and service integration.
+*   [writing-rules](./writing-rules/SKILL.md) — Hookify rule syntax and patterns for building agent governance rules.
+
+### 🔄 Migration & SDK
+*   [claude-opus-4-5-migration](./claude-opus-4-5-migration/SKILL.md) — One-shot migration of prompts and API calls to Opus 4.5, including model string updates.
+*   [agent-sdk-dev](./agent-sdk-dev/SKILL.md) — Guidance for building Agent SDK applications.
 
 ---
 
 ## ⚙️ Installation
 
-To add a specific skill to your local workspace, run:
-
-```bash
-npx skills add mhenke/claude-code-unplugged/skills/<skill-name>
-```
-
-For example, to install the code reviewer skill:
-```bash
-npx skills add mhenke/claude-code-unplugged/skills/code-review
-```
-
-Or install the entire collection:
+Install the entire collection:
 ```bash
 npx skills add mhenke/claude-code-unplugged
+```
+
+Or install a single skill:
+```bash
+npx skills add mhenke/claude-code-unplugged/<skill-name>
+
+For example, to install only the code reviewer:
+```bash
+npx skills add mhenke/claude-code-unplugged/code-review
 ```
 
 ---

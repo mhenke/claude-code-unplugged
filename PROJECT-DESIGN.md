@@ -75,13 +75,12 @@ scripts/
 ```
 
 ### Transformation Layer
-Converts source assets into a flat `skills/` folder:
+Converts source assets into flat skill directories at the repo root:
 ```text
-skills/
-  commit-commands/
-  security-guidance/
-  code-review/
-  github-management/
+commit-commands/
+security-guidance/
+code-review/
+github-management/
 ```
 
 Each target contains:
@@ -94,7 +93,8 @@ examples/
 
 ### Distribution Layer
 Supported target:
-* `npx skills add <owner>/claude-code-unplugged/skills/<skill-name>`
+* `npx skills add <owner>/claude-code-unplugged`
+* `npx skills add <owner>/claude-code-unplugged/<skill-name>`
 
 ---
 
@@ -106,27 +106,45 @@ claude-code-unplugged/
 ├── LICENSE.md
 ├── README.md
 ├── PROJECT-DESIGN.md
+├── AGENTS.md
+├── package.json
+├── skills.json                   # Auto-generated manifest (run generate-manifest.js)
 │
 ├── scripts/
-│   └── extract.js            # Helper script to pull assets from source repo
+│   ├── validate.js               # Validate all skills (frontmatter, naming, neutrality)
+│   ├── generate-manifest.js      # Regenerate skills.json from skill directories
+│   ├── extract.js                # Pull and neutralize assets from a source repo
+│   └── test/
+│       ├── validate.test.js
+│       ├── generate-manifest.test.js
+│       └── extract.test.js
 │
-└── skills/
-    ├── frontend-design/
-    │   └── SKILL.md
-    ├── commit-commands/
-    │   └── SKILL.md
-    ├── pr-review-toolkit/
-    │   └── SKILL.md
-    ├── security-guidance/
-    │   ├── SKILL.md
-    │   └── scripts/
-    │       ├── security_reminder_hook.py
-    │       └── patterns.py
-    └── github-management/
-        ├── SKILL.md
-        └── scripts/
-            ├── auto-close-duplicates.ts
-            └── sweep.ts
+├── openspec/                     # Spec-driven change workflow
+│   ├── config.yaml
+│   ├── specs/                    # Finalized specs
+│   └── changes/                  # In-progress change proposals
+│       └── <change-name>/
+│           ├── proposal.md
+│           ├── design.md
+│           └── tasks.md
+│
+├── frontend-design/             # 22 portable skill directories (repo root)
+│   └── SKILL.md
+├── commit-commands/
+│   └── SKILL.md
+├── code-review/
+│   └── SKILL.md
+├── security-guidance/
+│   ├── SKILL.md
+│   └── scripts/
+│       ├── security_reminder_hook.py
+│       └── patterns.py
+├── github-management/
+│   ├── SKILL.md
+│   └── scripts/
+│       ├── auto-close-duplicates.ts
+│       └── sweep.ts
+├── ... (17 more skill directories)
 ```
 
 ---

@@ -224,8 +224,7 @@ function main() {
     process.exit(1);
   }
 
-  const skillsDestDir = path.join(targetPath, 'skills');
-  fs.mkdirSync(skillsDestDir, { recursive: true });
+  const skillsDestDir = targetPath;
 
   // -------------------------------------------------------------
   // 1. Copy Direct Skills (Task 2.2)
