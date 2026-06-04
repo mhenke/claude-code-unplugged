@@ -1,0 +1,42 @@
+# AGENTS.md
+
+## Project
+
+A collection of portable agent skills extracted from Claude Code, packaged as standard `SKILL.md` files. Distributable via `npx skills add`. No code — this is pure markdown content with optional helper scripts.
+
+## Commands
+
+```bash
+node scripts/validate.js     # validate all skills (SKILL.md frontmatter, naming, non-empty body)
+node scripts/extract.js --source <path> --target <path>  # extract skills from source repo
+```
+
+Validation exits 0 on success, 1 on failure.
+
+## Skill format
+
+Each skill is a directory under `skills/` with a `SKILL.md` file. The file must have YAML frontmatter:
+
+```yaml
+---
+name: skill-slug        # required; must match the directory name; lowercase, dashes only
+description: ...         # required
+---
+```
+
+Optional subdirectories: `scripts/`, `references/`, `examples/`.
+
+## Content rules
+
+- **Platform-neutral**: no hardcoded CLI commands, no model-specific assumptions, no Claude Code `/command` syntax
+- Single `SKILL.md` for metadata and core instructions
+- Put detailed guides in `references/`, utility scripts in `scripts/`
+- Human-readable and editable
+
+## Development workflow (openspec)
+
+This repo uses a spec-driven workflow. Proposals and specs live under `openspec/`:
+- `openspec/changes/<name>/proposal.md` — what and why
+- `openspec/changes/<name>/design.md` — technical design
+- `openspec/changes/<name>/tasks.md` — implementation tasks
+- `openspec/specs/` — finalized specs
