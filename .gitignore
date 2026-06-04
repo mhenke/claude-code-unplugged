@@ -1,3 +1,8 @@
 node_modules/
 .DS_Store
 *.log
+.agent/*.local.md
+.agent/*.local.json
+.full-review/
+.vscode/
+.idea/

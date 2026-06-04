@@ -199,9 +199,10 @@ function main() {
   const sourcePath = path.resolve(options.source);
   const targetPath = path.resolve(options.target);
 
-  console.log(`Starting extraction...`);
-  console.log(`Source: ${sourcePath}`);
-  console.log(`Target: ${targetPath}`);
+  const cwd = process.cwd();
+  if (!sourcePath.startsWith(cwd) && !targetPath.startsWith(cwd)) {
+    console.warn('Warning: Source or target paths are outside the current working directory. Proceeding anyway.');
+  }
 
   if (!fs.existsSync(sourcePath)) {
     console.error(`Error: Source directory does not exist at "${sourcePath}"`);
@@ -210,6 +211,16 @@ function main() {
 
   if (!fs.existsSync(targetPath)) {
     console.error(`Error: Target directory does not exist at "${targetPath}"`);
+    process.exit(1);
+  }
+
+  if (!fs.statSync(sourcePath).isDirectory()) {
+    console.error(`Error: Source is not a directory: "${sourcePath}"`);
+    process.exit(1);
+  }
+
+  if (!fs.statSync(targetPath).isDirectory()) {
+    console.error(`Error: Target is not a directory: "${targetPath}"`);
     process.exit(1);
   }
 

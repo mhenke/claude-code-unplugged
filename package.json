@@ -1,0 +1,22 @@
+{
+  "name": "claude-code-unplugged",
+  "version": "1.0.0",
+  "description": "Portable agent skills, workflows, commands, and automation scripts extracted from Claude Code",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test scripts/test/validate.test.js && node --test scripts/test/generate-manifest.test.js"
+  },
+  "keywords": [
+    "agent-skills",
+    "claude-code",
+    "ai-agents",
+    "prompt-engineering"
+  ],
+  "author": "Community",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
