@@ -106,27 +106,38 @@ claude-code-unplugged/
 ├── LICENSE.md
 ├── README.md
 ├── PROJECT-DESIGN.md
+├── AGENTS.md
+├── package.json
+├── skills.json                   # Auto-generated manifest (run generate-manifest.js)
 │
 ├── scripts/
-│   └── extract.js            # Helper script to pull assets from source repo
+│   ├── validate.js               # Validate all skills (frontmatter, naming, neutrality)
+│   ├── generate-manifest.js      # Regenerate skills.json from skill directories
+│   ├── extract.js                # Pull and neutralize assets from a source repo
+│   └── test/
+│       ├── validate.test.js
+│       ├── generate-manifest.test.js
+│       └── extract.test.js
 │
-└── skills/
+├── openspec/                     # Spec-driven change workflow
+│   ├── config.yaml
+│   ├── specs/                    # Finalized specs
+│   └── changes/                  # In-progress change proposals
+│
+└── skills/                       # 22 portable skill directories
     ├── frontend-design/
     │   └── SKILL.md
     ├── commit-commands/
     │   └── SKILL.md
-    ├── pr-review-toolkit/
+    ├── code-review/
     │   └── SKILL.md
     ├── security-guidance/
     │   ├── SKILL.md
     │   └── scripts/
-    │       ├── security_reminder_hook.py
-    │       └── patterns.py
-    └── github-management/
-        ├── SKILL.md
-        └── scripts/
-            ├── auto-close-duplicates.ts
-            └── sweep.ts
+    ├── github-management/
+    │   ├── SKILL.md
+    │   └── scripts/
+    └── ... (16 more)
 ```
 
 ---

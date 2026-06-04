@@ -13,18 +13,21 @@
       "name": "agent-sdk-dev",
       "description": "Help developers build Agent SDK applications",
       "path": "skills/agent-sdk-dev",
+      "version": "0.1.0",
       "bodyLength": 24935
     },
     {
       "name": "claude-opus-4-5-migration",
       "description": "Migrate prompts and code from Claude Sonnet 4.0, Sonnet 4.5, or Opus 4.1 to Opus 4.5. Use when the user wants to update their codebase, prompts, or API calls to use Opus 4.5. Handles model string updates and prompt adjustments for known Opus 4.5 behavioral differences. Does NOT migrate Haiku 4.5.",
       "path": "skills/claude-opus-4-5-migration",
+      "version": "0.1.0",
       "bodyLength": 4377
     },
     {
       "name": "code-review",
       "description": "Automated PR and code reviewer guidelines",
       "path": "skills/code-review",
+      "version": "0.1.0",
       "bodyLength": 15408
     },
     {
@@ -38,30 +41,35 @@
       "name": "commit-commands",
       "description": "Git commit and repository workflows",
       "path": "skills/commit-commands",
-      "bodyLength": 9948
+      "version": "0.1.0",
+      "bodyLength": 9945
     },
     {
       "name": "explanatory-output-style",
       "description": "Provides educational insights and explanations during code execution",
       "path": "skills/explanatory-output-style",
+      "version": "0.1.0",
       "bodyLength": 1046
     },
     {
       "name": "feature-dev",
       "description": "Guided feature development workflow",
       "path": "skills/feature-dev",
+      "version": "0.1.0",
       "bodyLength": 24236
     },
     {
       "name": "frontend-design",
       "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.",
       "path": "skills/frontend-design",
+      "version": "0.1.0",
       "bodyLength": 3956
     },
     {
       "name": "github-management",
       "description": "Issue and pull request lifecycle automation scripts",
       "path": "skills/github-management",
+      "version": "0.1.0",
       "bodyLength": 912
     },
     {
@@ -75,12 +83,14 @@
       "name": "hookify",
       "description": "Extensible user-configured prompt hooks",
       "path": "skills/hookify",
+      "version": "0.1.0",
       "bodyLength": 30640
     },
     {
       "name": "learning-output-style",
       "description": "Prompts users for lightweight contributions to encourage learning",
       "path": "skills/learning-output-style",
+      "version": "0.1.0",
       "bodyLength": 3059
     },
     {
@@ -94,6 +104,7 @@
       "name": "plugin-dev",
       "description": "Development assistance for creating CLI plugins",
       "path": "skills/plugin-dev",
+      "version": "0.1.0",
       "bodyLength": 46172
     },
     {
@@ -114,18 +125,21 @@
       "name": "pr-review-toolkit",
       "description": "Comprehensive code review toolkit",
       "path": "skills/pr-review-toolkit",
-      "bodyLength": 43723
+      "version": "0.1.0",
+      "bodyLength": 43717
     },
     {
       "name": "ralph-wiggum",
       "description": "Iterative feedback loop commands",
       "path": "skills/ralph-wiggum",
+      "version": "0.1.0",
       "bodyLength": 10692
     },
     {
       "name": "security-guidance",
       "description": "Security warnings, patterns scanner, and LLM diff security reviews",
       "path": "skills/security-guidance",
+      "version": "0.1.0",
       "bodyLength": 9074
     },
     {

@@ -1,6 +1,7 @@
 ---
 name: security-guidance
 description: Security warnings, patterns scanner, and LLM diff security reviews
+version: 0.1.0
 ---
 
 # Security Guidance
