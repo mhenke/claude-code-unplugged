@@ -10,7 +10,7 @@ We wanted to use those same battle-tested workflows, prompts, and helper scripts
 
 This repository extracts those prompt patterns and translates them into the open Agent Skills format (`SKILL.md`). You can install them in seconds using:
 ```bash
-npx skills add <owner>/claude-code-unplugged/skills/<skill-name>
+npx skills add mhenke/claude-code-unplugged/skills/<skill-name>
 ```
 
 No platform lock-in. No proprietary runtimes. Just great agent prompts and scripts that work anywhere.
@@ -46,17 +46,17 @@ Executable scripts bundled inside respective skill folders that your agent can r
 To add a specific skill to your local workspace, run:
 
 ```bash
-npx skills add <owner>/claude-code-unplugged/skills/<skill-name>
+npx skills add mhenke/claude-code-unplugged/skills/<skill-name>
 ```
 
 For example, to install the code reviewer skill:
 ```bash
-npx skills add <owner>/claude-code-unplugged/skills/code-review
+npx skills add mhenke/claude-code-unplugged/skills/code-review
 ```
 
 Or install the entire collection:
 ```bash
-npx skills add <owner>/claude-code-unplugged
+npx skills add mhenke/claude-code-unplugged
 ```
 
 ---

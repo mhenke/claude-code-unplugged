@@ -495,6 +495,15 @@ To run these scripts, use your bash command tool from the workspace root:
   console.log('\nExtraction completed successfully!');
 }
 
+module.exports = {
+  parseArgs,
+  cleanAndNeutralize,
+  parseFrontmatter,
+  stripFrontmatter,
+  extractAdditionalContext,
+  main,
+};
+
 if (require.main === module) {
   main();
 }

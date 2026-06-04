@@ -221,7 +221,7 @@ The Ralph Wiggum technique is an iterative development methodology based on cont
 **Core concept:**
 ```bash
 while :; do
-  cat PROMPT.md | claude-code --continue
+  cat PROMPT.md | coding-assistant --continue
 done
 ```
 

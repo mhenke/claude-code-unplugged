@@ -457,7 +457,7 @@ my-plugin/
 - Replace all hardcoded paths with `PLUGIN_ROOT`
 - Verify paths are relative and start with `./` in manifest
 - Check that referenced files exist at specified paths
-- Test with `echo $CLAUDE_PLUGIN_ROOT` in hook scripts
+- Test with `echo PLUGIN_ROOT` in hook scripts
 
 **Auto-discovery not working**:
 - Confirm directories are at plugin root (not in `.agent-plugin/`)

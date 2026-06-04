@@ -7,10 +7,10 @@ description: Security warnings, patterns scanner, and LLM diff security reviews
 
 # security-guidance
 
-Security review for Claude-generated code. Three layers:
+Security review for AI-generated code. Three layers:
 
 1. **Pattern warnings** — instant regex-based reminders on `Edit`/`Write` for ~25 known-dangerous patterns (`yaml.load`, `torch.load(weights_only=False)`, `pickle.load` on untrusted data, raw `innerHTML`, hardcoded secrets, etc.).
-2. **LLM diff review** — when Claude finishes a turn, the plugin sends the diff to a fast LLM call (Opus 4.7 by default) and feeds high-severity findings back to Claude so it can fix them before you see the response.
+2. **LLM diff review** — when the agent finishes a turn, the plugin sends the diff to a fast LLM call (Opus 4.7 by default) and feeds high-severity findings back to Claude so it can fix them before you see the response.
 3. **Agentic commit review** — on `git commit`, an SDK-driven reviewer reads related files (`Read`/`Grep`/`Glob`) to trace data flow across the codebase, catching multi-file vulnerabilities pattern matching misses (IDOR, auth bypass, cross-file SSRF).
 
 Findings cover common web-vulnerability classes — injection, XSS, SSRF, hardcoded secrets, IDOR, auth bypass, unsafe deserialization, and path traversal among others.
@@ -68,10 +68,10 @@ Runs two parallel review calls and unions the findings. Catches a few percentage
 
 ## Org-specific policies
 
-Drop a `claude-security-guidance.md` in any of:
+Drop a `security-guidance.md` in any of:
 
-- `~/.agent/claude-security-guidance.md` — user-wide rules
-- `<project>/.agent/claude-security-guidance.md` — project rules, intended to be committed
+- `~/.agent/security-guidance.md` — user-wide rules
+- `<project>/.agent/security-guidance.md` — project rules, intended to be committed
 - `<project>/.agent/claude-security-guidance.local.md` — local overrides, intended to be `.gitignore`'d
 
 All three are loaded and concatenated into the LLM diff review's prompt in the order user → project → project-local. If the combined size exceeds the 8 KB prompt budget, the tail is truncated, so user-wide rules are kept and project-local rules are dropped first. The agentic commit reviewer (layer 3) does not currently read this file. Example:
@@ -87,11 +87,11 @@ All three are loaded and concatenated into the LLM diff review's prompt in the o
   the SSRF-allowlist wrapper at `acme.net.safe_request`.
 ```
 
-Built-in rules cover common web-vulnerability classes without it — `claude-security-guidance.md` is for things specific to your codebase that the model can't infer.
+Built-in rules cover common web-vulnerability classes without it — `security-guidance.md` is for things specific to your codebase that the model can't infer.
 
 ## Privacy and data handling
 
-The plugin sends data to a model endpoint to perform its reviews. Specifically, each Stop-hook diff review transmits the changed file paths, the diff hunks, and the relevant file contents in the diff; each agentic commit review additionally transmits any files the reviewer pulls in via `Read`/`Grep`/`Glob` while tracing data flow. Your `claude-security-guidance.md` contents (user, project, and local) are appended to the prompt on every review, so don't put secrets in it.
+The plugin sends data to a model endpoint to perform its reviews. Specifically, each Stop-hook diff review transmits the changed file paths, the diff hunks, and the relevant file contents in the diff; each agentic commit review additionally transmits any files the reviewer pulls in via `Read`/`Grep`/`Glob` while tracing data flow. Your `security-guidance.md` contents (user, project, and local) are appended to the prompt on every review, so don't put secrets in it.
 
 Where that data goes depends on your coding assistant configuration:
 - **Default (Anthropic API / subscription):** sent to `api.anthropic.com` and handled under Anthropic's [Commercial Terms](https://www.anthropic.com/legal/commercial-terms) and [Privacy Policy](https://www.anthropic.com/legal/privacy).
@@ -106,18 +106,18 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 
 ## Troubleshooting
 
-**Plugin doesn't seem to fire** — check that `~/.agent/claude-security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with `--debug-file /tmp/claude/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
+**Plugin doesn't seem to fire** — check that `~/.agent/security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with debug mode enabled and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
 
 **Review never finds anything** — verify your API path works. On 3P providers, check `SECURITY_REVIEW_MODEL` is set to a provider-specific id (not a bare `claude-opus-4-7`). On LLM gateways, check the gateway's logs for `POST /v1/messages` traffic from the plugin.
 
 **Too many false positives** — drop `SECURITY_REVIEW_MODEL` to a cheaper model (`claude-sonnet-4-6`) and re-evaluate; if precision is the priority, stay on Opus 4.7.
 
-**Want to silence a specific finding** — add a comment to the line explaining why it's safe; the LLM reviewer treats inline justifications as exclusions. For systemic exclusions, document them in your `claude-security-guidance.md`.
+**Want to silence a specific finding** — add a comment to the line explaining why it's safe; the LLM reviewer treats inline justifications as exclusions. For systemic exclusions, document them in your `security-guidance.md`.
 
 ## Reporting issues
 
 Open an issue on the [security-guidance plugin repo](https://github.com/anthropics/claude-code/issues) with:
-- The coding assistant CLI version (`claude --version`)
+- The coding assistant CLI version (`assistant --version`)
 - Provider setup (1P / Bedrock / Vertex / LLM gateway / etc.)
 - A minimal repro diff
 - The relevant section of `~/.agent/security/log.txt`
