@@ -428,7 +428,7 @@ for id in task_ids:
 2. Install plugin locally (`.agent-plugin/`)
 3. Run `mcp` to verify server appears
 4. Test tool calls in commands
-5. Check `claude --debug` logs for connection issues
+5. Check debug logs for connection issues
 
 ### Validation Checklist
 
@@ -535,7 +535,7 @@ Working examples in `examples/`:
 - **Official MCP Docs**: https://modelcontextprotocol.io/
 - **coding assistant MCP Docs**: https://docs.agent.com/en/docs/claude-code/mcp
 - **MCP SDK**: @modelcontextprotocol/sdk
-- **Testing**: Use `claude --debug` and `mcp` command
+- **Testing**: Use debug mode and `mcp` command
 
 ## Implementation Workflow
 

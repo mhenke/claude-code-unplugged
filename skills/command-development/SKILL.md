@@ -526,7 +526,7 @@ PR #$1 Workflow:
 
 ## Plugin-Specific Features
 
-### CLAUDE_PLUGIN_ROOT Variable
+### PLUGIN_ROOT Variable
 
 Plugin commands have access to `PLUGIN_ROOT`, an environment variable that resolves to the plugin's absolute path.
 

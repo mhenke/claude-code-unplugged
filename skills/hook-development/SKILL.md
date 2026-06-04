@@ -323,10 +323,10 @@ Access fields in prompts using `$TOOL_INPUT`, `$TOOL_RESULT`, `$USER_PROMPT`, et
 
 Available in all command hooks:
 
-- `$CLAUDE_PROJECT_DIR` - Project root path
-- `$CLAUDE_PLUGIN_ROOT` - Plugin directory (use for portable paths)
-- `$CLAUDE_ENV_FILE` - SessionStart only: persist env vars here
-- `$CLAUDE_CODE_REMOTE` - Set if running in remote context
+- `PROJECT_DIR` - Project root path
+- `PLUGIN_ROOT` - Plugin directory (use for portable paths)
+- `ENV_FILE` - SessionStart only: persist env vars here
+- `CODE_REMOTE` - Set if running in remote context
 
 **Always use PLUGIN_ROOT in hook commands for portability:**
 
@@ -579,14 +579,14 @@ input=$(cat)
 - Editing `hooks/hook-config.json` won't affect current session
 - Adding new hook scripts won't be recognized
 - Changing hook commands/prompts won't update
-- Must restart coding assistant: exit and run `claude` again
+- Must restart coding assistant: exit and run it again
 
 **To test hook changes:**
 1. Edit hook configuration or scripts
 2. Exit coding assistant session
-3. Restart: `claude` or `cc`
+3. Restart the coding assistant
 4. New hook configuration loads
-5. Test hooks with `claude --debug`
+5. Test hooks with debug mode enabled
 
 ### Hook Validation at Startup
 
@@ -602,7 +602,7 @@ Use `/hooks` command to review loaded hooks in current session.
 ### Enable Debug Mode
 
 ```bash
-claude --debug
+coding-assistant --debug
 ```
 
 Look for hook registration, execution logs, input/output JSON, and timing information.
@@ -692,7 +692,7 @@ Development tools in `scripts/`:
 
 - **Official Docs**: https://docs.agent.com/en/docs/claude-code/hooks
 - **Examples**: See security-guidance plugin in marketplace
-- **Testing**: Use `claude --debug` for detailed logs
+- **Testing**: Use debug mode for detailed logs
 - **Validation**: Use `jq` to validate hook JSON output
 
 ## Implementation Workflow
@@ -706,7 +706,7 @@ To implement hooks in a plugin:
 5. Use PLUGIN_ROOT for all file references
 6. Validate configuration with `scripts/validate-hook-schema.sh hooks/hook-config.json`
 7. Test hooks with `scripts/test-hook.sh` before deployment
-8. Test in coding assistant with `claude --debug`
+8. Test in coding assistant with debug mode enabled
 9. Document hooks in plugin README
 
 Focus on prompt-based hooks for most use cases. Reserve command hooks for performance-critical or deterministic checks.
