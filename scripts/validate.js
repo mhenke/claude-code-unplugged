@@ -27,17 +27,14 @@ function parseFrontmatter(content) {
 }
 
 function validateSkills() {
-  const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '..');
+  const skillsDir = path.resolve(__dirname, '../skills');
   
   if (!fs.existsSync(skillsDir)) {
     console.error('Error: skills directory does not exist!');
     process.exit(1);
   }
 
-  let skills = fs.readdirSync(skillsDir);
-  // Skip hidden dirs and infrastructure dirs
-  const skipDirs = new Set(['.git', '.full-review', 'openspec', 'scripts', 'node_modules']);
-  skills = skills.filter(d => !d.startsWith('.') && !skipDirs.has(d));
+  const skills = fs.readdirSync(skillsDir);
   console.log(`Validating ${skills.length} skills...\n`);
 
   let errorsCount = 0;

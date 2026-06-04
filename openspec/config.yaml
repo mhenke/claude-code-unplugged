@@ -1,24 +1,20 @@
 schema: spec-driven
 
-context: |
-  Tech stack: Node.js (no npm dependencies), vanilla JavaScript (CommonJS), Markdown
-  Skill format: Each skill is a directory at the repo root with a SKILL.md file.
-  SKILL.md must start with YAML frontmatter containing `name` (matching directory) and `description`.
-  Platform-neutral: skills must not reference Claude Code, CLAUDE.md, hooks.json,
-  ${CLAUDE_PLUGIN_ROOT}, .claude/ paths, or platform-specific slash commands.
-  Validation: node scripts/validate.js — exits 0 on pass, 1 on failure.
-  Manifest: node scripts/generate-manifest.js — regenerates skills.json; must be
-  re-run and committed whenever SKILL.md files are added or changed.
-  Tests: npm test (node --test) — 44 tests across validate, generate-manifest, extract.
-  Spec workflow: proposals → design → tasks in openspec/changes/<name>/;
-  completed changes promoted to openspec/specs/.
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
 
-rules:
-  proposal:
-    - Keep proposals under 500 words
-    - Always include a "What Changes" and "Impact" section
-    - Must flag whether generate-manifest.js needs to be re-run
-  tasks:
-    - Each task should be independently verifiable
-    - Include a validation step running node scripts/validate.js
-    - Include a manifest step running node scripts/generate-manifest.js if skills changed
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
