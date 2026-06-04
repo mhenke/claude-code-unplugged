@@ -1,98 +1,83 @@
-# Claude Code Unplugged
+# Claude Code Unplugged 🔌
 
-> Portable agent skills, workflows, commands, and automation patterns extracted from Claude Code and adapted for any AI coding assistant.
+> Portable agent skills, workflows, commands, and automation scripts extracted from Claude Code, ready to use in any AI coding assistant (Cursor, Gemini CLI, Copilot, VS Code, etc.).
 
-## Why This Exists
+## 💡 Why this exists
 
-Claude Code has developed a rich ecosystem of workflows, skills, commands, review processes, and automation patterns. Many of these ideas are valuable outside of Claude Code itself.
+Claude Code is fantastic, but some of its best features—like the structured multi-phase feature development loop, automated PR reviews, and smart commit generation—are tightly bound to its CLI. 
 
-This repository extracts those concepts and repackages them into the open Agent Skills format (`SKILL.md`) so they can be installed and used in any supported coding assistant environment (such as Cursor, Claude Code, Gemini CLI, Qwen Code, and OpenCode).
+We wanted to use those same battle-tested workflows, prompts, and helper scripts in **Cursor, Gemini, Qwen, or custom local agents**. 
 
-The goal is not to recreate Claude Code. The goal is to preserve useful workflows and skills while removing platform lock-in.
+This repository extracts those prompt patterns and translates them into the open Agent Skills format (`SKILL.md`). You can install them in seconds using:
+```bash
+npx skills add <owner>/claude-code-unplugged/skills/<skill-name>
+```
 
----
-
-## What You'll Find Here
-
-All assets are located in the `skills/` directory:
-
-### Workflows & Skills
-
-Modular agent capabilities and structured engineering processes.
-
-Examples:
-*   **`skills/frontend-design`**: Guidance on bold design choices, typography, animations, and visual details.
-*   **`skills/commit-commands`**: Unified instructions for composing semantic commit messages, pushing branches, and creating PRs.
-*   **`skills/code-review`**: Multi-perspective code review guidelines and confidence-based scoring.
-*   **`skills/feature-development`**: A structured software creation process covering exploration, design, implementation, and review.
-*   **`skills/pr-review-toolkit`**: Review personas targeting comments, tests, error handling, types, and code simplification.
-*   **`skills/security-guidance`**: Pattern-based safety reviews (e.g., path traversal, injection checks).
-
-### Scripts
-
-Optional helper scripts bundled inside specific skills.
-
-Examples:
-*   **`skills/github-management/scripts/`**: Automations for GitHub issue lifecycles (closing duplicates, commenting, label edits).
-*   **`skills/security-guidance/scripts/`**: Command-line regex scanners to review edits for security patterns.
+No platform lock-in. No proprietary runtimes. Just great agent prompts and scripts that work anywhere.
 
 ---
 
-## Installation
+## 📦 What's inside?
 
-Install a specific skill from this repository:
+We've organized the extractions into a flat `skills/` directory:
+
+### 🚀 Workflows & Prompt Skills
+Modular agent instructions that teach your AI assistant how to perform complex, multi-step engineering tasks:
+*   [frontend-design](file:///home/mhenke/Projects/claude-code-unplugged/skills/frontend-design/SKILL.md) — Guides agents to build gorgeous, responsive UIs with curated HSL colors, Google Fonts, and smooth micro-animations instead of basic browser defaults.
+*   [commit-commands](file:///home/mhenke/Projects/claude-code-unplugged/skills/commit-commands/SKILL.md) — Ported versions of `/commit`, `/commit-push-pr`, and `/clean_gone` translated into clean, step-by-step instructions.
+*   [code-review](file:///home/mhenke/Projects/claude-code-unplugged/skills/code-review/SKILL.md) — The parallel agent PR review logic. Instructs your agent to spawn parallel review personas (CLAUDE.md checkers, bug hunters, logic validators) to score and comment on code.
+*   [feature-dev](file:///home/mhenke/Projects/claude-code-unplugged/skills/feature-dev/SKILL.md) — A 7-phase software engineering cycle: Codebase Exploration ➡️ Clarifying Questions ➡️ Architecture Blueprints ➡️ Implementation ➡️ Review.
+
+### 🎭 Agent Personas & Output Styles
+Instruct your coding assistant to act as a specific sub-agent or write in a different mode:
+*   [pr-review-toolkit](file:///home/mhenke/Projects/claude-code-unplugged/skills/pr-review-toolkit/SKILL.md) — Specialised reviewer personas: *Silent Failure Hunter*, *Code Simplifier*, *PR Test Analyzer*, and *Type Design Analyzer*.
+*   [explanatory-output-style](file:///home/mhenke/Projects/claude-code-unplugged/skills/explanatory-output-style/SKILL.md) — Puts the model into an educational mode, requiring it to explain implementation choices with formatted `★ Insight` boxes before and after code edits.
+*   [learning-output-style](file:///home/mhenke/Projects/claude-code-unplugged/skills/learning-output-style/SKILL.md) — A hybrid learning mode. Instead of doing all the work, the agent is instructed to write boilerplate, identify key design files, and request 5-10 line code contributions from you.
+
+### 🛠️ Automation & Helper Scripts
+Executable scripts bundled inside respective skill folders that your agent can run locally using its terminal/bash tool:
+*   [security-guidance](file:///home/mhenke/Projects/claude-code-unplugged/skills/security-guidance/SKILL.md) — Instructs the model to run a regex pattern-based security warning script (`python3 scripts/security_reminder_hook.py`) on edits to check for secrets, raw `innerHTML`, or unsafe serialization.
+*   [github-management](file:///home/mhenke/Projects/claude-code-unplugged/skills/github-management/SKILL.md) — Automation scripts copied directly from the Claude Code repository to auto-detect duplicate issues, close stale issues, manage labels, and run sweeps.
+
+---
+
+## ⚙️ Installation
+
+To add a specific skill to your local workspace, run:
 
 ```bash
 npx skills add <owner>/claude-code-unplugged/skills/<skill-name>
 ```
 
-Or install the entire collection:
+For example, to install the code reviewer skill:
+```bash
+npx skills add <owner>/claude-code-unplugged/skills/code-review
+```
 
+Or install the entire collection:
 ```bash
 npx skills add <owner>/claude-code-unplugged
 ```
 
 ---
 
-## Philosophy
+## 🕊️ Philosophy
 
-This project follows several principles:
-
-### Portable First
-Workflows and skills should work across multiple agent runtimes.
-
-### Open Formats
-Content should use standard markdown-based `SKILL.md` files.
-
-### Minimal Lock-In
-Avoid dependencies on a single model, provider, or CLI.
-
-### Human Maintainable
-Skills should remain understandable and editable by humans.
+* **CLI & Model Agnostic:** Translated from proprietary syntax (`!` command interpolations or Claude-only hooks) into standard English directives that any modern LLM can interpret.
+* **Pure Markdown:** Every skill uses the standard `SKILL.md` format. No dependencies, no package files.
+* **Keep it Simple:** No complex compilation pipelines. Just copy, refactor, and distribute.
 
 ---
 
-## Relationship to Claude Code
+## 🤝 Contributing
 
-This repository is inspired by and derived from workflows originally created for Claude Code environments. The contents are adapted to be platform-neutral whenever possible.
-
-This project is not affiliated with Anthropic.
-
----
-
-## Contributing
-
-Contributions are welcome. Particularly valuable contributions include:
-* Workflow extraction and normalization
-* Skill portability improvements
-* New agent-compatible formats
-* Cross-CLI testing
-* Documentation improvements
+Find a cool command, agent, or workflow in the Claude Code source tree that isn't here? Open a PR! 
+You can run our built-in extraction utility to sync and validate:
+```bash
+node scripts/extract.js --source /path/to/claude-code --target .
+node scripts/validate.js
+```
 
 ---
 
-## Vision
-
-Create the largest collection of portable software-engineering workflows and skills that can be used by any coding agent.
-
-Build once. Use anywhere.
+*Disclaimer: This repository is a community-driven project to make prompts portable. It is not affiliated with or endorsed by Anthropic.*
