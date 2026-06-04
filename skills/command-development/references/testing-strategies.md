@@ -19,16 +19,16 @@ Testing commands ensures they work correctly, handle edge cases, and provide goo
 
 ```bash
 # Validate YAML frontmatter
-head -n 20 .claude/commands/my-command.md | grep -A 10 "^---"
+head -n 20 .agent/commands/my-command.md | grep -A 10 "^---"
 
 # Check for closing frontmatter marker
-head -n 20 .claude/commands/my-command.md | grep -c "^---" # Should be 2
+head -n 20 .agent/commands/my-command.md | grep -c "^---" # Should be 2
 
 # Verify file has .md extension
-ls .claude/commands/*.md
+ls .agent/commands/*.md
 
 # Check file is in correct location
-test -f .claude/commands/my-command.md && echo "Found" || echo "Missing"
+test -f .agent/commands/my-command.md && echo "Found" || echo "Missing"
 ```
 
 **Automated validation script:**
@@ -126,14 +126,14 @@ echo "✓ Frontmatter fields valid"
 ### Level 3: Manual Command Invocation
 
 **What to test:**
-- Command appears in `/help`
+- Command appears in `help`
 - Command executes without errors
 - Output is as expected
 
 **Test procedure:**
 
 ```bash
-# 1. Start Claude Code
+# 1. Start coding assistant
 claude --debug
 
 # 2. Check command appears in help
@@ -149,7 +149,7 @@ claude --debug
 # Verify expected behavior
 
 # 5. Check debug logs
-tail -f ~/.claude/debug-logs/latest
+tail -f ~/.agent/debug-logs/latest
 # Look for errors or warnings
 ```
 
@@ -255,7 +255,7 @@ rm /tmp/test-file*.txt /tmp/large-file.bin
 
 ```bash
 # Create test command with bash execution
-cat > .claude/commands/test-bash.md << 'EOF'
+cat > .agent/commands/test-bash.md << 'EOF'
 ---
 description: Test bash execution
 allowed-tools: Bash(echo:*), Bash(date:*)
@@ -267,7 +267,7 @@ Test output: !`echo "Hello from bash"`
 Analysis of output above...
 EOF
 
-# Test in Claude Code
+# Test in coding assistant
 > /test-bash
 # Verify:
 # 1. Date appears correctly
@@ -275,7 +275,7 @@ EOF
 # 3. No errors in debug logs
 
 # Test with disallowed command (should fail or be blocked)
-cat > .claude/commands/test-forbidden.md << 'EOF'
+cat > .agent/commands/test-forbidden.md << 'EOF'
 ---
 description: Test forbidden command
 allowed-tools: Bash(echo:*)
@@ -304,7 +304,7 @@ EOF
 # Setup: Command that triggers a hook
 # Test: Invoke command, verify hook executes
 
-# Command: .claude/commands/risky-operation.md
+# Command: .agent/commands/risky-operation.md
 # Hook: PreToolUse that validates the operation
 
 > /risky-operation
@@ -348,7 +348,7 @@ Create a test suite script:
 #!/bin/bash
 # test-commands.sh - Command test suite
 
-TEST_DIR=".claude/commands"
+TEST_DIR=".agent/commands"
 FAILED_TESTS=0
 
 echo "Command Test Suite"
@@ -395,7 +395,7 @@ Validate commands before committing:
 
 echo "Validating commands..."
 
-COMMANDS_CHANGED=$(git diff --cached --name-only | grep "\.claude/commands/.*\.md")
+COMMANDS_CHANGED=$(git diff --cached --name-only | grep "\.agent/commands/.*\.md")
 
 if [ -z "$COMMANDS_CHANGED" ]; then
   echo "No commands changed"
@@ -432,20 +432,20 @@ jobs:
 
       - name: Validate command structure
         run: |
-          for cmd in .claude/commands/*.md; do
+          for cmd in .agent/commands/*.md; do
             echo "Testing: $cmd"
             ./scripts/validate-command.sh "$cmd"
           done
 
       - name: Validate frontmatter
         run: |
-          for cmd in .claude/commands/*.md; do
+          for cmd in .agent/commands/*.md; do
             ./scripts/validate-frontmatter.sh "$cmd"
           done
 
       - name: Check for TODOs
         run: |
-          if grep -r "TODO" .claude/commands/; then
+          if grep -r "TODO" .agent/commands/; then
             echo "ERROR: TODOs found in commands"
             exit 1
           fi
@@ -529,7 +529,7 @@ echo "  - Acceptable threshold: < 3 seconds for fast commands"
 ### Resource Usage Testing
 
 ```bash
-# Monitor Claude Code during command execution
+# Monitor coding assistant during command execution
 # In terminal 1:
 claude --debug
 
@@ -547,7 +547,7 @@ watch -n 1 'ps aux | grep claude'
 ### Usability Checklist
 
 - [ ] Command name is intuitive
-- [ ] Description is clear in `/help`
+- [ ] Description is clear in `help`
 - [ ] Arguments are well-documented
 - [ ] Error messages are helpful
 - [ ] Output is formatted readably
@@ -600,7 +600,7 @@ Before releasing a command:
 - [ ] Markdown syntax correct
 
 ### Functionality
-- [ ] Command appears in `/help`
+- [ ] Command appears in `help`
 - [ ] Description is clear
 - [ ] Command executes without errors
 - [ ] Arguments work as expected
@@ -641,15 +641,15 @@ Before releasing a command:
 
 ```bash
 # Check file location
-ls -la .claude/commands/my-command.md
+ls -la .agent/commands/my-command.md
 
 # Check permissions
-chmod 644 .claude/commands/my-command.md
+chmod 644 .agent/commands/my-command.md
 
 # Check syntax
-head -n 20 .claude/commands/my-command.md
+head -n 20 .agent/commands/my-command.md
 
-# Restart Claude Code
+# Restart coding assistant
 claude --debug
 ```
 
@@ -657,21 +657,21 @@ claude --debug
 
 ```bash
 # Verify syntax
-grep '\$1' .claude/commands/my-command.md
-grep '\$ARGUMENTS' .claude/commands/my-command.md
+grep '\$1' .agent/commands/my-command.md
+grep '\$ARGUMENTS' .agent/commands/my-command.md
 
 # Test with simple command first
-echo "Test: \$1 and \$2" > .claude/commands/test-args.md
+echo "Test: \$1 and \$2" > .agent/commands/test-args.md
 ```
 
 **Issue: Bash commands not executing**
 
 ```bash
 # Check allowed-tools
-grep "allowed-tools" .claude/commands/my-command.md
+grep "allowed-tools" .agent/commands/my-command.md
 
 # Verify command syntax
-grep '!\`' .claude/commands/my-command.md
+grep '!\`' .agent/commands/my-command.md
 
 # Test command manually
 date
@@ -682,7 +682,7 @@ echo "test"
 
 ```bash
 # Check @ syntax
-grep '@' .claude/commands/my-command.md
+grep '@' .agent/commands/my-command.md
 
 # Verify file exists
 ls -la /path/to/referenced/file

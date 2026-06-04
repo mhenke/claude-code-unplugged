@@ -6,24 +6,24 @@ Advanced patterns for organizing plugin components effectively.
 
 ### Discovery Phase
 
-When Claude Code starts:
+When coding assistant starts:
 
-1. **Scan enabled plugins**: Read `.claude-plugin/plugin.json` for each
+1. **Scan enabled plugins**: Read `.agent-plugin/plugin.json` for each
 2. **Discover components**: Look in default and custom paths
 3. **Parse definitions**: Read YAML frontmatter and configurations
-4. **Register components**: Make available to Claude Code
+4. **Register components**: Make available to coding assistant
 5. **Initialize**: Start MCP servers, register hooks
 
-**Timing**: Component registration happens during Claude Code initialization, not continuously.
+**Timing**: Component registration happens during coding assistant initialization, not continuously.
 
 ### Activation Phase
 
 When components are used:
 
-**Commands**: User types slash command → Claude Code looks up → Executes
-**Agents**: Task arrives → Claude Code evaluates capabilities → Selects agent
-**Skills**: Task context matches description → Claude Code loads skill
-**Hooks**: Event occurs → Claude Code calls matching hooks
+**Commands**: User types slash command → coding assistant looks up → Executes
+**Agents**: Task arrives → coding assistant evaluates capabilities → Selects agent
+**Skills**: Task context matches description → coding assistant loads skill
+**Hooks**: Event occurs → coding assistant calls matching hooks
 **MCP Servers**: Tool call matches server capability → Forwards to server
 
 ## Command Organization Patterns
@@ -108,7 +108,7 @@ commands/
     └── status.md
 ```
 
-**Note**: Claude Code doesn't support nested command discovery automatically. Use custom paths:
+**Note**: coding assistant doesn't support nested command discovery automatically. Use custom paths:
 
 ```json
 {
@@ -292,18 +292,18 @@ skills/
 
 ### Monolithic Configuration
 
-Single hooks.json with all hooks:
+Single hook-config.json with all hooks:
 
 ```
 hooks/
-├── hooks.json     # All hook definitions
+├── hook-config.json     # All hook definitions
 └── scripts/
     ├── validate-write.sh
     ├── validate-bash.sh
     └── load-context.sh
 ```
 
-**hooks.json**:
+**hook-config.json**:
 ```json
 {
   "PreToolUse": [...],
@@ -324,7 +324,7 @@ Separate files per event type:
 
 ```
 hooks/
-├── hooks.json              # Combines all
+├── hook-config.json              # Combines all
 ├── pre-tool-use.json      # PreToolUse hooks
 ├── post-tool-use.json     # PostToolUse hooks
 ├── stop.json              # Stop hooks
@@ -336,7 +336,7 @@ hooks/
         └── load.sh
 ```
 
-**hooks.json** (combines):
+**hook-config.json** (combines):
 ```json
 {
   "PreToolUse": ${file:./pre-tool-use.json},
@@ -345,7 +345,7 @@ hooks/
 }
 ```
 
-**Note**: Use build script to combine files, Claude Code doesn't support file references.
+**Note**: Use build script to combine files, coding assistant doesn't support file references.
 
 **When to use**:
 - 10+ hooks
@@ -358,7 +358,7 @@ Group by functional purpose:
 
 ```
 hooks/
-├── hooks.json
+├── hook-config.json
 └── scripts/
     ├── security/
     │   ├── validate-paths.sh
@@ -469,7 +469,7 @@ plugin/
 **Usage in components**:
 ```bash
 #!/bin/bash
-source "${CLAUDE_PLUGIN_ROOT}/lib/test-utils.sh"
+source "PLUGIN_ROOT/lib/test-utils.sh"
 run_tests
 ```
 
@@ -504,7 +504,7 @@ Nested plugin structure:
 
 ```
 plugin/
-├── .claude-plugin/
+├── .agent-plugin/
 │   └── plugin.json
 ├── core/              # Core functionality
 │   ├── commands/

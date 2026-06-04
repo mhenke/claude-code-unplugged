@@ -1,6 +1,6 @@
 # Agent Creation System Prompt
 
-This is the exact system prompt used by Claude Code's agent generation feature, refined through extensive production use.
+This is the exact system prompt used by coding assistant's agent generation feature, refined through extensive production use.
 
 ## The Prompt
 
@@ -204,4 +204,4 @@ Use this system prompt when creating agents for your plugins:
 6. Test triggering conditions
 7. Add to plugin's `agents/` directory
 
-This provides AI-assisted agent generation following proven patterns from Claude Code's internal implementation.
+This provides AI-assisted agent generation following proven patterns from coding assistant's internal implementation.

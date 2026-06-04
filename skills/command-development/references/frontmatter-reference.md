@@ -26,9 +26,9 @@ All fields are optional. Commands work without any frontmatter.
 **Type:** String
 **Required:** No
 **Default:** First line of command prompt
-**Max Length:** ~60 characters recommended for `/help` display
+**Max Length:** ~60 characters recommended for `help` display
 
-**Purpose:** Describes what the command does, shown in `/help` output
+**Purpose:** Describes what the command does, shown in `help` output
 
 **Examples:**
 ```yaml
@@ -459,5 +459,5 @@ Before committing command:
 3. **Restrict tools:** Use most restrictive allowed-tools that works
 4. **Choose right model:** Use haiku for speed, opus for complexity
 5. **Manual-only sparingly:** Only use disable-model-invocation when necessary
-6. **Clear descriptions:** Make commands discoverable in `/help`
+6. **Clear descriptions:** Make commands discoverable in `help`
 7. **Test thoroughly:** Verify frontmatter works as expected

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Security Guidance Plugin for Claude Code
+Security Guidance Plugin for coding assistant
 
 A hooks-based plugin that guides Claude toward writing more secure code. It runs as
-UserPromptSubmit, PostToolUse, and Stop hooks via the Claude Code plugin system.
+UserPromptSubmit, PostToolUse, and Stop hooks via the coding assistant plugin system.
 
 ## Architecture
 
@@ -49,7 +49,7 @@ Other:
 - SECURITY_REVIEW_MODEL: Model for LLM review (default: claude-opus-4-7)
 - ANTHROPIC_API_KEY: Required for LLM-based reviews
 - ANTHROPIC_AUTH_TOKEN: Alternative to API key — OAuth access token sent as Bearer auth.
-  Claude Code passes this automatically for OAuth-authenticated users.
+  coding assistant passes this automatically for OAuth-authenticated users.
 """
 
 try:
@@ -192,7 +192,7 @@ CONTINUATION_SUFFIX = (
 
 def emit_metrics(metrics, rewake_summary=None):
     """
-    Write a SyncHookJSONOutput line to stdout for Claude Code to pick up.
+    Write a SyncHookJSONOutput line to stdout for coding assistant to pick up.
     For asyncRewake (Stop) hooks, CC scans stdout for the first {-prefixed line
     that validates as SyncHookJSONOutput and emits the hook metrics event.
     For sync (PostToolUse) hooks, the metrics key in the normal JSON response
@@ -210,7 +210,7 @@ def emit_metrics(metrics, rewake_summary=None):
     per-version breakdowns.
 
     `rewake_summary` (asyncRewake only): per-run override of the static
-    rewakeSummary in hooks.json, shown to the user in the terminal as the
+    rewakeSummary in hook-config.json, shown to the user in the terminal as the
     task-notification one-liner. Must be in the same JSON line as the metrics
     because CC stops scanning stdout after the first {-prefixed line.
     """
@@ -582,7 +582,7 @@ _COMMIT_DIFFSTAT_PATTERNS = [
     re.compile(r'^ rename ', re.MULTILINE),
 ]
 
-# Capture-group form of the [branch sha] pattern. Mirrors Claude Code's own
+# Capture-group form of the [branch sha] pattern. Mirrors coding assistant's own
 # commit-id parsing, but tolerates spaces before the
 # sha (covers `[detached HEAD abc1234]`). 7–40 hex chars: git's abbrev floor
 # through full sha; the abbrev resolves fine with `git show`. Anchored to
@@ -590,7 +590,7 @@ _COMMIT_DIFFSTAT_PATTERNS = [
 # or trailing hook output isn't picked up and fed to `git show`.
 _COMMIT_SHA_RE = re.compile(r'^\[[^\]]*?\b([0-9a-f]{7,40})\]', re.MULTILINE)
 
-# Regex matching `git commit` commands. Mirrors Claude Code's own commit
+# Regex matching `git commit` commands. Mirrors coding assistant's own commit
 # detection — it does NOT tolerate `git -c k=v commit` global options, which
 # keeps this hook aligned with CC's commit attribution on what counts as a
 # commit.
@@ -611,14 +611,14 @@ COMMIT_REVIEW_RATE_WINDOW_S = int(
 
 # ─── push-sweep ─────────────────────────────────────────────────────────────
 #
-# Mirrors Claude Code's own push-command matching — tolerates `git -C <p>` /
-# `git -c k=v` global options. The hooks.json `Bash(git push:*)` matcher
+# Mirrors coding assistant's own push-command matching — tolerates `git -C <p>` /
+# `git -c k=v` global options. The hook-config.json `Bash(git push:*)` matcher
 # (subcommand prefix) doesn't, but those forms are rare in practice
 # and the python only ever runs after CC's matcher fired, so this regex is a
 # defensive re-gate, not a widening — `git -C path push` won't reach python
 # unless chained with a plain `git push` in the same compound command.
 #
-# `gh pr create` is intentionally NOT a separate hooks.json matcher: gh runs
+# `gh pr create` is intentionally NOT a separate hook-config.json matcher: gh runs
 # `git push` as a child process, which CC's matcher doesn't observe (it sees
 # only the top-level `gh pr create` argv). A separate `Bash(gh pr create:*)`
 # entry would buy minimal extra coverage (sessions that push only via gh) at
@@ -644,7 +644,7 @@ MAX_PUSH_SWEEP_RANGE = int(os.environ.get("SG_PUSH_SWEEP_MAX_RANGE", "50"))
 PUSH_SWEEP_REPORT_CAP = int(os.environ.get("SG_PUSH_SWEEP_REPORT_CAP", "3"))
 
 def _claim_bash_hook_once(input_data):
-    """De-dupe across hooks.json `if` matchers firing for the same Bash call.
+    """De-dupe across hook-config.json `if` matchers firing for the same Bash call.
 
     `git commit -m x && git push` matches both `Bash(git commit:*)` and
     `Bash(git push:*)` `if` configs → CC spawns this script twice with the
@@ -915,7 +915,7 @@ def handle_commit_review_posttooluse(input_data):
 
     command = tool_input.get("command", "")
     if not isinstance(command, str) or not _GIT_COMMIT_RE.search(command):
-        # Defensive only — hooks.json's `"if": "Bash(git commit:*)"` is the
+        # Defensive only — hook-config.json's `"if": "Bash(git commit:*)"` is the
         # real gate so CC never spawns python3 for ls/grep/etc. This catches
         # cases where CC's command matching fails open and spawns the hook anyway.
         sys.exit(0)
@@ -924,7 +924,7 @@ def handle_commit_review_posttooluse(input_data):
 
     # Bash tool_response has no exit_code field (only stdout, stderr,
     # interrupted), so success is inferred from the output text — the same
-    # heuristic Claude Code itself uses.
+    # heuristic coding assistant itself uses.
     if not isinstance(tool_response, dict):
         tool_response = {}
     stdout = tool_response.get("stdout", "") or ""
@@ -1406,8 +1406,8 @@ def handle_push_sweep_posttooluse(input_data):
     )
     interrupted = tool_response.get("interrupted", False)
 
-    # Re-gate: hooks.json `if` matched, but confirm with the broader regex
-    # (defensive — `git -C`/`-c` forms won't reach here via the hooks.json
+    # Re-gate: hook-config.json `if` matched, but confirm with the broader regex
+    # (defensive — `git -C`/`-c` forms won't reach here via the hook-config.json
     # prefix matcher alone, but a compound with a plain `git push` would).
     if not _GIT_PUSH_RE.search(command):
         sys.exit(0)
@@ -1973,7 +1973,7 @@ def handle_stop_hook(input_data):
 
 _SDK_BOOTSTRAP_THROTTLE = os.path.join(
     os.environ.get("SECURITY_WARNINGS_STATE_DIR")
-    or os.path.expanduser("~/.claude/security"),
+    or os.path.expanduser("~/.agent/security"),
     ".sdk_bootstrap_spawned")
 
 def _maybe_bootstrap_agent_sdk_async():
@@ -2073,7 +2073,7 @@ def main():
 
     # Handle PostToolUse[Bash] — commit review or push sweep (asyncRewake).
     #
-    # hooks.json has two `if` configs under the Bash matcher (`git commit:*`
+    # hook-config.json has two `if` configs under the Bash matcher (`git commit:*`
     # and `git push:*`). CC evaluates each `if` independently and spawns this
     # script ONCE PER MATCH — so `git commit -m x && git push` spawns python
     # twice with the same command string and the same tool_use_id. The python
@@ -2115,7 +2115,7 @@ def main():
             sys.exit(0)
 
         # Skip plan files
-        plans_dir = os.path.expanduser("~/.claude/plans")
+        plans_dir = os.path.expanduser("~/.agent/plans")
         if file_path.startswith(plans_dir):
             sys.exit(0)
 

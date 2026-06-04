@@ -121,7 +121,7 @@ Based on the answers received from AskUserQuestion:
 
 ## Step 3: Generate Configuration
 
-Create `.claude/plugin-name.local.md` with:
+Create `.agent/plugin-name.local.md` with:
 
 \`\`\`yaml
 ---
@@ -590,7 +590,7 @@ allowed-tools: AskUserQuestion, Write, Read
 
 Use AskUserQuestion for core settings.
 
-Save to `.claude/config-partial.yml`
+Save to `.agent/config-partial.yml`
 
 ## Phase 2: Review Core Settings
 

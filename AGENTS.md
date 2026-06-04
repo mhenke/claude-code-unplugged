@@ -7,11 +7,12 @@ A collection of portable agent skills extracted from Claude Code, packaged as st
 ## Commands
 
 ```bash
-node scripts/validate.js     # validate all skills (SKILL.md frontmatter, naming, non-empty body)
+node scripts/validate.js     # validate all skills (frontmatter, naming, non-empty body, platform-neutrality)
 node scripts/extract.js --source <path> --target <path>  # extract skills from source repo
+node scripts/generate-manifest.js  # regenerate skills.json from current skill directories
 ```
 
-Validation exits 0 on success, 1 on failure.
+Validation exits 0 on success, 1 on failure. Flags: "Claude Code" references, `hooks.json`, `${CLAUDE_PLUGIN_ROOT}`, `.claude/` paths, slash commands.
 
 ## Skill format
 

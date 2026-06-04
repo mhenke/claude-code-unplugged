@@ -13,7 +13,7 @@ Easily create custom hooks to prevent unwanted behaviors by analyzing conversati
 
 ## Overview
 
-The hookify plugin makes it simple to create hooks without editing complex `hooks.json` files. Instead, you create lightweight markdown configuration files that define patterns to watch for and messages to show when those patterns match.
+The hookify plugin makes it simple to create hooks without editing complex `hook-config.json` files. Instead, you create lightweight markdown configuration files that define patterns to watch for and messages to show when those patterns match.
 
 **Key features:**
 - 🎯 Analyze conversations to find unwanted behaviors automatically
@@ -30,7 +30,7 @@ The hookify plugin makes it simple to create hooks without editing complex `hook
 /hookify Warn me when I use rm -rf commands
 ```
 
-This analyzes your request and creates `.claude/hookify.warn-rm.local.md`.
+This analyzes your request and creates `.agent/hookify.warn-rm.local.md`.
 
 ### 2. Test It Immediately
 
@@ -81,7 +81,7 @@ Enable/disable existing rules through an interactive interface.
 
 ### Simple Rule (Single Pattern)
 
-`.claude/hookify.dangerous-rm.local.md`:
+`.agent/hookify.dangerous-rm.local.md`:
 ```markdown
 ---
 name: block-dangerous-rm
@@ -105,7 +105,7 @@ This command could delete important files. Please:
 
 ### Advanced Rule (Multiple Conditions)
 
-`.claude/hookify.sensitive-files.local.md`:
+`.agent/hookify.sensitive-files.local.md`:
 ```markdown
 ---
 name: warn-sensitive-files
@@ -286,7 +286,7 @@ Set `enabled: true`
 
 Simply delete the `.local.md` file:
 ```bash
-rm .claude/hookify.my-rule.local.md
+rm .agent/hookify.my-rule.local.md
 ```
 
 ### View All Rules
@@ -297,7 +297,7 @@ rm .claude/hookify.my-rule.local.md
 
 ## Installation
 
-This plugin is part of the Claude Code Marketplace. It should be auto-discovered when the marketplace is installed.
+This plugin is part of the coding assistant Marketplace. It should be auto-discovered when the marketplace is installed.
 
 **Manual testing:**
 ```bash
@@ -312,11 +312,11 @@ cc --plugin-dir /path/to/hookify
 ## Troubleshooting
 
 **Rule not triggering:**
-1. Check rule file exists in `.claude/` directory (in project root, not plugin directory)
+1. Check rule file exists in `.agent/` directory (in project root, not plugin directory)
 2. Verify `enabled: true` in frontmatter
 3. Test regex pattern separately
 4. Rules should work immediately - no restart needed
-5. Try `/hookify:list` to see if rule is loaded
+5. Try `hookify:list` to see if rule is loaded
 
 **Import errors:**
 - Ensure Python 3 is available: `python3 --version`
@@ -365,12 +365,12 @@ Enable or disable existing hookify rules using an interactive interface.
 
 Use Glob tool to find all hookify rule files:
 ```
-pattern: ".claude/hookify.*.local.md"
+pattern: ".agent/hookify.*.local.md"
 ```
 
 If no rules found, inform user:
 ```
-No hookify rules configured yet. Use `/hookify` to create your first rule.
+No hookify rules configured yet. Use `hookify` to create your first rule.
 ```
 
 ### 2. Read Current State
@@ -461,14 +461,14 @@ Changes apply immediately - no restart needed
 ## Important Notes
 
 - Changes take effect immediately on next tool use
-- You can also manually edit .claude/hookify.*.local.md files
+- You can also manually edit .agent/hookify.*.local.md files
 - To permanently remove a rule, delete its .local.md file
-- Use `/hookify:list` to see all configured rules
+- Use `hookify:list` to see all configured rules
 
 ## Edge Cases
 
 **No rules to configure:**
-- Show message about using `/hookify` to create rules first
+- Show message about using `hookify` to create rules first
 
 **User selects no rules:**
 - Inform that no changes were made
@@ -479,7 +479,7 @@ Changes apply immediately - no restart needed
 
 ---
 
-### Command: `/help`
+### Command: `help`
 *Description*: Get help with the hookify plugin
 
 # Hookify Plugin Help
@@ -488,7 +488,7 @@ Explain how the hookify plugin works and how to use it.
 
 ## Overview
 
-The hookify plugin makes it easy to create custom hooks that prevent unwanted behaviors. Instead of editing `hooks.json` files, users create simple markdown configuration files that define patterns to watch for.
+The hookify plugin makes it easy to create custom hooks that prevent unwanted behaviors. Instead of editing `hook-config.json` files, users create simple markdown configuration files that define patterns to watch for.
 
 ## How It Works
 
@@ -500,11 +500,11 @@ Hookify installs generic hooks that run on these events:
 - **Stop**: When Claude wants to stop working
 - **UserPromptSubmit**: When user submits a prompt
 
-These hooks read configuration files from `.claude/hookify.*.local.md` and check if any rules match the current operation.
+These hooks read configuration files from `.agent/hookify.*.local.md` and check if any rules match the current operation.
 
 ### 2. Configuration Files
 
-Users create rules in `.claude/hookify.{rule-name}.local.md` files:
+Users create rules in `.agent/hookify.{rule-name}.local.md` files:
 
 ```markdown
 ---
@@ -537,7 +537,7 @@ The message body is what Claude sees when the rule triggers.
 This analyzes your request and creates the appropriate rule file.
 
 **Option B: Create manually**
-Create `.claude/hookify.my-rule.local.md` with the format above.
+Create `.agent/hookify.my-rule.local.md` with the format above.
 
 **Option C: Analyze conversation**
 ```
@@ -548,10 +548,10 @@ Without arguments, hookify analyzes recent conversation to find behaviors you wa
 
 ## Available Commands
 
-- **`/hookify`** - Create hooks from conversation analysis or explicit instructions
-- **`/hookify:help`** - Show this help (what you're reading now)
-- **`/hookify:list`** - List all configured hooks
-- **`/hookify:configure`** - Enable/disable existing hooks interactively
+- **`hookify`** - Create hooks from conversation analysis or explicit instructions
+- **`hookify:help`** - Show this help (what you're reading now)
+- **`hookify:list`** - List all configured hooks
+- **`hookify:configure`** - Enable/disable existing hooks interactively
 
 ## Example Use Cases
 
@@ -614,14 +614,14 @@ Use Python regex syntax:
 
 **Block or Warn**: Rules can either `block` operations (prevent execution) or `warn` (show message but allow). Set `action: block` or `action: warn` in the rule's frontmatter.
 
-**Rule Files**: Keep rules in `.claude/hookify.*.local.md` - they should be git-ignored (add to .gitignore if needed).
+**Rule Files**: Keep rules in `.agent/hookify.*.local.md` - they should be git-ignored (add to .gitignore if needed).
 
 **Disable Rules**: Set `enabled: false` in frontmatter or delete the file.
 
 ## Troubleshooting
 
 **Hook not triggering:**
-- Check rule file is in `.claude/` directory
+- Check rule file is in `.agent/` directory
 - Verify `enabled: true` in frontmatter
 - Confirm pattern is valid regex
 - Test pattern: `python3 -c "import re; print(re.search('your_pattern', 'test_text'))"`
@@ -647,15 +647,15 @@ Use Python regex syntax:
    - Ask Claude to run `rm -rf /tmp/test`
    - You should see the warning
 
-4. Refine the rule by editing `.claude/hookify.warn-rm.local.md`
+4. Refine the rule by editing `.agent/hookify.warn-rm.local.md`
 
 5. Create more rules as you encounter unwanted behaviors
 
-For more examples, check the `${CLAUDE_PLUGIN_ROOT}/examples/` directory.
+For more examples, check the `PLUGIN_ROOT/examples/` directory.
 
 ---
 
-### Command: `/hookify`
+### Command: `hookify`
 *Description*: Create hooks to prevent unwanted behaviors from conversation analysis or explicit instructions
 
 # Hookify - Create Hooks from Unwanted Behaviors
@@ -686,7 +686,7 @@ Use the Task tool to launch conversation-analyzer agent:
 {
   "subagent_type": "general-purpose",
   "description": "Analyze conversation for unwanted behaviors",
-  "prompt": "You are analyzing a Claude Code conversation to find behaviors the user wants to prevent.
+  "prompt": "You are analyzing a coding assistant conversation to find behaviors the user wants to prevent.
 
 Read user messages in the current conversation and identify:
 1. Explicit requests to avoid something (\"don't do X\", \"stop doing Y\")
@@ -735,7 +735,7 @@ After gathering behaviors (from arguments or agent), present to user using AskUs
 
 ### Step 3: Generate Rule Files
 
-For each confirmed behavior, create a `.claude/hookify.{rule-name}.local.md` file:
+For each confirmed behavior, create a `.agent/hookify.{rule-name}.local.md` file:
 
 **Rule naming convention:**
 - Use kebab-case
@@ -779,23 +779,23 @@ conditions:
 
 ### Step 4: Create Files and Confirm
 
-**IMPORTANT**: Rule files must be created in the current working directory's `.claude/` folder, NOT the plugin directory.
+**IMPORTANT**: Rule files must be created in the current working directory's `.agent/` folder, NOT the plugin directory.
 
-Use the current working directory (where Claude Code was started) as the base path.
+Use the current working directory (where coding assistant was started) as the base path.
 
-1. Check if `.claude/` directory exists in current working directory
-   - If not, create it first with: `mkdir -p .claude`
+1. Check if `.agent/` directory exists in current working directory
+   - If not, create it first with: `mkdir -p .agent`
 
-2. Use Write tool to create each `.claude/hookify.{name}.local.md` file
-   - Use relative path from current working directory: `.claude/hookify.{name}.local.md`
-   - The path should resolve to the project's .claude directory, not the plugin's
+2. Use Write tool to create each `.agent/hookify.{name}.local.md` file
+   - Use relative path from current working directory: `.agent/hookify.{name}.local.md`
+   - The path should resolve to the project's .agent directory, not the plugin's
 
 3. Show user what was created:
    ```
    Created 3 hookify rules:
-   - .claude/hookify.dangerous-rm.local.md
-   - .claude/hookify.console-log.local.md
-   - .claude/hookify.sensitive-files.local.md
+   - .agent/hookify.dangerous-rm.local.md
+   - .agent/hookify.console-log.local.md
+   - .agent/hookify.sensitive-files.local.md
 
    These rules will trigger on:
    - dangerous-rm: Bash commands matching "rm -rf"
@@ -838,7 +838,7 @@ Use the current working directory (where Claude Code was started) as the base pa
 1. Analyze: User wants to prevent rm -rf commands
 2. Ask: "Should I block this command or just warn you?"
 3. User selects: "Just warn"
-4. Create `.claude/hookify.dangerous-rm.local.md`:
+4. Create `.agent/hookify.dangerous-rm.local.md`:
    ```markdown
    ---
    name: warn-dangerous-rm
@@ -857,7 +857,7 @@ Use the current working directory (where Claude Code was started) as the base pa
 ## Important Notes
 
 - **No restart needed**: Rules take effect immediately on the next tool use
-- **File location**: Create files in project's `.claude/` directory (current working directory), NOT the plugin's .claude/
+- **File location**: Create files in project's `.agent/` directory (current working directory), NOT the plugin's .agent/
 - **Regex syntax**: Use Python regex syntax (raw strings, no need to escape in YAML)
 - **Action types**: Rules can `warn` (default) or `block` operations
 - **Testing**: Test rules immediately after creating them
@@ -866,12 +866,12 @@ Use the current working directory (where Claude Code was started) as the base pa
 
 **If rule file creation fails:**
 1. Check current working directory with pwd
-2. Ensure `.claude/` directory exists (create with mkdir if needed)
-3. Use absolute path if needed: `{cwd}/.claude/hookify.{name}.local.md`
+2. Ensure `.agent/` directory exists (create with mkdir if needed)
+3. Use absolute path if needed: `{cwd}/.agent/hookify.{name}.local.md`
 4. Verify file was created with Glob or ls
 
 **If rule doesn't trigger after creation:**
-1. Verify file is in project `.claude/` not plugin `.claude/`
+1. Verify file is in project `.agent/` not plugin `.agent/`
 2. Check file with Read tool to ensure pattern is correct
 3. Test pattern with: `python3 -c "import re; print(re.search(r'pattern', 'test text'))"`
 4. Verify `enabled: true` in frontmatter
@@ -899,7 +899,7 @@ Show all configured hookify rules in the project.
 
 1. Use Glob tool to find all hookify rule files:
    ```
-   pattern: ".claude/hookify.*.local.md"
+   pattern: ".agent/hookify.*.local.md"
    ```
 
 2. For each file found:
@@ -929,7 +929,7 @@ Show all configured hookify rules in the project.
 **Message**: "⚠️ **Dangerous rm command detected!** This command could delete..."
 
 **Status**: ✅ Active
-**File**: .claude/hookify.dangerous-rm.local.md
+**File**: .agent/hookify.dangerous-rm.local.md
 ```
 
 5. Add helpful footer:
@@ -940,7 +940,7 @@ To modify a rule: Edit the .local.md file directly
 To disable a rule: Set `enabled: false` in frontmatter
 To enable a rule: Set `enabled: true` in frontmatter
 To delete a rule: Remove the .local.md file
-To create a rule: Use `/hookify` command
+To create a rule: Use `hookify` command
 
 **Remember**: Changes take effect immediately - no restart needed
 ```
@@ -955,16 +955,16 @@ If no hookify rules exist:
 You haven't created any hookify rules yet.
 
 To get started:
-1. Use `/hookify` to analyze conversation and create rules
-2. Or manually create `.claude/hookify.my-rule.local.md` files
-3. See `/hookify:help` for documentation
+1. Use `hookify` to analyze conversation and create rules
+2. Or manually create `.agent/hookify.my-rule.local.md` files
+3. See `hookify:help` for documentation
 
 Example:
 ```
 /hookify Warn me when I use console.log
 ```
 
-Check `${CLAUDE_PLUGIN_ROOT}/examples/` for example rule files.
+Check `PLUGIN_ROOT/examples/` for example rule files.
 ```
 
 ---
@@ -974,7 +974,7 @@ Check `${CLAUDE_PLUGIN_ROOT}/examples/` for example rule files.
 ### Persona: `conversation-analyzer`
 *Description*: Use this agent when analyzing conversation transcripts to find behaviors worth preventing with hooks. Examples: <example>Context: User is running /hookify command without arguments\nuser: "/hookify"\nassistant: "I'll analyze the conversation to find behaviors you want to prevent"\n<commentary>The /hookify command without arguments triggers conversation analysis to find unwanted behaviors.</commentary></example><example>Context: User wants to create hooks from recent frustrations\nuser: "Can you look back at this conversation and help me create hooks for the mistakes you made?"\nassistant: "I'll use the conversation-analyzer agent to identify the issues and suggest hooks."\n<commentary>User explicitly asks to analyze conversation for mistakes that should be prevented.</commentary></example>
 
-You are a conversation analysis specialist that identifies problematic behaviors in Claude Code sessions that could be prevented with hooks.
+You are a conversation analysis specialist that identifies problematic behaviors in coding assistant sessions that could be prevented with hooks.
 
 **Your Core Responsibilities:**
 1. Read and analyze user messages to find frustration signals
@@ -1141,6 +1141,19 @@ Provide your analysis in the structured format above. The /hookify command will 
 1. Present findings to user
 2. Ask which rules to create
 3. Generate .local.md configuration files
-4. Save rules to .claude directory
+4. Save rules to .agent directory
 
 ---
+
+
+
+## 🔒 Hookify Cognitive Execution
+
+Before executing any tools or modifying files, you MUST cognitively scan the workspace for Hookify rule files matching `.agent/hookify.*.local.md`.
+For any matching rules:
+1. Inspect the defined regex patterns and trigger conditions.
+2. Verify that your planned tool execution or edits do not violate these rules.
+3. Alternatively, execute the rule engine script to programmatically validate compliance:
+   ```bash
+   python3 scripts/rule_engine.py
+   ```

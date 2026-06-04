@@ -2,7 +2,7 @@
 
 ## Template: Basic Configuration
 
-**.claude/my-plugin.local.md:**
+**.agent/my-plugin.local.md:**
 
 ```markdown
 ---
@@ -17,7 +17,7 @@ Plugin is active in standard mode.
 
 ## Template: Advanced Configuration
 
-**.claude/my-plugin.local.md:**
+**.agent/my-plugin.local.md:**
 
 ```markdown
 ---
@@ -48,7 +48,7 @@ Contact @team-lead with questions about this configuration.
 
 ## Template: Agent State File
 
-**.claude/multi-agent-swarm.local.md:**
+**.agent/multi-agent-swarm.local.md:**
 
 ```markdown
 ---
@@ -90,7 +90,7 @@ Report status to coordinator session 'team-leader'.
 
 ## Template: Feature Flag Pattern
 
-**.claude/experimental-features.local.md:**
+**.agent/experimental-features.local.md:**
 
 ```markdown
 ---
@@ -118,12 +118,12 @@ These templates can be read by hooks:
 
 ```bash
 # Check if plugin is configured
-if [[ ! -f ".claude/my-plugin.local.md" ]]; then
+if [[ ! -f ".agent/my-plugin.local.md" ]]; then
   exit 0  # Not configured, skip hook
 fi
 
 # Read settings
-FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' ".claude/my-plugin.local.md")
+FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' ".agent/my-plugin.local.md")
 ENABLED=$(echo "$FRONTMATTER" | grep '^enabled:' | sed 's/enabled: *//')
 
 # Apply settings
@@ -139,8 +139,8 @@ Always add to project `.gitignore`:
 
 ```gitignore
 # Plugin settings (user-local, not committed)
-.claude/*.local.md
-.claude/*.local.json
+.agent/*.local.md
+.agent/*.local.json
 ```
 
 ## Editing Settings
@@ -149,11 +149,11 @@ Users can edit settings files manually:
 
 ```bash
 # Edit settings
-vim .claude/my-plugin.local.md
+vim .agent/my-plugin.local.md
 
 # Changes take effect after restart
-exit  # Exit Claude Code
+exit  # Exit coding assistant
 claude  # Restart
 ```
 
-Changes require Claude Code restart - hooks can't be hot-swapped.
+Changes require coding assistant restart - hooks can't be hot-swapped.

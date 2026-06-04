@@ -1,10 +1,10 @@
 # Using MCP Tools in Commands and Agents
 
-Complete guide to using MCP tools effectively in Claude Code plugin commands and agents.
+Complete guide to using MCP tools effectively in coding assistant plugin commands and agents.
 
 ## Overview
 
-Once an MCP server is configured, its tools become available with the prefix `mcp__plugin_<plugin-name>_<server-name>__<tool-name>`. Use these tools in commands and agents just like built-in Claude Code tools.
+Once an MCP server is configured, its tools become available with the prefix `mcp__plugin_<plugin-name>_<server-name>__<tool-name>`. Use these tools in commands and agents just like built-in coding assistant tools.
 
 ## Tool Naming Convention
 
@@ -28,7 +28,7 @@ mcp__plugin_<plugin-name>_<server-name>__<tool-name>
 
 ### Discovering Tool Names
 
-**Use `/mcp` command:**
+**Use `mcp` command:**
 ```bash
 /mcp
 ```
@@ -211,7 +211,7 @@ Steps:
 
 ### Understanding Tool Schemas
 
-Each MCP tool has a schema defining its parameters. View with `/mcp`.
+Each MCP tool has a schema defining its parameters. View with `mcp`.
 
 **Example schema:**
 ```json
@@ -412,8 +412,8 @@ Ensure you're authenticated to Asana before running this command.
 ### Local Testing
 
 1. **Configure MCP server** in `.mcp.json`
-2. **Install plugin locally** in `.claude-plugin/`
-3. **Verify tools available** with `/mcp`
+2. **Install plugin locally** in `.agent-plugin/`
+3. **Verify tools available** with `mcp`
 4. **Test command** that uses tools
 5. **Check debug output**: `claude --debug`
 
@@ -505,9 +505,9 @@ Steps:
 
 **Check:**
 - MCP server configured correctly
-- Server connected (check `/mcp`)
+- Server connected (check `mcp`)
 - Tool names match exactly (case-sensitive)
-- Restart Claude Code after config changes
+- Restart coding assistant after config changes
 
 ### Tool Calls Failing
 
@@ -528,7 +528,7 @@ Steps:
 ## Conclusion
 
 Effective MCP tool usage requires:
-1. **Understanding tool schemas** via `/mcp`
+1. **Understanding tool schemas** via `mcp`
 2. **Pre-allowing tools** in commands appropriately
 3. **Handling errors gracefully**
 4. **Optimizing performance** with batching and caching

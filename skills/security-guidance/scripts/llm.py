@@ -33,7 +33,7 @@ from session_state import with_locked_state
 
 # Plan Security Check Configuration
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-# OAuth access token — Claude Code passes this for /login users.
+# OAuth access token — coding assistant passes this for /login users.
 # The Anthropic API accepts it as `Authorization: Bearer <token>` instead of `x-api-key`.
 ANTHROPIC_AUTH_TOKEN = os.environ.get("ANTHROPIC_AUTH_TOKEN", "")
 # On 3P providers (Bedrock/Vertex/Foundry/Mantle), credentials live in the
@@ -205,7 +205,7 @@ def _build_auth_headers(use_token):
 
 # Models that require the adaptive thinking API (4.6 and later). Older models
 # require the legacy budget_tokens form. Sending the wrong one returns a 400.
-# Mirrors Claude Code's adaptive-thinking model support; keep in sync
+# Mirrors coding assistant's adaptive-thinking model support; keep in sync
 # when new model families ship.
 _ADAPTIVE_THINKING_MODELS = (
     "claude-opus-4-6",
@@ -226,7 +226,7 @@ _LEGACY_THINKING_MODELS = (
 def _model_supports_adaptive_thinking(model: str) -> bool:
     """True for models that reject the budget_tokens thinking form (4.6+)."""
     name = (model or "").lower()
-    # Strip provider/version suffixes (e.g. "us.anthropic.claude-opus-4-7-v1:0").
+    # Strip provider/version suffixes (e.g. "us.anthropic.agent-opus-4-7-v1:0").
     for prefix in ("us.anthropic.", "eu.anthropic.", "anthropic."):
         if name.startswith(prefix):
             name = name[len(prefix):]
@@ -296,7 +296,7 @@ def _call_claude_via_sdk(prompt, output_schema, *, max_tokens=16000, model=None)
         # the agentic path to have run first.
         _state_dir = os.environ.get(
             "SECURITY_WARNINGS_STATE_DIR",
-            os.path.expanduser("~/.claude/security"),
+            os.path.expanduser("~/.agent/security"),
         )
         for _sp in glob.glob(
             os.path.join(_state_dir, "agent-sdk-venv", "lib",
@@ -642,7 +642,7 @@ def _format_vulns_summary(vulns: List[Dict[str, Any]],
 
     The full guidance goes to the model via stderr; this is the line the user
     actually sees in the terminal in place of the static rewakeSummary in
-    hooks.json. List the top findings by severity as `<category> in <file>`.
+    hook-config.json. List the top findings by severity as `<category> in <file>`.
     """
     if not vulns:
         return None
@@ -843,7 +843,7 @@ A NEW security-gate parameter (group/role/tool/permission/scope) is safe only if
 **GitHub Actions Third-Party Unpinned**: A `uses:` referencing a THIRD-PARTY action (NOT `actions/*`, `github/*`, or same-org `{{{{github.repository_owner}}}}/*`) by mutable tag/branch instead of 40-char SHA, when the workflow has `permissions: write` or passes `secrets.*`. Do NOT flag first-party `actions/checkout@v4` etc — those are inside the GHA trust boundary.
 
 
-**Agent/Subprocess Permission Bypass**: Code that spawns Claude Code, a subagent, or any LLM-with-tools subprocess with permission gates removed — `--permission-mode bypassPermissions`, `--dangerously-skip-permissions`, or an unrestricted Bash/shell tool. Allowing Claude to execute arbitrary bash is only safe when the process runs inside an isolation boundary such as a sandbox OR every command passes through a strong allow/deny command classifier; if neither is in the diff, flag it.
+**Agent/Subprocess Permission Bypass**: Code that spawns coding assistant, a subagent, or any LLM-with-tools subprocess with permission gates removed — `--permission-mode bypassPermissions`, `--dangerously-skip-permissions`, or an unrestricted Bash/shell tool. Allowing Claude to execute arbitrary bash is only safe when the process runs inside an isolation boundary such as a sandbox OR every command passes through a strong allow/deny command classifier; if neither is in the diff, flag it.
 
 **Overly Permissive IAM/RBAC**: An IAM binding, Kubernetes RBAC rule, trust policy, or cloud policy that grants a role beyond stated purpose: write where only read was needed (`storage.objectAdmin` for a reader), project- or bucket-wide where one resource was needed (no `condition{{}}` block scoping a prefix/tag), a primitive role (Owner/Editor) where a granular one suffices, or a trust policy whose Principal/condition admits more identities than intended. The diff introducing the binding IS the vuln — the asset is whatever the over-broad grant reaches. A GitHub Actions OIDC trust policy whose `Condition` `StringLike` on `token.actions.githubusercontent.com:sub` ends in `:*` (e.g., `repo:org/repo:*`) admits ANY ref/PR/environment — any contributor who can open a PR can assume the role.
 
@@ -1086,13 +1086,13 @@ def agentic_review(
     except Exception:
         # Some users don't have claude_agent_sdk in their system python.
         # The SessionStart hook (ensure_agent_sdk.py) creates a venv under
-        # ~/.claude/security/ with the SDK installed; try that as a fallback
+        # ~/.agent/security/ with the SDK installed; try that as a fallback
         # before giving up. The system import is attempted first so users
         # who DO have it never touch the venv.
         _venv_tried = False
         _state_dir = os.environ.get(
             "SECURITY_WARNINGS_STATE_DIR",
-            os.path.expanduser("~/.claude/security"),
+            os.path.expanduser("~/.agent/security"),
         )
         for _sp in glob.glob(
             os.path.join(_state_dir, "agent-sdk-venv", "lib",
@@ -1174,7 +1174,7 @@ def agentic_review(
             os.environ.get("CLAUDE_CODE_EXECPATH"),
             os.path.expanduser("~/.local/bin/claude"),
             "/root/.local/bin/claude",
-            # Claude Code Remote container install path. CLAUDE_CODE_EXECPATH
+            # coding assistant Remote container install path. CLAUDE_CODE_EXECPATH
             # is not exported to hook subprocesses there, so without this
             # candidate cli_path resolves to None and the SDK uses its
             # bundled CLI — which lags the running CC by builds.
@@ -1238,7 +1238,7 @@ def agentic_review(
                 _DEFAULT_PUBLIC_MODEL if model != _DEFAULT_PUBLIC_MODEL else None
             ),
             # Plugin-hook subprocesses get ANTHROPIC_AUTH_TOKEN (the user's
-            # OAuth token) injected by Claude Code. The SDK builds the child
+            # OAuth token) injected by coding assistant. The SDK builds the child
             # env as {**os.environ, **opts.env}, so the inner claude inherits
             # it and prefers it over ANTHROPIC_API_KEY — but some model
             # endpoints reject OAuth bearers (401 → exit 1 → silent
@@ -1251,7 +1251,7 @@ def agentic_review(
             # auth bytes and never finishes initialization → 60s
             # `Control request timeout: initialize`. This was the dominant
             # cause of agentic fallbacks in remote sessions. Clearing them
-            # makes the inner CLI fall back to ~/.claude/.credentials.json.
+            # makes the inner CLI fall back to ~/.agent/.credentials.json.
             # INCLUDE_PARTIAL_MESSAGES also leaks in and trips an arg-check
             # (`--include-partial-messages requires --print`) on some CC
             # versions. Clearing WEBSOCKET_AUTH_FILE_DESCRIPTOR alone lets
@@ -1498,7 +1498,7 @@ def agentic_review(
             "victim); data-exposure findings (CWE-200/359/532, secrets-"
             "in-logs — the question is who READS the sink, not who "
             "controls the input); project-working-directory config "
-            "(.claude/settings, .vscode/, package.json scripts — repo "
+            "(.agent/settings, .vscode/, package.json scripts — repo "
             "author ≠ repo cloner); cross-process metadata sources "
             "(psutil.Process(...), /proc/<pid>/* — different process "
             "owner is a different principal).\n"

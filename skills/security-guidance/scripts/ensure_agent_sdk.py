@@ -3,12 +3,12 @@
 agentic commit reviewer.
 
 If claude_agent_sdk already imports in the current python3, this is a no-op.
-Otherwise it creates a venv at ~/.claude/security/agent-sdk-venv and installs
+Otherwise it creates a venv at ~/.agent/security/agent-sdk-venv and installs
 the SDK there. security_reminder_hook.py prepends that venv's site-packages to
 sys.path before attempting the SDK import, so the venv is used as a
 fallback only when the system install is missing.
 
-The venv lives under ~/.claude/security/ (same dir the plugin already uses
+The venv lives under ~/.agent/security/ (same dir the plugin already uses
 for per-session state) so it persists across plugin updates — rebuilding
 on every update is 30-60s of wasted work for a package that changes far
 less often than the plugin does.
@@ -46,7 +46,7 @@ def _plugin_version_int() -> int:
     # Same encoding as security_reminder_hook._read_plugin_version_int so
     # metrics rows from both hooks join on pv.
     try:
-        p = Path(__file__).parent.parent / ".claude-plugin" / "plugin.json"
+        p = Path(__file__).parent.parent / ".agent-plugin" / "plugin.json"
         v = json.loads(p.read_text())["version"]
         major, minor, patch = (int(x) for x in v.split(".")[:3])
         return major * 10000 + minor * 100 + patch
@@ -72,7 +72,7 @@ def main() -> tuple[int, str, str]:
 
     state_dir = Path(
         os.environ.get("SECURITY_WARNINGS_STATE_DIR")
-        or os.path.expanduser("~/.claude/security")
+        or os.path.expanduser("~/.agent/security")
     )
     venv = state_dir / "agent-sdk-venv"
     venv_py = venv / "bin" / "python"

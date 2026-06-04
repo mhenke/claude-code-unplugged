@@ -6,7 +6,7 @@ A well-structured plugin with commands, agents, and skills.
 
 ```
 code-quality/
-├── .claude-plugin/
+├── .agent-plugin/
 │   └── plugin.json
 ├── commands/
 │   ├── lint.md
@@ -26,7 +26,7 @@ code-quality/
 │           ├── unit-test.js
 │           └── integration-test.js
 ├── hooks/
-│   ├── hooks.json
+│   ├── hook-config.json
 │   └── scripts/
 │       └── validate-commit.sh
 └── scripts/
@@ -36,7 +36,7 @@ code-quality/
 
 ## File Contents
 
-### .claude-plugin/plugin.json
+### .agent-plugin/plugin.json
 
 ```json
 {
@@ -78,7 +78,7 @@ Run comprehensive linting checks on the project codebase.
 Execute the linting script:
 
 \`\`\`bash
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/run-linter.sh
+bash PLUGIN_ROOT/scripts/run-linter.sh
 \`\`\`
 
 Parse the output and present issues organized by:
@@ -423,7 +423,7 @@ See language-specific guides for:
 - Ruby: `references/ruby-style.md`
 ```
 
-### hooks/hooks.json
+### hooks/hook-config.json
 
 ```json
 {
@@ -445,7 +445,7 @@ See language-specific guides for:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate-commit.sh",
+          "command": "bash PLUGIN_ROOT/hooks/scripts/validate-commit.sh",
           "timeout": 45
         }
       ]

@@ -9,16 +9,16 @@ description: Development assistance for creating CLI plugins
 
 # Plugin Development Toolkit
 
-A comprehensive toolkit for developing Claude Code plugins with expert guidance on hooks, MCP integration, plugin structure, and marketplace publishing.
+A comprehensive toolkit for developing coding assistant plugins with expert guidance on hooks, MCP integration, plugin structure, and marketplace publishing.
 
 ## Overview
 
-The plugin-dev toolkit provides seven specialized skills to help you build high-quality Claude Code plugins:
+The plugin-dev toolkit provides seven specialized skills to help you build high-quality coding assistant plugins:
 
 1. **Hook Development** - Advanced hooks API and event-driven automation
 2. **MCP Integration** - Model Context Protocol server integration
 3. **Plugin Structure** - Plugin organization and manifest configuration
-4. **Plugin Settings** - Configuration patterns using .claude/plugin-name.local.md files
+4. **Plugin Settings** - Configuration patterns using .agent/plugin-name.local.md files
 5. **Command Development** - Creating slash commands with frontmatter and arguments
 6. **Agent Development** - Creating autonomous agents with AI-assisted generation
 7. **Skill Development** - Creating skills with progressive disclosure and strong triggers
@@ -38,7 +38,7 @@ A comprehensive, end-to-end workflow command for creating plugins from scratch, 
 4. **Structure Creation** - Set up directories and manifest
 5. **Component Implementation** - Create each component using AI-assisted agents
 6. **Validation** - Run plugin-validator and component-specific checks
-7. **Testing** - Verify plugin works in Claude Code
+7. **Testing** - Verify plugin works in coding assistant
 8. **Documentation** - Finalize README and prepare for distribution
 
 **Features:**
@@ -64,7 +64,7 @@ Use this workflow for structured, high-quality plugin development from concept t
 
 ### 1. Hook Development
 
-**Trigger phrases:** "create a hook", "add a PreToolUse hook", "validate tool use", "implement prompt-based hooks", "${CLAUDE_PLUGIN_ROOT}", "block dangerous commands"
+**Trigger phrases:** "create a hook", "add a PreToolUse hook", "validate tool use", "implement prompt-based hooks", "PLUGIN_ROOT", "block dangerous commands"
 
 **What it covers:**
 - Prompt-based hooks (recommended) with LLM decision-making
@@ -72,7 +72,7 @@ Use this workflow for structured, high-quality plugin development from concept t
 - All hook events: PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification
 - Hook output formats and JSON schemas
 - Security best practices and input validation
-- ${CLAUDE_PLUGIN_ROOT} for portable paths
+- PLUGIN_ROOT for portable paths
 
 **Resources:**
 - Core SKILL.md (1,619 words)
@@ -89,7 +89,7 @@ Use this workflow for structured, high-quality plugin development from concept t
 **What it covers:**
 - MCP server configuration (.mcp.json vs plugin.json)
 - All server types: stdio (local), SSE (hosted/OAuth), HTTP (REST), WebSocket (real-time)
-- Environment variable expansion (${CLAUDE_PLUGIN_ROOT}, user vars)
+- Environment variable expansion (PLUGIN_ROOT, user vars)
 - MCP tool naming and usage in commands/agents
 - Authentication patterns: OAuth, tokens, env vars
 - Integration patterns and performance optimization
@@ -109,7 +109,7 @@ Use this workflow for structured, high-quality plugin development from concept t
 - Standard plugin directory structure and auto-discovery
 - plugin.json manifest format and all fields
 - Component organization (commands, agents, skills, hooks)
-- ${CLAUDE_PLUGIN_ROOT} usage throughout
+- PLUGIN_ROOT usage throughout
 - File naming conventions and best practices
 - Minimal, standard, and advanced plugin patterns
 
@@ -125,7 +125,7 @@ Use this workflow for structured, high-quality plugin development from concept t
 **Trigger phrases:** "plugin settings", "store plugin configuration", ".local.md files", "plugin state files", "read YAML frontmatter", "per-project plugin settings"
 
 **What it covers:**
-- .claude/plugin-name.local.md pattern for configuration
+- .agent/plugin-name.local.md pattern for configuration
 - YAML frontmatter + markdown body structure
 - Parsing techniques for bash scripts (sed, awk, grep patterns)
 - Temporarily active hooks (flag files and quick-exit)
@@ -169,14 +169,14 @@ Use this workflow for structured, high-quality plugin development from concept t
 - All frontmatter fields (name, description, model, color, tools)
 - Description format with <example> blocks for reliable triggering
 - System prompt design patterns (analysis, generation, validation, orchestration)
-- AI-assisted agent generation using Claude Code's proven prompt
+- AI-assisted agent generation using coding assistant's proven prompt
 - Validation rules and best practices
 - Complete production-ready agent examples
 
 **Resources:**
 - Core SKILL.md (1,438 words)
 - 2 examples: agent-creation-prompt (AI-assisted workflow), complete-agent-examples (4 full agents)
-- 3 reference docs: agent-creation-system-prompt (from Claude Code), system-prompt-design (~4,000w), triggering-examples (~2,500w)
+- 3 reference docs: agent-creation-system-prompt (from coding assistant), system-prompt-design (~4,000w), triggering-examples (~2,500w)
 - 1 utility script: validate-agent.sh
 
 **Use when:** Creating autonomous agents, defining agent behavior, or implementing AI-assisted agent generation.
@@ -192,7 +192,7 @@ Use this workflow for structured, high-quality plugin development from concept t
 - Writing style (imperative/infinitive form, third person)
 - Bundled resources organization (references/, examples/, scripts/)
 - Skill creation workflow
-- Based on skill-creator methodology adapted for Claude Code plugins
+- Based on skill-creator methodology adapted for coding assistant plugins
 
 **Resources:**
 - Core SKILL.md (1,232 words)
@@ -275,15 +275,15 @@ Each skill uses a three-level disclosure system:
 2. **Core SKILL.md** (when triggered): Essential API reference (~1,500-2,000 words)
 3. **References/Examples** (as needed): Detailed guides, patterns, and working code
 
-This keeps Claude Code's context focused while providing deep knowledge when needed.
+This keeps coding assistant's context focused while providing deep knowledge when needed.
 
 ### Utility Scripts
 
 The hook-development skill includes production-ready utilities:
 
 ```bash
-# Validate hooks.json structure
-./validate-hook-schema.sh hooks/hooks.json
+# Validate hook-config.json structure
+./validate-hook-schema.sh hooks/hook-config.json
 
 # Test hooks before deployment
 ./test-hook.sh my-hook.sh test-input.json
@@ -307,7 +307,7 @@ All skills follow consistent standards:
 - Third-person descriptions ("This skill should be used when...")
 - Strong trigger phrases for reliable loading
 - Imperative/infinitive form throughout
-- Based on official Claude Code documentation
+- Based on official coding assistant documentation
 - Security-first approach with best practices
 
 ## Total Content
@@ -371,7 +371,7 @@ All skills emphasize:
 - Principle of least privilege
 
 ✅ **Portability**
-- Use ${CLAUDE_PLUGIN_ROOT} everywhere
+- Use PLUGIN_ROOT everywhere
 - Relative paths only
 - Environment variable substitution
 
@@ -412,12 +412,12 @@ MIT License - See repository for details
 
 ## Commands / Workflows
 
-### Command: `/create-plugin`
+### Command: `create-plugin`
 *Description*: Guided end-to-end plugin creation workflow with component design, implementation, and validation
 
 # Plugin Creation Workflow
 
-Guide the user through creating a complete, high-quality Claude Code plugin from initial concept to tested implementation. Follow a systematic approach: understand requirements, design components, clarify details, implement following best practices, validate, and test.
+Guide the user through creating a complete, high-quality coding assistant plugin from initial concept to tested implementation. Follow a systematic approach: understand requirements, design components, clarify details, implement following best practices, validate, and test.
 
 ## Core Principles
 
@@ -535,7 +535,7 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
    - Offer options: current directory, ../new-plugin-name, custom path
 3. Create directory structure using bash:
    ```bash
-   mkdir -p plugin-name/.claude-plugin
+   mkdir -p plugin-name/.agent-plugin
    mkdir -p plugin-name/skills     # if needed
    mkdir -p plugin-name/commands   # if needed
    mkdir -p plugin-name/agents     # if needed
@@ -554,7 +554,7 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
    }
    ```
 5. Create README.md template
-6. Create .gitignore if needed (for .claude/*.local.md, etc.)
+6. Create .gitignore if needed (for .agent/*.local.md, etc.)
 7. Initialize git repo if creating new directory
 
 **Output**: Plugin directory structure created and ready for components
@@ -612,9 +612,9 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
 ### For Hooks:
 1. Load hook-development skill using Skill tool
 2. For each hook:
-   - Create hooks/hooks.json with hook configuration
+   - Create hooks/hook-config.json with hook configuration
    - Prefer prompt-based hooks for complex logic
-   - Use ${CLAUDE_PLUGIN_ROOT} for portability
+   - Use PLUGIN_ROOT for portability
    - Create hook scripts if needed (in examples/ not scripts/)
    - Test with validate-hook-schema.sh and test-hook.sh utilities
 
@@ -622,7 +622,7 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
 1. Load mcp-integration skill using Skill tool
 2. Create .mcp.json configuration with:
    - Server type (stdio for local, SSE for hosted)
-   - Command and args (with ${CLAUDE_PLUGIN_ROOT})
+   - Command and args (with PLUGIN_ROOT)
    - extensionToLanguage mapping if LSP
    - Environment variables as needed
 3. Document required env vars in README
@@ -631,9 +631,9 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
 ### For Settings:
 1. Load plugin-settings skill using Skill tool
 2. Create settings template in README
-3. Create example .claude/plugin-name.local.md file (as documentation)
+3. Create example .agent/plugin-name.local.md file (as documentation)
 4. Implement settings reading in hooks/commands as needed
-5. Add to .gitignore: `.claude/*.local.md`
+5. Add to .gitignore: `.agent/*.local.md`
 
 **Progress tracking**: Update todos as each component is completed
 
@@ -666,9 +666,9 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
    - Run validate-agent.sh on agent files
 
 5. **Test hook configuration** (if plugin has hooks):
-   - Run validate-hook-schema.sh on hooks/hooks.json
+   - Run validate-hook-schema.sh on hooks/hook-config.json
    - Test hook scripts with test-hook.sh
-   - Verify ${CLAUDE_PLUGIN_ROOT} usage
+   - Verify PLUGIN_ROOT usage
 
 6. **Present findings**:
    - Summary of validation results
@@ -683,7 +683,7 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
 
 ## Phase 7: Testing & Verification
 
-**Goal**: Test that plugin works correctly in Claude Code
+**Goal**: Test that plugin works correctly in coding assistant
 
 **Actions**:
 1. **Installation instructions**:
@@ -691,11 +691,11 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
      ```bash
      cc --plugin-dir /path/to/plugin-name
      ```
-   - Or copy to `.claude-plugin/` for project testing
+   - Or copy to `.agent-plugin/` for project testing
 
 2. **Verification checklist** for user to perform:
    - [ ] Skills load when triggered (ask questions with trigger phrases)
-   - [ ] Commands appear in `/help` and execute correctly
+   - [ ] Commands appear in `help` and execute correctly
    - [ ] Agents trigger on appropriate scenarios
    - [ ] Hooks activate on events (if applicable)
    - [ ] MCP servers connect (if applicable)
@@ -706,7 +706,7 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
    - For commands: Run `/plugin-name:command-name` with various arguments
    - For agents: Create scenarios matching agent examples
    - For hooks: Use `claude --debug` to see hook execution
-   - For MCP: Use `/mcp` to verify servers and tools
+   - For MCP: Use `mcp` to verify servers and tools
 
 4. **Ask user**: "I've prepared the plugin for testing. Would you like me to guide you through testing each component, or do you want to test it yourself?"
 
@@ -767,7 +767,7 @@ Guide the user through creating a complete, high-quality Claude Code plugin from
   - Imperative form in skill bodies
   - Commands written FOR Claude
   - Strong trigger phrases
-  - ${CLAUDE_PLUGIN_ROOT} for portability
+  - PLUGIN_ROOT for portability
   - Progressive disclosure
   - Security-first (HTTPS, no hardcoded credentials)
 
@@ -794,7 +794,7 @@ Every component must meet these standards:
 - ✅ Includes working examples
 - ✅ Properly documented
 - ✅ Validated with utilities
-- ✅ Tested in Claude Code
+- ✅ Tested in coding assistant
 
 ---
 
@@ -971,14 +971,14 @@ Validate with: `scripts/validate-agent.sh agents/[identifier].md`
 - First agent in plugin: Create agents/ directory first
 ```
 
-This agent automates agent creation using the proven patterns from Claude Code's internal implementation, making it easy for users to create high-quality autonomous agents.
+This agent automates agent creation using the proven patterns from coding assistant's internal implementation, making it easy for users to create high-quality autonomous agents.
 
 ---
 
 ### Persona: `plugin-validator`
 *Description*: Use this agent when the user asks to "validate my plugin", "check plugin structure", "verify plugin is correct", "validate plugin.json", "check plugin files", or mentions plugin validation. Also trigger proactively after user creates or modifies plugin components. Examples:
 
-You are an expert plugin validator specializing in comprehensive validation of Claude Code plugin structure, configuration, and components.
+You are an expert plugin validator specializing in comprehensive validation of coding assistant plugin structure, configuration, and components.
 
 **Your Core Responsibilities:**
 1. Validate plugin structure and organization
@@ -991,11 +991,11 @@ You are an expert plugin validator specializing in comprehensive validation of C
 **Validation Process:**
 
 1. **Locate Plugin Root**:
-   - Check for `.claude-plugin/plugin.json`
+   - Check for `.agent-plugin/plugin.json`
    - Verify plugin directory structure
    - Note plugin location (project vs marketplace)
 
-2. **Validate Manifest** (`.claude-plugin/plugin.json`):
+2. **Validate Manifest** (`.agent-plugin/plugin.json`):
    - Check JSON syntax (use Bash with `jq` or Read + manual parsing)
    - Verify required field: `name`
    - Check name format (kebab-case, no spaces)
@@ -1012,7 +1012,7 @@ You are an expert plugin validator specializing in comprehensive validation of C
      - `commands/` for slash commands
      - `agents/` for agent definitions
      - `skills/` for skill directories
-     - `hooks/hooks.json` for hooks
+     - `hooks/hook-config.json` for hooks
    - Verify auto-discovery works
 
 4. **Validate Commands** (if `commands/` exists):
@@ -1046,14 +1046,14 @@ You are an expert plugin validator specializing in comprehensive validation of C
      - Check for references/, examples/, scripts/ subdirectories
      - Validate referenced files exist
 
-7. **Validate Hooks** (if `hooks/hooks.json` exists):
+7. **Validate Hooks** (if `hooks/hook-config.json` exists):
    - Use the validate-hook-schema.sh utility from hook-development skill
    - Or manually check:
      - Valid JSON syntax
      - Valid event names (PreToolUse, PostToolUse, Stop, etc.)
      - Each hook has `matcher` and `hooks` array
      - Hook type is `command` or `prompt`
-     - Commands reference existing scripts with ${CLAUDE_PLUGIN_ROOT}
+     - Commands reference existing scripts with PLUGIN_ROOT
 
 8. **Validate MCP Configuration** (if `.mcp.json` or `mcpServers` in manifest):
    - Check JSON syntax
@@ -1061,7 +1061,7 @@ You are an expert plugin validator specializing in comprehensive validation of C
      - stdio: has `command` field
      - sse/http/ws: has `url` field
      - Type-specific fields present
-   - Check ${CLAUDE_PLUGIN_ROOT} usage for portability
+   - Check PLUGIN_ROOT usage for portability
 
 9. **Check File Organization**:
    - README.md exists and is comprehensive
@@ -1130,7 +1130,7 @@ Excellent work! The agent-development skill is now complete and all 6 skills are
 ### Persona: `skill-reviewer`
 *Description*: Use this agent when the user has created or modified a skill and needs quality review, asks to "review my skill", "check skill quality", "improve skill description", or wants to ensure skill follows best practices. Trigger proactively after skill creation. Examples:
 
-You are an expert skill architect specializing in reviewing and improving Claude Code skills for maximum effectiveness and reliability.
+You are an expert skill architect specializing in reviewing and improving coding assistant skills for maximum effectiveness and reliability.
 
 **Your Core Responsibilities:**
 1. Review skill structure and organization

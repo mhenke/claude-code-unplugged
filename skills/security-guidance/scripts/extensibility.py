@@ -11,12 +11,12 @@ Two extensibility points, both additive only:
    with the built-in PostToolUse pattern warnings. No LLM call; pure regex.
 
 Discovery, in precedence order (matching CLAUDE.md / settings.json):
-  - ``~/.claude/<name>``                  (user)
-  - ``<cwd>/.claude/<name>``              (project, committed)
-  - ``<cwd>/.claude/<name>.local.<ext>``  (project local, gitignored)
+  - ``~/.agent/<name>``                  (user)
+  - ``<cwd>/.agent/<name>``              (project, committed)
+  - ``<cwd>/.agent/<name>.local.<ext>``  (project local, gitignored)
 
 Managed delivery via ``managed-settings.json`` is not yet supported.
-Org admins can still push files to ``~/.claude/`` via MDM/GPO.
+Org admins can still push files to ``~/.agent/`` via MDM/GPO.
 
 Trust model:
   - The ``.md`` is repo-controlled and goes into the USER prompt (not system),
@@ -93,12 +93,12 @@ def _config_paths(cwd: Optional[str], basename: str) -> List[Tuple[str, str]]:
     """Existing config file paths, lowest precedence first (so concat reads in
     precedence order user → project → project-local). Truncation is done on
     the concatenated string, so lowest-precedence content is dropped last."""
-    paths = [("User", os.path.expanduser(os.path.join("~", ".claude", basename)))]
+    paths = [("User", os.path.expanduser(os.path.join("~", ".agent", basename)))]
     if cwd:
-        paths.append(("Project", os.path.join(cwd, ".claude", basename)))
+        paths.append(("Project", os.path.join(cwd, ".agent", basename)))
         # claude-security-guidance.local.md / security-patterns.local.yaml
         stem, ext = os.path.splitext(basename)
-        paths.append(("Project (local)", os.path.join(cwd, ".claude", f"{stem}.local{ext}")))
+        paths.append(("Project (local)", os.path.join(cwd, ".agent", f"{stem}.local{ext}")))
     return paths
 
 
@@ -148,7 +148,7 @@ def _load_user_patterns(cwd: Optional[str]) -> List[Dict[str, Any]]:
     rules: List[Dict[str, Any]] = []
     for label, path in _config_paths(cwd, "security-patterns"):
         # _config_paths returns an extensionless stem (e.g.
-        # ".claude/security-patterns" or ".claude/security-patterns.local");
+        # ".agent/security-patterns" or ".agent/security-patterns.local");
         # try each supported extension.
         for ext in (".yaml", ".yml", ".json"):
             candidate = path + ext

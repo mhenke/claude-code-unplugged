@@ -1,12 +1,12 @@
 #!/bin/bash
 # Hook Schema Validator
-# Validates hooks.json structure and checks for common issues
+# Validates hook-config.json structure and checks for common issues
 
 set -euo pipefail
 
 # Usage
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 <path/to/hooks.json>"
+  echo "Usage: $0 <path/to/hook-config.json>"
   echo ""
   echo "Validates hook configuration file for:"
   echo "  - Valid JSON syntax"
@@ -108,8 +108,8 @@ for event in $(jq -r 'keys[]' "$HOOKS_FILE"); do
           ((error_count++))
         else
           # Check for hardcoded paths
-          if [[ "$command" == /* ]] && [[ "$command" != *'${CLAUDE_PLUGIN_ROOT}'* ]]; then
-            echo "⚠️  $event[$i].hooks[$j]: Hardcoded absolute path detected. Consider using \${CLAUDE_PLUGIN_ROOT}"
+          if [[ "$command" == /* ]] && [[ "$command" != *'PLUGIN_ROOT'* ]]; then
+            echo "⚠️  $event[$i].hooks[$j]: Hardcoded absolute path detected. Consider using \PLUGIN_ROOT"
             ((warning_count++))
           fi
         fi

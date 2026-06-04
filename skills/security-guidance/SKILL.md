@@ -21,11 +21,11 @@ Findings cover common web-vulnerability classes — injection, XSS, SSRF, hardco
 /plugin install security-guidance@claude-plugins-official
 ```
 
-Marketplace ships enabled by default in Claude Code — no setup beyond having the CLI itself.
+Marketplace ships enabled by default in coding assistant — no setup beyond having the CLI itself.
 
 ## Prerequisites
 
-- Claude Code CLI ≥ v2.1.144
+- coding assistant CLI ≥ v2.1.144
 - Python 3.8+ on `PATH` (`python3`, `python`, or `py -3` — the plugin picks the first that works)
 - A working API path (subscription, API key, or 3P provider config)
 
@@ -40,7 +40,7 @@ All configuration is via environment variables. None are required for default be
 SECURITY_REVIEW_MODEL=claude-opus-4-7   # default
 
 # Bedrock: use the inference-profile id
-SECURITY_REVIEW_MODEL=us.anthropic.claude-opus-4-7
+SECURITY_REVIEW_MODEL=us.anthropic.agent-opus-4-7
 
 # Vertex: use the Vertex date-tag form
 SECURITY_REVIEW_MODEL=claude-opus-4-7@20260218
@@ -70,9 +70,9 @@ Runs two parallel review calls and unions the findings. Catches a few percentage
 
 Drop a `claude-security-guidance.md` in any of:
 
-- `~/.claude/claude-security-guidance.md` — user-wide rules
-- `<project>/.claude/claude-security-guidance.md` — project rules, intended to be committed
-- `<project>/.claude/claude-security-guidance.local.md` — local overrides, intended to be `.gitignore`'d
+- `~/.agent/claude-security-guidance.md` — user-wide rules
+- `<project>/.agent/claude-security-guidance.md` — project rules, intended to be committed
+- `<project>/.agent/claude-security-guidance.local.md` — local overrides, intended to be `.gitignore`'d
 
 All three are loaded and concatenated into the LLM diff review's prompt in the order user → project → project-local. If the combined size exceeds the 8 KB prompt budget, the tail is truncated, so user-wide rules are kept and project-local rules are dropped first. The agentic commit reviewer (layer 3) does not currently read this file. Example:
 
@@ -93,12 +93,12 @@ Built-in rules cover common web-vulnerability classes without it — `claude-sec
 
 The plugin sends data to a model endpoint to perform its reviews. Specifically, each Stop-hook diff review transmits the changed file paths, the diff hunks, and the relevant file contents in the diff; each agentic commit review additionally transmits any files the reviewer pulls in via `Read`/`Grep`/`Glob` while tracing data flow. Your `claude-security-guidance.md` contents (user, project, and local) are appended to the prompt on every review, so don't put secrets in it.
 
-Where that data goes depends on your Claude Code configuration:
+Where that data goes depends on your coding assistant configuration:
 - **Default (Anthropic API / subscription):** sent to `api.anthropic.com` and handled under Anthropic's [Commercial Terms](https://www.anthropic.com/legal/commercial-terms) and [Privacy Policy](https://www.anthropic.com/legal/privacy).
 - **LLM gateway** (`ANTHROPIC_BASE_URL` set): sent to your gateway URL instead. The gateway operator's terms apply.
 - **3rd-party providers** (Bedrock / Vertex / Foundry / Mantle): sent to your configured provider endpoint. The provider's data-handling terms apply (e.g., AWS / GCP / Azure).
 
-The plugin writes its own debug log to `~/.claude/security/log.txt` (override with `SECURITY_GUIDANCE_DEBUG_LOG`). The log contains diffstate metadata and finding categories — no full file contents or model prompts — and rotates at 1 MB. Nothing is uploaded.
+The plugin writes its own debug log to `~/.agent/security/log.txt` (override with `SECURITY_GUIDANCE_DEBUG_LOG`). The log contains diffstate metadata and finding categories — no full file contents or model prompts — and rotates at 1 MB. Nothing is uploaded.
 
 ## Limitations
 
@@ -106,7 +106,7 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 
 ## Troubleshooting
 
-**Plugin doesn't seem to fire** — check that `~/.claude/claude-security-guidance.md` (or hook activity) shows in debug logs. Run Claude Code with `--debug-file /tmp/claude/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.claude/security/log.txt`.
+**Plugin doesn't seem to fire** — check that `~/.agent/claude-security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with `--debug-file /tmp/claude/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
 
 **Review never finds anything** — verify your API path works. On 3P providers, check `SECURITY_REVIEW_MODEL` is set to a provider-specific id (not a bare `claude-opus-4-7`). On LLM gateways, check the gateway's logs for `POST /v1/messages` traffic from the plugin.
 
@@ -117,10 +117,10 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 ## Reporting issues
 
 Open an issue on the [security-guidance plugin repo](https://github.com/anthropics/claude-code/issues) with:
-- The Claude Code CLI version (`claude --version`)
+- The coding assistant CLI version (`claude --version`)
 - Provider setup (1P / Bedrock / Vertex / LLM gateway / etc.)
 - A minimal repro diff
-- The relevant section of `~/.claude/security/log.txt`
+- The relevant section of `~/.agent/security/log.txt`
 
 ---
 
@@ -150,3 +150,21 @@ Upon completing code writing or editing:
 2. If any changes touch critical web interfaces, ensure input validation is applied.
 3. Review database commands to prevent auth bypass or IDOR.
 4. Address or acknowledge any security warnings found during execution.
+
+
+## 🔒 Pre-Execution Verification Gate
+
+Before executing any commands, creating files, or editing code, you MUST output a structured XML `<verification_gate>` block evaluating the following checks:
+1. `secrets`: Check for hardcoded API keys, secrets, credentials, or certificates. (PASS/FAIL)
+2. `input_sanitization`: Check for unsafe user input handling (e.g., innerHTML, eval, unvalidated parameters). (PASS/FAIL)
+3. `paths`: Check for path traversal vulnerabilities or directory escape attempts. (PASS/FAIL)
+
+Example output format:
+```xml
+<verification_gate>
+  <secrets>PASS</secrets>
+  <input_sanitization>PASS</input_sanitization>
+  <paths>PASS</paths>
+</verification_gate>
+```
+Do not execute tools or code edits until you have output this verification gate.

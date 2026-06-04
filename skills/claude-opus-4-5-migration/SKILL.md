@@ -33,7 +33,7 @@ Remove the `context-1m-2025-08-07` beta header if present—it is not yet suppor
 | Platform | Opus 4.5 Model String |
 |----------|----------------------|
 | Anthropic API (1P) | `claude-opus-4-5-20251101` |
-| AWS Bedrock | `anthropic.claude-opus-4-5-20251101-v1:0` |
+| AWS Bedrock | `anthropic.agent-opus-4-5-20251101-v1:0` |
 | Google Vertex AI | `claude-opus-4-5@20251101` |
 | Azure AI Foundry | `claude-opus-4-5-20251101` |
 
@@ -41,9 +41,9 @@ Remove the `context-1m-2025-08-07` beta header if present—it is not yet suppor
 
 | Source Model | Anthropic API (1P) | AWS Bedrock | Google Vertex AI |
 |--------------|-------------------|-------------|------------------|
-| Sonnet 4.0 | `claude-sonnet-4-20250514` | `anthropic.claude-sonnet-4-20250514-v1:0` | `claude-sonnet-4@20250514` |
-| Sonnet 4.5 | `claude-sonnet-4-5-20250929` | `anthropic.claude-sonnet-4-5-20250929-v1:0` | `claude-sonnet-4-5@20250929` |
-| Opus 4.1 | `claude-opus-4-1-20250422` | `anthropic.claude-opus-4-1-20250422-v1:0` | `claude-opus-4-1@20250422` |
+| Sonnet 4.0 | `claude-sonnet-4-20250514` | `anthropic.agent-sonnet-4-20250514-v1:0` | `claude-sonnet-4@20250514` |
+| Sonnet 4.5 | `claude-sonnet-4-5-20250929` | `anthropic.agent-sonnet-4-5-20250929-v1:0` | `claude-sonnet-4-5@20250929` |
+| Opus 4.1 | `claude-opus-4-1-20250422` | `anthropic.agent-opus-4-1-20250422-v1:0` | `claude-opus-4-1@20250422` |
 
 **Do NOT migrate**: Any Haiku models (e.g., `claude-haiku-4-5-20251001`).
 

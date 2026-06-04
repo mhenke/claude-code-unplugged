@@ -1,12 +1,12 @@
 ---
 name: skill-development
-description: This skill should be used when the user wants to "create a skill", "add a skill to plugin", "write a new skill", "improve skill description", "organize skill content", or needs guidance on skill structure, progressive disclosure, or skill development best practices for Claude Code plugins.
+description: This skill should be used when the user wants to "create a skill", "add a skill to plugin", "write a new skill", "improve skill description", "organize skill content", or needs guidance on skill structure, progressive disclosure, or skill development best practices for coding assistant plugins.
 version: 0.1.0
 ---
 
-# Skill Development for Claude Code Plugins
+# Skill Development for coding assistant Plugins
 
-This skill provides guidance for creating effective skills for Claude Code plugins.
+This skill provides guidance for creating effective skills for coding assistant plugins.
 
 ## About Skills
 
@@ -127,8 +127,8 @@ Example: When building a `big-query` skill to handle queries like "How many user
 1. Querying BigQuery requires re-discovering the table schemas and relationships each time
 2. A `references/schema.md` file documenting the table schemas would be helpful to store in the skill
 
-**For Claude Code plugins:** When building a hooks skill, the analysis shows:
-1. Developers repeatedly need to validate hooks.json and test hook scripts
+**For coding assistant plugins:** When building a hooks skill, the analysis shows:
+1. Developers repeatedly need to validate hook-config.json and test hook scripts
 2. `scripts/validate-hook-schema.sh` and `scripts/test-hook.sh` utilities would be helpful
 3. `references/patterns.md` for detailed hook patterns to avoid bloating SKILL.md
 
@@ -136,7 +136,7 @@ To establish the skill's contents, analyze each concrete example to create a lis
 
 ### Step 3: Create Skill Structure
 
-For Claude Code plugins, create the skill directory structure:
+For coding assistant plugins, create the skill directory structure:
 
 ```bash
 mkdir -p plugin-name/skills/skill-name/{references,examples,scripts}
@@ -254,7 +254,7 @@ Plugin skills live in the plugin's `skills/` directory:
 
 ```
 my-plugin/
-├── .claude-plugin/
+├── .agent-plugin/
 │   └── plugin.json
 ├── commands/
 ├── agents/
@@ -268,7 +268,7 @@ my-plugin/
 
 ### Auto-Discovery
 
-Claude Code automatically discovers skills:
+coding assistant automatically discovers skills:
 - Scans `skills/` directory
 - Finds subdirectories containing `SKILL.md`
 - Loads skill metadata (name + description) always
@@ -305,7 +305,7 @@ Study the skills in this plugin as examples of best practices:
 **agent-development skill:**
 - Strong triggers: "create an agent", "agent frontmatter", etc.
 - Focused SKILL.md (1,438 words)
-- References include the AI generation prompt from Claude Code
+- References include the AI generation prompt from coding assistant
 - Complete agent examples
 
 **plugin-settings skill:**
