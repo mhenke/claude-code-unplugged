@@ -1,6 +1,7 @@
 ---
 name: plugin-dev
 description: Development assistance for creating CLI plugins
+version: 0.1.0
 ---
 
 # Plugin Development Helpers

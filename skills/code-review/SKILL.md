@@ -1,6 +1,7 @@
 ---
 name: code-review
 description: Automated PR and code reviewer guidelines
+version: 0.1.0
 ---
 
 # Code Reviewer

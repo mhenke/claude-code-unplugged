@@ -33,11 +33,29 @@ Instruct your coding assistant to act as a specific sub-agent or write in a diff
 *   [pr-review-toolkit](file:///home/mhenke/Projects/claude-code-unplugged/skills/pr-review-toolkit/SKILL.md) — Specialised reviewer personas: *Silent Failure Hunter*, *Code Simplifier*, *PR Test Analyzer*, and *Type Design Analyzer*.
 *   [explanatory-output-style](file:///home/mhenke/Projects/claude-code-unplugged/skills/explanatory-output-style/SKILL.md) — Puts the model into an educational mode, requiring it to explain implementation choices with formatted `★ Insight` boxes before and after code edits.
 *   [learning-output-style](file:///home/mhenke/Projects/claude-code-unplugged/skills/learning-output-style/SKILL.md) — A hybrid learning mode. Instead of doing all the work, the agent is instructed to write boilerplate, identify key design files, and request 5-10 line code contributions from you.
+*   [ralph-wiggum](file:///home/mhenke/Projects/claude-code-unplugged/skills/ralph-wiggum/SKILL.md) — Iterative self-enforcing feedback loop. The agent tracks its own promise-completion state and loops until done.
 
 ### 🛠️ Automation & Helper Scripts
 Executable scripts bundled inside respective skill folders that your agent can run locally using its terminal/bash tool:
 *   [security-guidance](file:///home/mhenke/Projects/claude-code-unplugged/skills/security-guidance/SKILL.md) — Instructs the model to run a regex pattern-based security warning script (`python3 scripts/security_reminder_hook.py`) on edits to check for secrets, raw `innerHTML`, or unsafe serialization.
 *   [github-management](file:///home/mhenke/Projects/claude-code-unplugged/skills/github-management/SKILL.md) — Automation scripts copied directly from the Claude Code repository to auto-detect duplicate issues, close stale issues, manage labels, and run sweeps.
+
+### 🔌 Plugin & Agent Development
+Skills for building new plugins, agents, hooks, and skills for AI coding assistants:
+*   [plugin-dev](file:///home/mhenke/Projects/claude-code-unplugged/skills/plugin-dev/SKILL.md) — Comprehensive guide for developing new CLI plugins from scratch.
+*   [plugin-structure](file:///home/mhenke/Projects/claude-code-unplugged/skills/plugin-structure/SKILL.md) — Plugin directory layout, manifest config, component organization, and naming conventions.
+*   [plugin-settings](file:///home/mhenke/Projects/claude-code-unplugged/skills/plugin-settings/SKILL.md) — Patterns for user-configurable plugin settings via `.agent/plugin-name.local.md` files with YAML frontmatter.
+*   [agent-development](file:///home/mhenke/Projects/claude-code-unplugged/skills/agent-development/SKILL.md) — Agent structure, system prompts, triggering conditions, and development best practices.
+*   [hook-development](file:///home/mhenke/Projects/claude-code-unplugged/skills/hook-development/SKILL.md) — Creating PreToolUse/PostToolUse/Stop hooks with prompt-based enforcement patterns.
+*   [hookify](file:///home/mhenke/Projects/claude-code-unplugged/skills/hookify/SKILL.md) — Extensible user-configured prompt hooks with a full rule engine and examples.
+*   [command-development](file:///home/mhenke/Projects/claude-code-unplugged/skills/command-development/SKILL.md) — Slash command structure, YAML frontmatter fields, dynamic arguments, and user interaction patterns.
+*   [skill-development](file:///home/mhenke/Projects/claude-code-unplugged/skills/skill-development/SKILL.md) — Skill structure, progressive disclosure patterns, and best practices for writing new skills.
+*   [mcp-integration](file:///home/mhenke/Projects/claude-code-unplugged/skills/mcp-integration/SKILL.md) — Integrating Model Context Protocol (MCP) servers into plugins for external tool and service integration.
+*   [writing-rules](file:///home/mhenke/Projects/claude-code-unplugged/skills/writing-rules/SKILL.md) — Hookify rule syntax and patterns for building agent governance rules.
+
+### 🔄 Migration & SDK
+*   [claude-opus-4-5-migration](file:///home/mhenke/Projects/claude-code-unplugged/skills/claude-opus-4-5-migration/SKILL.md) — One-shot migration of prompts and API calls to Opus 4.5, including model string updates.
+*   [agent-sdk-dev](file:///home/mhenke/Projects/claude-code-unplugged/skills/agent-sdk-dev/SKILL.md) — Guidance for building Agent SDK applications.
 
 ---
 

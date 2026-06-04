@@ -1,6 +1,7 @@
 ---
 name: hookify
 description: Extensible user-configured prompt hooks
+version: 0.1.0
 ---
 
 # Hookify Extensions

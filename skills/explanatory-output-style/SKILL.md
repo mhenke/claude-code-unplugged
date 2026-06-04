@@ -1,6 +1,7 @@
 ---
 name: explanatory-output-style
 description: Provides educational insights and explanations during code execution
+version: 0.1.0
 ---
 
 # Explanatory Output Style
