@@ -291,7 +291,7 @@ describe('extract.js CLI integration', () => {
     assert.match(output, /Copying direct skill: my-skill/);
     assert.match(output, /Extraction completed successfully/);
 
-    const destSkillMd = path.join(targetDir, 'my-skill', 'SKILL.md');
+    const destSkillMd = path.join(targetDir, 'skills', 'my-skill', 'SKILL.md');
     assert.ok(fs.existsSync(destSkillMd));
     const content = fs.readFileSync(destSkillMd, 'utf8');
     assert.ok(!content.includes('Claude Code'));
@@ -314,7 +314,7 @@ describe('extract.js CLI integration', () => {
 
     execSync(`node "${EXTRACT_SCRIPT}" --source ${sourceDir} --target ${targetDir}`, { stdio: 'pipe' });
 
-    const destSkillMd = path.join(targetDir, 'commit-commands', 'SKILL.md');
+    const destSkillMd = path.join(targetDir, 'skills', 'commit-commands', 'SKILL.md');
     assert.ok(fs.existsSync(destSkillMd));
     const content = fs.readFileSync(destSkillMd, 'utf8');
     assert.ok(content.includes('Commands / Workflows'));

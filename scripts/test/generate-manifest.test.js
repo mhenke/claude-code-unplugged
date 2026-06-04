@@ -4,10 +4,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execSync } = require('node:child_process');
 
-const TMP_DIR = path.resolve(__dirname, '../../tmp-test-skills-gen');
+const TMP_DIR = path.resolve(__dirname, '../../tmp-test-skills');
 const MANIFEST_SCRIPT = path.resolve(__dirname, '../generate-manifest.js');
 const ROOT_DIR = path.resolve(__dirname, '../..');
+const ORIG_SKILLS = path.join(ROOT_DIR, 'skills');
 const ORIG_JSON = path.join(ROOT_DIR, 'skills.json');
+const BAK_SKILLS = ORIG_SKILLS + '.bak';
 const BAK_JSON = ORIG_JSON + '.bak';
 
 function cleanSkillsDir() {
@@ -26,13 +28,19 @@ function mkSkillDir(name, content) {
 describe('generate-manifest.js', () => {
   before(() => {
     fs.mkdirSync(TMP_DIR, { recursive: true });
-    process.env.SKILLS_DIR = TMP_DIR;
     if (fs.existsSync(ORIG_JSON)) fs.renameSync(ORIG_JSON, BAK_JSON);
+    if (fs.existsSync(ORIG_SKILLS) && fs.lstatSync(ORIG_SKILLS).isDirectory()) {
+      fs.renameSync(ORIG_SKILLS, BAK_SKILLS);
+    } else if (fs.existsSync(ORIG_SKILLS)) {
+      fs.unlinkSync(ORIG_SKILLS);
+    }
+    fs.symlinkSync(TMP_DIR, ORIG_SKILLS, 'dir');
   });
 
   after(() => {
-    delete process.env.SKILLS_DIR;
+    if (fs.existsSync(ORIG_SKILLS)) { try { fs.unlinkSync(ORIG_SKILLS); } catch {} }
     if (fs.existsSync(ORIG_JSON)) { try { fs.unlinkSync(ORIG_JSON); } catch {} }
+    if (fs.existsSync(BAK_SKILLS)) fs.renameSync(BAK_SKILLS, ORIG_SKILLS);
     if (fs.existsSync(BAK_JSON)) fs.renameSync(BAK_JSON, ORIG_JSON);
     fs.rmSync(TMP_DIR, { recursive: true, force: true });
   });

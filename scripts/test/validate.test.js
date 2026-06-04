@@ -22,11 +22,25 @@ function mkSkillDir(name, content) {
 
 describe('validate.js', () => {
   before(() => {
-    process.env.SKILLS_DIR = TMP_DIR;
+    const origSkills = path.resolve(__dirname, '../../skills');
+    if (fs.existsSync(origSkills) && fs.lstatSync(origSkills).isDirectory()) {
+      fs.renameSync(origSkills, origSkills + '.bak');
+    } else if (fs.existsSync(origSkills)) {
+      fs.unlinkSync(origSkills);
+    }
+    fs.mkdirSync(TMP_DIR, { recursive: true });
+    fs.symlinkSync(TMP_DIR, origSkills, 'dir');
   });
 
   after(() => {
-    delete process.env.SKILLS_DIR;
+    const origSkills = path.resolve(__dirname, '../../skills');
+    if (fs.existsSync(origSkills)) {
+      try { fs.unlinkSync(origSkills); } catch {}
+    }
+    const bak = origSkills + '.bak';
+    if (fs.existsSync(bak)) {
+      fs.renameSync(bak, origSkills);
+    }
     fs.rmSync(TMP_DIR, { recursive: true, force: true });
   });
 

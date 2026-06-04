@@ -2,11 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '..');
-const skipDirs = new Set(['.git', '.full-review', 'openspec', 'scripts', 'node_modules']);
+const skillsDir = path.resolve(__dirname, '../skills');
 const skills = fs.readdirSync(skillsDir).filter(d => {
-  if (d.startsWith('.')) return false;
-  if (skipDirs.has(d)) return false;
   const stat = fs.statSync(path.join(skillsDir, d));
   if (!stat.isDirectory()) return false;
   return fs.existsSync(path.join(skillsDir, d, 'SKILL.md'));
@@ -34,7 +31,7 @@ for (const name of skills) {
   const entry = {
     name,
     description: meta.description || '',
-    path: name,
+    path: `skills/${name}`,
   };
 
   if (meta.version) entry.version = meta.version;
