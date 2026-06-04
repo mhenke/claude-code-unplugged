@@ -87,7 +87,7 @@ done
 BODY+=$'\n'"This issue will be automatically closed as a duplicate in 3 days."$'\n\n'
 BODY+="- If your issue is a duplicate, please close it and 👍 the existing issue instead"$'\n'
 BODY+="- To prevent auto-closure, add a comment or 👎 this comment"$'\n\n'
-BODY+="🤖 Generated with [Claude Code](https://claude.ai/code)"
+BODY+="🤖 Generated with [coding assistant](https://claude.ai/code)"
 
 # Post the comment
 gh issue comment "$BASE_ISSUE" --repo "$REPO" --body "$BODY"

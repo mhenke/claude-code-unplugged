@@ -1,0 +1,146 @@
+{
+  "name": "claude-code-unplugged",
+  "description": "Portable agent skills, workflows, and automation patterns extracted from Claude Code. Platform-neutral SKILL.md format.",
+  "skills": [
+    {
+      "name": "agent-development",
+      "description": "This skill should be used when the user asks to \"create an agent\", \"add an agent\", \"write a subagent\", \"agent frontmatter\", \"when to use description\", \"agent examples\", \"agent tools\", \"agent colors\", \"autonomous agent\", or needs guidance on agent structure, system prompts, triggering conditions, or agent development best practices for coding assistant plugins.",
+      "path": "skills/agent-development",
+      "version": "0.1.0",
+      "bodyLength": 9969
+    },
+    {
+      "name": "agent-sdk-dev",
+      "description": "Help developers build Agent SDK applications",
+      "path": "skills/agent-sdk-dev",
+      "bodyLength": 24818
+    },
+    {
+      "name": "claude-opus-4-5-migration",
+      "description": "Migrate prompts and code from Claude Sonnet 4.0, Sonnet 4.5, or Opus 4.1 to Opus 4.5. Use when the user wants to update their codebase, prompts, or API calls to use Opus 4.5. Handles model string updates and prompt adjustments for known Opus 4.5 behavioral differences. Does NOT migrate Haiku 4.5.",
+      "path": "skills/claude-opus-4-5-migration",
+      "bodyLength": 4381
+    },
+    {
+      "name": "code-review",
+      "description": "Automated PR and code reviewer guidelines",
+      "path": "skills/code-review",
+      "bodyLength": 14894
+    },
+    {
+      "name": "command-development",
+      "description": "This skill should be used when the user asks to \"create a slash command\", \"add a command\", \"write a custom command\", \"define command arguments\", \"use command frontmatter\", \"organize commands\", \"create command with file references\", \"interactive command\", \"use AskUserQuestion in command\", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for coding assistant.",
+      "path": "skills/command-development",
+      "version": "0.2.0",
+      "bodyLength": 18105
+    },
+    {
+      "name": "commit-commands",
+      "description": "Git commit and repository workflows",
+      "path": "skills/commit-commands",
+      "bodyLength": 9514
+    },
+    {
+      "name": "explanatory-output-style",
+      "description": "Provides educational insights and explanations during code execution",
+      "path": "skills/explanatory-output-style",
+      "bodyLength": 1046
+    },
+    {
+      "name": "feature-dev",
+      "description": "Guided feature development workflow",
+      "path": "skills/feature-dev",
+      "bodyLength": 23902
+    },
+    {
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.",
+      "path": "skills/frontend-design",
+      "bodyLength": 3956
+    },
+    {
+      "name": "github-management",
+      "description": "Issue and pull request lifecycle automation scripts",
+      "path": "skills/github-management",
+      "bodyLength": 912
+    },
+    {
+      "name": "hook-development",
+      "description": "This skill should be used when the user asks to \"create a hook\", \"add a PreToolUse/PostToolUse/Stop hook\", \"validate tool use\", \"implement prompt-based hooks\", \"use PLUGIN_ROOT\", \"set up event-driven automation\", \"block dangerous commands\", or mentions hook events (PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification). Provides comprehensive guidance for creating and implementing coding assistant plugin hooks with focus on advanced prompt-based hooks API.",
+      "path": "skills/hook-development",
+      "version": "0.1.0",
+      "bodyLength": 15658
+    },
+    {
+      "name": "hookify",
+      "description": "Extensible user-configured prompt hooks",
+      "path": "skills/hookify",
+      "bodyLength": 30516
+    },
+    {
+      "name": "learning-output-style",
+      "description": "Prompts users for lightweight contributions to encourage learning",
+      "path": "skills/learning-output-style",
+      "bodyLength": 3059
+    },
+    {
+      "name": "mcp-integration",
+      "description": "This skill should be used when the user asks to \"add MCP server\", \"integrate MCP\", \"configure MCP in plugin\", \"use .mcp.json\", \"set up Model Context Protocol\", \"connect external service\", mentions \"PLUGIN_ROOT with MCP\", or discusses MCP server types (SSE, stdio, HTTP, WebSocket). Provides comprehensive guidance for integrating Model Context Protocol servers into coding assistant plugins for external tool and service integration.",
+      "path": "skills/mcp-integration",
+      "version": "0.1.0",
+      "bodyLength": 11982
+    },
+    {
+      "name": "plugin-dev",
+      "description": "Development assistance for creating CLI plugins",
+      "path": "skills/plugin-dev",
+      "bodyLength": 46230
+    },
+    {
+      "name": "plugin-settings",
+      "description": "This skill should be used when the user asks about \"plugin settings\", \"store plugin configuration\", \"user-configurable plugin\", \".local.md files\", \"plugin state files\", \"read YAML frontmatter\", \"per-project plugin settings\", or wants to make plugin behavior configurable. Documents the .agent/plugin-name.local.md pattern for storing plugin-specific configuration with YAML frontmatter and markdown content.",
+      "path": "skills/plugin-settings",
+      "version": "0.1.0",
+      "bodyLength": 11623
+    },
+    {
+      "name": "plugin-structure",
+      "description": "This skill should be used when the user asks to \"create a plugin\", \"scaffold a plugin\", \"understand plugin structure\", \"organize plugin components\", \"set up plugin.json\", \"use PLUGIN_ROOT\", \"add commands/agents/skills/hooks\", \"configure auto-discovery\", or needs guidance on plugin directory layout, manifest configuration, component organization, file naming conventions, or coding assistant plugin architecture best practices.",
+      "path": "skills/plugin-structure",
+      "version": "0.1.0",
+      "bodyLength": 12950
+    },
+    {
+      "name": "pr-review-toolkit",
+      "description": "Comprehensive code review toolkit",
+      "path": "skills/pr-review-toolkit",
+      "bodyLength": 43721
+    },
+    {
+      "name": "ralph-wiggum",
+      "description": "Iterative feedback loop commands",
+      "path": "skills/ralph-wiggum",
+      "bodyLength": 10324
+    },
+    {
+      "name": "security-guidance",
+      "description": "Security warnings, patterns scanner, and LLM diff security reviews",
+      "path": "skills/security-guidance",
+      "bodyLength": 8375
+    },
+    {
+      "name": "skill-development",
+      "description": "This skill should be used when the user wants to \"create a skill\", \"add a skill to plugin\", \"write a new skill\", \"improve skill description\", \"organize skill content\", or needs guidance on skill structure, progressive disclosure, or skill development best practices for coding assistant plugins.",
+      "path": "skills/skill-development",
+      "version": "0.1.0",
+      "bodyLength": 22220
+    },
+    {
+      "name": "writing-rules",
+      "description": "This skill should be used when the user asks to \"create a hookify rule\", \"write a hook rule\", \"configure hookify\", \"add a hookify rule\", or needs guidance on hookify rule syntax and patterns.",
+      "path": "skills/writing-rules",
+      "version": "0.1.0",
+      "bodyLength": 8140
+    }
+  ]
+}

@@ -10,12 +10,12 @@ import os
 import threading
 from datetime import datetime
 
-# Debug log file. Lives under the plugin state dir (default ~/.claude/security/)
+# Debug log file. Lives under the plugin state dir (default ~/.agent/security/)
 # rather than /tmp because /tmp is world-writable on multi-user hosts (TOCTOU /
 # symlink-attack surface, cross-user log leakage). Overridable per-process via
 # SECURITY_GUIDANCE_DEBUG_LOG, or per-state-dir via SECURITY_WARNINGS_STATE_DIR.
 _DEFAULT_STATE_DIR = os.path.expanduser(
-    os.environ.get("SECURITY_WARNINGS_STATE_DIR") or "~/.claude/security"
+    os.environ.get("SECURITY_WARNINGS_STATE_DIR") or "~/.agent/security"
 )
 DEBUG_LOG_FILE = os.environ.get("SECURITY_GUIDANCE_DEBUG_LOG") or os.path.join(
     _DEFAULT_STATE_DIR, "log.txt"
@@ -30,7 +30,7 @@ def debug_log(message):
     """Append debug message to log file with timestamp."""
     try:
         # Ensure parent dir exists — first hook invocation on a fresh install
-        # creates ~/.claude/security/ if it isn't already there. 0700 so other
+        # creates ~/.agent/security/ if it isn't already there. 0700 so other
         # local users can't read review/debug output (only applies on creation).
         try:
             os.makedirs(os.path.dirname(DEBUG_LOG_FILE), mode=0o700, exist_ok=True)
@@ -71,7 +71,7 @@ def _read_plugin_version_int():
     """Encode plugin.json version "M.m.p" as M*10000 + m*100 + p so it fits the
     bool|number metrics constraint. Returns 0 if unreadable."""
     try:
-        with open(os.path.join(os.path.dirname(__file__), "..", ".claude-plugin", "plugin.json")) as f:
+        with open(os.path.join(os.path.dirname(__file__), "..", ".agent-plugin", "plugin.json")) as f:
             v = json.load(f)["version"]
         major, minor, patch = (int(x) for x in v.split(".")[:3])
         return major * 10000 + minor * 100 + patch

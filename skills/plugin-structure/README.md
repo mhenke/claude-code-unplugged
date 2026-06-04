@@ -1,6 +1,6 @@
 # Plugin Structure Skill
 
-Comprehensive guidance on Claude Code plugin architecture, directory layout, and best practices.
+Comprehensive guidance on coding assistant plugin architecture, directory layout, and best practices.
 
 ## Overview
 
@@ -9,7 +9,7 @@ This skill provides detailed knowledge about:
 - `plugin.json` manifest configuration
 - Component organization (commands, agents, skills, hooks)
 - Auto-discovery mechanisms
-- Portable path references with `${CLAUDE_PLUGIN_ROOT}`
+- Portable path references with `PLUGIN_ROOT`
 - File naming conventions
 
 ## Skill Structure
@@ -20,7 +20,7 @@ Core skill content covering:
 - Directory structure overview
 - Plugin manifest (plugin.json) fields
 - Component organization patterns
-- ${CLAUDE_PLUGIN_ROOT} usage
+- PLUGIN_ROOT usage
 - File naming conventions
 - Auto-discovery mechanism
 - Best practices
@@ -72,12 +72,12 @@ Three complete plugin examples:
 
 ## When This Skill Triggers
 
-Claude Code activates this skill when users:
+coding assistant activates this skill when users:
 - Ask to "create a plugin" or "scaffold a plugin"
 - Need to "understand plugin structure"
 - Want to "organize plugin components"
 - Need to "set up plugin.json"
-- Ask about "${CLAUDE_PLUGIN_ROOT}" usage
+- Ask about "PLUGIN_ROOT" usage
 - Want to "add commands/agents/skills/hooks"
 - Need "configure auto-discovery" help
 - Ask about plugin architecture or best practices

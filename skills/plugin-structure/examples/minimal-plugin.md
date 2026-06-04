@@ -6,7 +6,7 @@ A bare-bones plugin with a single command.
 
 ```
 hello-world/
-├── .claude-plugin/
+├── .agent-plugin/
 │   └── plugin.json
 └── commands/
     └── hello.md
@@ -14,7 +14,7 @@ hello-world/
 
 ## File Contents
 
-### .claude-plugin/plugin.json
+### .agent-plugin/plugin.json
 
 ```json
 {
@@ -63,7 +63,7 @@ Executed at: 2025-01-15 14:30:22 UTC
 
 1. **Minimal manifest**: Only the required `name` field
 2. **Single command**: One markdown file in `commands/` directory
-3. **Auto-discovery**: Claude Code finds the command automatically
+3. **Auto-discovery**: coding assistant finds the command automatically
 4. **No dependencies**: No scripts, hooks, or external resources
 
 ## When to Use This Pattern
@@ -80,4 +80,4 @@ To add more functionality:
 1. **Add commands**: Create more `.md` files in `commands/`
 2. **Add metadata**: Update `plugin.json` with version, description, author
 3. **Add agents**: Create `agents/` directory with agent definitions
-4. **Add hooks**: Create `hooks/hooks.json` for event handling
+4. **Add hooks**: Create `hooks/hook-config.json` for event handling

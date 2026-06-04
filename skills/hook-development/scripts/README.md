@@ -4,11 +4,11 @@ These scripts help validate, test, and lint hook implementations before deployme
 
 ## validate-hook-schema.sh
 
-Validates `hooks.json` configuration files for correct structure and common issues.
+Validates `hook-config.json` configuration files for correct structure and common issues.
 
 **Usage:**
 ```bash
-./validate-hook-schema.sh path/to/hooks.json
+./validate-hook-schema.sh path/to/hook-config.json
 ```
 
 **Checks:**
@@ -23,12 +23,12 @@ Validates `hooks.json` configuration files for correct structure and common issu
 **Example:**
 ```bash
 cd my-plugin
-./validate-hook-schema.sh hooks/hooks.json
+./validate-hook-schema.sh hooks/hook-config.json
 ```
 
 ## test-hook.sh
 
-Tests individual hook scripts with sample input before deploying to Claude Code.
+Tests individual hook scripts with sample input before deploying to coding assistant.
 
 **Usage:**
 ```bash
@@ -112,17 +112,17 @@ Checks hook scripts for common issues and best practices violations.
    ./test-hook.sh -v my-plugin/scripts/my-hook.sh test-input.json
    ```
 
-5. **Add to hooks.json**
+5. **Add to hook-config.json**
    ```bash
-   # Edit my-plugin/hooks/hooks.json
+   # Edit my-plugin/hooks/hook-config.json
    ```
 
 6. **Validate configuration**
    ```bash
-   ./validate-hook-schema.sh my-plugin/hooks/hooks.json
+   ./validate-hook-schema.sh my-plugin/hooks/hook-config.json
    ```
 
-7. **Test in Claude Code**
+7. **Test in coding assistant**
    ```bash
    claude --debug
    ```
@@ -132,7 +132,7 @@ Checks hook scripts for common issues and best practices violations.
 - Always test hooks before deploying to avoid breaking user workflows
 - Use verbose mode (`-v`) to debug hook behavior
 - Check the linter output for security and best practice issues
-- Validate hooks.json after any changes
+- Validate hook-config.json after any changes
 - Create different test inputs for various scenarios (safe operations, dangerous operations, edge cases)
 
 ## Common Issues
@@ -142,11 +142,11 @@ Checks hook scripts for common issues and best practices violations.
 Check:
 - Script has shebang (`#!/bin/bash`)
 - Script is executable (`chmod +x`)
-- Path in hooks.json is correct (use `${CLAUDE_PLUGIN_ROOT}`)
+- Path in hook-config.json is correct (use `PLUGIN_ROOT`)
 
 ### Hook times out
 
-- Reduce timeout in hooks.json
+- Reduce timeout in hook-config.json
 - Optimize hook script performance
 - Remove long-running operations
 

@@ -306,8 +306,8 @@ This plugin works great with:
 ## Contributing
 
 Found issues or have suggestions? These agents are maintained in:
-- User agents: `~/.claude/agents/`
-- Project agents: `.claude/agents/` in claude-cli-internal
+- User agents: `~/.agent/agents/`
+- Project agents: `.agent/agents/` in claude-cli-internal
 
 ## License
 
@@ -323,7 +323,7 @@ Daisy (daisy@anthropic.com)
 
 ## Commands / Workflows
 
-### Command: `/review-pr`
+### Command: `review-pr`
 *Description*: Comprehensive PR review using specialized agents
 
 # Comprehensive PR Review

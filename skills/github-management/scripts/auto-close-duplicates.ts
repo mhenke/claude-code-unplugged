@@ -90,7 +90,7 @@ async function closeIssueAsDuplicate(
 
 If this is incorrect, please re-open this issue or create a new one.
 
-🤖 Generated with [Claude Code](https://claude.ai/code)`
+🤖 Generated with [coding assistant](https://claude.ai/code)`
     }
   );
 

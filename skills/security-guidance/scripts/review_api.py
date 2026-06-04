@@ -254,7 +254,7 @@ def build_refute_prompt(candidates: list[dict[str, Any]], diff_text: str) -> str
         "victim); data-exposure findings (CWE-200/359/532, secrets-"
         "in-logs — the question is who READS the sink, not who "
         "controls the input); project-working-directory config "
-        "(.claude/settings, .vscode/, package.json scripts — repo "
+        "(.agent/settings, .vscode/, package.json scripts — repo "
         "author ≠ repo cloner); cross-process metadata sources "
         "(psutil.Process(...), /proc/<pid>/* — different process "
         "owner is a different principal).\n"

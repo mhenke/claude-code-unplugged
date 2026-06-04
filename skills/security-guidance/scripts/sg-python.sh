@@ -17,9 +17,9 @@
 #   3. py -3     — Windows Python launcher.
 #
 # Args after the shim path are passed straight through to the chosen
-# interpreter, so the hooks.json invocation is:
-#   bash "${CLAUDE_PLUGIN_ROOT}/hooks/sg-python.sh" \
-#        "${CLAUDE_PLUGIN_ROOT}/hooks/security_reminder_hook.py"
+# interpreter, so the hook-config.json invocation is:
+#   bash "PLUGIN_ROOT/hooks/sg-python.sh" \
+#        "PLUGIN_ROOT/hooks/security_reminder_hook.py"
 set -e
 
 probe() {

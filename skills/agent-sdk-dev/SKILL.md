@@ -17,7 +17,7 @@ The Agent SDK Development Plugin streamlines the entire lifecycle of building Ag
 
 ## Features
 
-### Command: `/new-sdk-app`
+### Command: `new-sdk-app`
 
 Interactive command that guides you through creating a new Claude Agent SDK application.
 
@@ -75,7 +75,7 @@ Thoroughly verifies Python Agent SDK applications for correct setup and best pra
 - Before deploying a Python SDK application
 
 **Usage:**
-The agent runs automatically after `/new-sdk-app` creates a Python project, or you can trigger it by asking:
+The agent runs automatically after `new-sdk-app` creates a Python project, or you can trigger it by asking:
 ```
 "Verify my Python Agent SDK application"
 "Check if my SDK app follows best practices"
@@ -109,7 +109,7 @@ Thoroughly verifies TypeScript Agent SDK applications for correct setup and best
 - Before deploying a TypeScript SDK application
 
 **Usage:**
-The agent runs automatically after `/new-sdk-app` creates a TypeScript project, or you can trigger it by asking:
+The agent runs automatically after `new-sdk-app` creates a TypeScript project, or you can trigger it by asking:
 ```
 "Verify my TypeScript Agent SDK application"
 "Check if my SDK app follows best practices"
@@ -158,14 +158,14 @@ npm start
 
 ## Installation
 
-This plugin is included in the Claude Code repository. To use it:
+This plugin is included in the coding assistant repository. To use it:
 
-1. Ensure Claude Code is installed
+1. Ensure coding assistant is installed
 2. The plugin commands and agents are automatically available
 
 ## Best Practices
 
-- **Always use the latest SDK version**: `/new-sdk-app` checks for and installs the latest version
+- **Always use the latest SDK version**: `new-sdk-app` checks for and installs the latest version
 - **Verify before deploying**: Run the verifier agent before deploying to production
 - **Keep API keys secure**: Never commit `.env` files or hardcode API keys
 - **Follow SDK documentation**: The verifier agents check against official patterns
@@ -174,10 +174,10 @@ This plugin is included in the Claude Code repository. To use it:
 
 ## Resources
 
-- [Agent SDK Overview](https://docs.claude.com/en/api/agent-sdk/overview)
-- [TypeScript SDK Reference](https://docs.claude.com/en/api/agent-sdk/typescript)
-- [Python SDK Reference](https://docs.claude.com/en/api/agent-sdk/python)
-- [Agent SDK Examples](https://docs.claude.com/en/api/agent-sdk/examples)
+- [Agent SDK Overview](https://docs.agent.com/en/api/agent-sdk/overview)
+- [TypeScript SDK Reference](https://docs.agent.com/en/api/agent-sdk/typescript)
+- [Python SDK Reference](https://docs.agent.com/en/api/agent-sdk/python)
+- [Agent SDK Examples](https://docs.agent.com/en/api/agent-sdk/examples)
 
 ## Troubleshooting
 
@@ -186,7 +186,7 @@ This plugin is included in the Claude Code repository. To use it:
 **Issue**: TypeScript project has type errors after creation
 
 **Solution**:
-- The `/new-sdk-app` command runs type checking automatically
+- The `new-sdk-app` command runs type checking automatically
 - If errors persist, check that you're using the latest SDK version
 - Verify your `tsconfig.json` matches SDK requirements
 
@@ -218,7 +218,7 @@ Ashwin Bhat (ashwin@anthropic.com)
 
 ## Commands / Workflows
 
-### Command: `/new-sdk-app`
+### Command: `new-sdk-app`
 *Description*: Create and setup a new Claude Agent SDK application
 
 You are tasked with helping the user create a new Claude Agent SDK application. Follow these steps carefully:
@@ -227,10 +227,10 @@ You are tasked with helping the user create a new Claude Agent SDK application. 
 
 Before starting, review the official documentation to ensure you provide accurate and up-to-date guidance. Use WebFetch to read these pages:
 
-1. **Start with the overview**: https://docs.claude.com/en/api/agent-sdk/overview
+1. **Start with the overview**: https://docs.agent.com/en/api/agent-sdk/overview
 2. **Based on the user's language choice, read the appropriate SDK reference**:
-   - TypeScript: https://docs.claude.com/en/api/agent-sdk/typescript
-   - Python: https://docs.claude.com/en/api/agent-sdk/python
+   - TypeScript: https://docs.agent.com/en/api/agent-sdk/typescript
+   - Python: https://docs.agent.com/en/api/agent-sdk/python
 3. **Read relevant guides mentioned in the overview** such as:
    - Streaming vs Single Mode
    - Permissions
@@ -317,8 +317,8 @@ Based on the user's answers, create a plan that includes:
    - Add `.env` to `.gitignore`
    - Explain how to get an API key from https://console.anthropic.com/
 
-6. **Optional: Create .claude directory structure**:
-   - Offer to create `.claude/` directory for agents, commands, and settings
+6. **Optional: Create .agent directory structure**:
+   - Offer to create `.agent/` directory for agents, commands, and settings
    - Ask if they want any example subagents or slash commands
 
 ## Implementation
@@ -365,8 +365,8 @@ Once setup is complete and verified, provide the user with:
 
 2. **Useful resources**:
 
-   - Link to TypeScript SDK reference: https://docs.claude.com/en/api/agent-sdk/typescript
-   - Link to Python SDK reference: https://docs.claude.com/en/api/agent-sdk/python
+   - Link to TypeScript SDK reference: https://docs.agent.com/en/api/agent-sdk/typescript
+   - Link to Python SDK reference: https://docs.agent.com/en/api/agent-sdk/python
    - Explain key concepts: system prompts, permissions, tools, MCP servers
 
 3. **Common next steps**:
@@ -484,7 +484,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 2. **Check SDK Documentation Adherence**:
 
-   - Use WebFetch to reference the official Python SDK docs: https://docs.claude.com/en/api/agent-sdk/python
+   - Use WebFetch to reference the official Python SDK docs: https://docs.agent.com/en/api/agent-sdk/python
    - Compare the implementation against official patterns and recommendations
    - Note any deviations from documented best practices
 
@@ -630,7 +630,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 2. **Check SDK Documentation Adherence**:
 
-   - Use WebFetch to reference the official TypeScript SDK docs: https://docs.claude.com/en/api/agent-sdk/typescript
+   - Use WebFetch to reference the official TypeScript SDK docs: https://docs.agent.com/en/api/agent-sdk/typescript
    - Compare the implementation against official patterns and recommendations
    - Note any deviations from documented best practices
 

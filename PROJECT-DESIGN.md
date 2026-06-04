@@ -144,6 +144,21 @@ Every skill must:
 
 ---
 
+## Deterministic Prompt-Enforced Hooks
+
+Since GUI-based coding environments (Cursor, Copilot, VS Code) lack JSON hook runners or interception handlers, we rely on prompt instructions to enforce lifecycle security and workflow constraints. This repository uses the following cognitive patterns:
+
+### 1. Gatekeeper Pattern
+High-severity skills (like `security-guidance`, `code-review`, and `commit-commands`) inject a mandatory XML `<verification_gate>` section immediately before any tool use or code generation. The agent evaluates checklist items (e.g. `secrets`, `input_sanitization`, `paths`) and outputs PASS/FAIL status.
+
+### 2. Split-Attention Critique Pattern
+To prevent confirmation bias, coding tasks are split: the agent outputs a draft, performs a `<self_critique>` evaluating potential bugs or convention mismatches, and only then produces `<final_code>`.
+
+### 3. Cryptographic Promise Pattern
+In iterative loops (such as `ralph-wiggum`), the agent tracks its current iteration and checks its own output for a `<promise>` XML block. The loop continues self-enforcing via user-prompt cycles until the promise is met or the iteration limit is reached.
+
+---
+
 ## Non-Goals
 
 The project does not aim to:

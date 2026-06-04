@@ -17,7 +17,7 @@ The Code Review Plugin automates pull request review by launching multiple agent
 
 ## Commands
 
-### `/code-review`
+### `code-review`
 
 Performs automated code review on a pull request using multiple specialized agents.
 
@@ -101,11 +101,11 @@ https://github.com/owner/repo/blob/abc123.../src/utils.ts#L23-L28
 
 ## Installation
 
-This plugin is included in the Claude Code repository. The command is automatically available when using Claude Code.
+This plugin is included in the coding assistant repository. The command is automatically available when using coding assistant.
 
 ## Best Practices
 
-### Using `/code-review`
+### Using `code-review`
 - Maintain clear CLAUDE.md files for better compliance checking
 - Trust the 80+ confidence threshold - false positives are filtered
 - Run on all non-trivial pull requests
@@ -177,7 +177,7 @@ This plugin is included in the Claude Code repository. The command is automatica
 
 ### No review comment posted
 
-**Issue**: `/code-review` runs but no comment appears
+**Issue**: `code-review` runs but no comment appears
 
 **Solution**:
 Check if:
@@ -268,7 +268,7 @@ Boris Cherny (boris@anthropic.com)
 
 ## Commands / Workflows
 
-### Command: `/code-review`
+### Command: `code-review`
 *Description*: Code review a pull request
 
 Provide a code review for the given pull request.
@@ -377,3 +377,20 @@ No issues found. Checked for bugs and CLAUDE.md compliance.
   - Provide at least 1 line of context before and after, centered on the line you are commenting about (eg. if you are commenting about lines 5-6, you should link to `L4-7`)
 
 ---
+
+
+
+## 🔒 Pre-Execution Verification Gate
+
+Before executing commands or submitting reviews, you MUST output a structured XML `<verification_gate>` block evaluating the following checks:
+- `conventions`: All changes align with target guidelines. (PASS/FAIL)
+- `correctness`: Verify code correctness and lack of logical bugs. (PASS/FAIL)
+
+Example output format:
+```xml
+<verification_gate>
+  <conventions>PASS</conventions>
+  <correctness>PASS</correctness>
+</verification_gate>
+```
+Do not proceed until you have output this verification gate.

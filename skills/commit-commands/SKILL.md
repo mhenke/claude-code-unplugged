@@ -17,7 +17,7 @@ The Commit Commands Plugin automates common git operations, reducing context swi
 
 ## Commands
 
-### `/commit`
+### `commit`
 
 Creates a git commit with an automatically generated commit message based on staged and unstaged changes.
 
@@ -51,9 +51,9 @@ Creates a git commit with an automatically generated commit message based on sta
 - Automatically drafts commit messages that match your repo's style
 - Follows conventional commit practices
 - Avoids committing files with secrets (.env, credentials.json)
-- Includes Claude Code attribution in commit message
+- Includes coding assistant attribution in commit message
 
-### `/commit-push-pr`
+### `commit-push-pr`
 
 Complete workflow command that commits, pushes, and creates a pull request in one step.
 
@@ -88,7 +88,7 @@ Complete workflow command that commits, pushes, and creates a pull request in on
 - Creates comprehensive PR descriptions with:
   - Summary of changes (1-3 bullet points)
   - Test plan checklist
-  - Claude Code attribution
+  - coding assistant attribution
 - Handles branch creation automatically
 - Uses GitHub CLI (`gh`) for PR creation
 
@@ -96,7 +96,7 @@ Complete workflow command that commits, pushes, and creates a pull request in on
 - GitHub CLI (`gh`) must be installed and authenticated
 - Repository must have a remote named `origin`
 
-### `/clean_gone`
+### `clean_gone`
 
 Cleans up local branches that have been deleted from the remote repository.
 
@@ -136,24 +136,24 @@ Cleans up local branches that have been deleted from the remote repository.
 
 ## Installation
 
-This plugin is included in the Claude Code repository. The commands are automatically available when using Claude Code.
+This plugin is included in the coding assistant repository. The commands are automatically available when using coding assistant.
 
 ## Best Practices
 
-### Using `/commit`
+### Using `commit`
 - Review the staged changes before committing
 - Let Claude analyze your changes and match your repo's commit style
 - Trust the automated message, but verify it's accurate
 - Use for routine commits during development
 
-### Using `/commit-push-pr`
+### Using `commit-push-pr`
 - Use when you're ready to create a PR
 - Ensure all your changes are complete and tested
 - Claude will analyze the full branch history for the PR description
 - Review the PR description and edit if needed
 - Use when you want to minimize context switching
 
-### Using `/clean_gone`
+### Using `clean_gone`
 - Run periodically to keep your branch list clean
 - Especially useful after merging multiple PRs
 - Safe to run - only removes branches already deleted remotely
@@ -188,12 +188,12 @@ This plugin is included in the Claude Code repository. The commands are automati
 ## Requirements
 
 - Git must be installed and configured
-- For `/commit-push-pr`: GitHub CLI (`gh`) must be installed and authenticated
+- For `commit-push-pr`: GitHub CLI (`gh`) must be installed and authenticated
 - Repository must be a git repository with a remote
 
 ## Troubleshooting
 
-### `/commit` creates empty commit
+### `commit` creates empty commit
 
 **Issue**: No changes to commit
 
@@ -201,7 +201,7 @@ This plugin is included in the Claude Code repository. The commands are automati
 - Ensure you have unstaged or staged changes
 - Run `git status` to verify changes exist
 
-### `/commit-push-pr` fails to create PR
+### `commit-push-pr` fails to create PR
 
 **Issue**: `gh pr create` command fails
 
@@ -210,7 +210,7 @@ This plugin is included in the Claude Code repository. The commands are automati
 - Authenticate: `gh auth login`
 - Ensure repository has a GitHub remote
 
-### `/clean_gone` doesn't find branches
+### `clean_gone` doesn't find branches
 
 **Issue**: No branches marked as [gone]
 
@@ -220,9 +220,9 @@ This plugin is included in the Claude Code repository. The commands are automati
 
 ## Tips
 
-- **Combine with other tools**: Use `/commit` during development, then `/commit-push-pr` when ready
+- **Combine with other tools**: Use `commit` during development, then `commit-push-pr` when ready
 - **Let Claude draft messages**: The commit message analysis learns from your repo's style
-- **Regular cleanup**: Run `/clean_gone` weekly to maintain a clean branch list
+- **Regular cleanup**: Run `clean_gone` weekly to maintain a clean branch list
 - **Review before pushing**: Always review the commit message and changes before pushing
 
 ## Author
@@ -235,7 +235,7 @@ Anthropic (support@anthropic.com)
 
 ## Commands / Workflows
 
-### Command: `/clean_gone`
+### Command: `clean_gone`
 *Description*: Cleans up all git branches marked as [gone] (branches that have been deleted on the remote but still exist locally), including removing associated worktrees.
 
 ## Your Task
@@ -289,7 +289,7 @@ If no branches are marked as [gone], report that no cleanup was needed.
 
 ---
 
-### Command: `/commit-push-pr`
+### Command: `commit-push-pr`
 *Description*: Commit, push, and open a PR
 
 ## Context
@@ -310,7 +310,7 @@ Based on the above changes:
 
 ---
 
-### Command: `/commit`
+### Command: `commit`
 *Description*: Create a git commit
 
 ## Context
@@ -327,3 +327,20 @@ Based on the above changes, create a single git commit.
 You have the capability to call multiple tools in a single response. Stage and create the commit using a single message. Do not use any other tools or do anything else. Do not send any other text or messages besides these tool calls.
 
 ---
+
+
+
+## 🔒 Pre-Execution Verification Gate
+
+Before executing commands or submitting reviews, you MUST output a structured XML `<verification_gate>` block evaluating the following checks:
+- `conventions`: All changes align with target guidelines. (PASS/FAIL)
+- `correctness`: Verify code correctness and lack of logical bugs. (PASS/FAIL)
+
+Example output format:
+```xml
+<verification_gate>
+  <conventions>PASS</conventions>
+  <correctness>PASS</correctness>
+</verification_gate>
+```
+Do not proceed until you have output this verification gate.

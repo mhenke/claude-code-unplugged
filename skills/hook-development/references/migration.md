@@ -214,7 +214,7 @@ Combine both for multi-stage validation:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/quick-check.sh",
+          "command": "bash PLUGIN_ROOT/scripts/quick-check.sh",
           "timeout": 5
         },
         {
@@ -256,8 +256,8 @@ When migrating hooks:
 
 ```
 my-plugin/
-├── .claude-plugin/plugin.json
-├── hooks/hooks.json
+├── .agent-plugin/plugin.json
+├── hooks/hook-config.json
 └── scripts/
     ├── validate-bash.sh
     ├── validate-write.sh
@@ -268,8 +268,8 @@ my-plugin/
 
 ```
 my-plugin/
-├── .claude-plugin/plugin.json
-├── hooks/hooks.json      # Now uses prompt hooks
+├── .agent-plugin/plugin.json
+├── hooks/hook-config.json      # Now uses prompt hooks
 └── scripts/              # Archive or delete
     └── archive/
         ├── validate-bash.sh
@@ -277,7 +277,7 @@ my-plugin/
         └── check-tests.sh
 ```
 
-### Updated hooks.json
+### Updated hook-config.json
 
 ```json
 {

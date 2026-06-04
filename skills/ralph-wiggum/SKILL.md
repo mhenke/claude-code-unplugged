@@ -9,7 +9,7 @@ description: Iterative feedback loop commands
 
 # Ralph Wiggum Plugin
 
-Implementation of the Ralph Wiggum technique for iterative, self-referential AI development loops in Claude Code.
+Implementation of the Ralph Wiggum technique for iterative, self-referential AI development loops in coding assistant.
 
 ## What is Ralph?
 
@@ -25,7 +25,7 @@ This plugin implements Ralph using a **Stop hook** that intercepts Claude's exit
 # You run ONCE:
 /ralph-loop "Your task description" --completion-promise "DONE"
 
-# Then Claude Code automatically:
+# Then coding assistant automatically:
 # 1. Works on the task
 # 2. Tries to exit
 # 3. Stop hook blocks exit
@@ -185,29 +185,29 @@ Keep trying until success. The loop handles retry logic automatically.
 
 ## For Help
 
-Run `/help` in Claude Code for detailed command reference and examples.
+Run `help` in coding assistant for detailed command reference and examples.
 
 ## Commands / Workflows
 
-### Command: `/cancel-ralph`
+### Command: `cancel-ralph`
 *Description*: Cancel active Ralph Wiggum loop
 
 # Cancel Ralph
 
 To cancel the Ralph loop:
 
-1. Check if `.claude/ralph-loop.local.md` exists using Bash: `test -f .claude/ralph-loop.local.md && echo "EXISTS" || echo "NOT_FOUND"`
+1. Check if `.agent/ralph-loop.local.md` exists using Bash: `test -f .agent/ralph-loop.local.md && echo "EXISTS" || echo "NOT_FOUND"`
 
 2. **If NOT_FOUND**: Say "No active Ralph loop found."
 
 3. **If EXISTS**:
-   - Read `.claude/ralph-loop.local.md` to get the current iteration number from the `iteration:` field
-   - Remove the file using Bash: `rm .claude/ralph-loop.local.md`
+   - Read `.agent/ralph-loop.local.md` to get the current iteration number from the `iteration:` field
+   - Remove the file using Bash: `rm .agent/ralph-loop.local.md`
    - Report: "Cancelled Ralph loop (was at iteration N)" where N is the iteration value
 
 ---
 
-### Command: `/help`
+### Command: `help`
 *Description*: Explain Ralph Wiggum technique and available commands
 
 # Ralph Wiggum Plugin Help
@@ -254,7 +254,7 @@ Start a Ralph loop in your current session.
 - `--completion-promise <text>` - Promise phrase to signal completion
 
 **How it works:**
-1. Creates `.claude/.ralph-loop.local.md` state file
+1. Creates `.agent/.ralph-loop.local.md` state file
 2. You work on the task
 3. When you try to exit, stop hook intercepts
 4. Same prompt fed back
@@ -274,7 +274,7 @@ Cancel an active Ralph loop (removes the loop state file).
 
 **How it works:**
 - Checks for active loop state file
-- Removes `.claude/.ralph-loop.local.md`
+- Removes `.agent/.ralph-loop.local.md`
 - Reports cancellation with iteration count
 
 ---
@@ -335,7 +335,7 @@ You'll see Ralph:
 
 ---
 
-### Command: `/ralph-loop`
+### Command: `ralph-loop`
 *Description*: Start Ralph Wiggum loop in current session
 
 # Ralph Loop Command
@@ -343,7 +343,7 @@ You'll see Ralph:
 Execute the setup script to initialize the Ralph loop:
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh" $ARGUMENTS
+"PLUGIN_ROOT/scripts/setup-ralph-loop.sh" $ARGUMENTS
 ```
 
 Please work on the task. When you try to exit, the Ralph loop will feed the SAME PROMPT back to you for the next iteration. You'll see your previous work in files and git history, allowing you to iterate and improve.
@@ -351,3 +351,15 @@ Please work on the task. When you try to exit, the Ralph loop will feed the SAME
 CRITICAL RULE: If a completion promise is set, you may ONLY output it when the statement is completely and unequivocally TRUE. Do not output false promises to escape the loop, even if you think you're stuck or should exit for other reasons. The loop is designed to continue until genuine completion.
 
 ---
+
+
+
+## 🔒 Ralph Self-Enforced Cognitive Loop
+
+You are responsible for self-enforcing the Ralph feedback loop within this session:
+1. Read the loop state file `.agent/ralph-loop.local.md` to extract current `iteration`, `max_iterations`, and `completion_promise`.
+2. If the task is finished, output the exact promise tag: `<promise>COMPLETION_PROMISE</promise>` and delete the state file using your bash tool.
+3. If `max_iterations` > 0 and `iteration` >= `max_iterations`, output a completion/termination message and delete the state file.
+4. If the task is incomplete and iterations remain:
+   - Increment the `iteration` count in the state file using your bash tool or file edits.
+   - Output a summary of progress and ask the user to reply to continue the loop (self-blocking exit pattern). Do NOT exit or close the task until complete.

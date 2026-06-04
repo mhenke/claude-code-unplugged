@@ -4,9 +4,9 @@ Complete reference for `plugin.json` configuration.
 
 ## File Location
 
-**Required path**: `.claude-plugin/plugin.json`
+**Required path**: `.agent-plugin/plugin.json`
 
-The manifest MUST be in the `.claude-plugin/` directory at the plugin root. Claude Code will not recognize plugins without this file in the correct location.
+The manifest MUST be in the `.agent-plugin/` directory at the plugin root. coding assistant will not recognize plugins without this file in the correct location.
 
 ## Complete Field Reference
 
@@ -19,7 +19,7 @@ The manifest MUST be in the `.claude-plugin/` directory at the plugin root. Clau
 **Example**: `"test-automation-suite"`
 
 The unique identifier for the plugin. Used for:
-- Plugin identification in Claude Code
+- Plugin identification in coding assistant
 - Conflict detection with other plugins
 - Command namespacing (optional)
 
@@ -259,14 +259,14 @@ Additional directories or files containing agent definitions.
 #### hooks
 
 **Type**: String (path to JSON file) or Object (inline configuration)
-**Default**: `"./hooks/hooks.json"`
+**Default**: `"./hooks/hook-config.json"`
 
 Hook configuration location or inline definition.
 
 **File path**:
 ```json
 {
-  "hooks": "./config/hooks.json"
+  "hooks": "./config/hook-config.json"
 }
 ```
 
@@ -280,7 +280,7 @@ Hook configuration location or inline definition.
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh",
+            "command": "bash PLUGIN_ROOT/scripts/validate.sh",
             "timeout": 30
           }
         ]
@@ -315,7 +315,7 @@ MCP server configuration location or inline definition.
   "mcpServers": {
     "github": {
       "command": "node",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/servers/github-mcp.js"],
+      "args": ["PLUGIN_ROOT/servers/github-mcp.js"],
       "env": {
         "GITHUB_TOKEN": "${GITHUB_TOKEN}"
       }
@@ -343,7 +343,7 @@ All paths in component fields must follow these rules:
 **Examples**:
 - ✅ `"./commands"`
 - ✅ `"./src/commands"`
-- ✅ `"./configs/hooks.json"`
+- ✅ `"./configs/hook-config.json"`
 - ❌ `"/Users/name/plugin/commands"`
 - ❌ `"commands"` (missing `./`)
 - ❌ `"../shared/commands"`
@@ -351,13 +351,13 @@ All paths in component fields must follow these rules:
 
 ### Resolution Order
 
-When Claude Code loads components:
+When coding assistant loads components:
 
 1. **Default directories**: Scans standard locations first
    - `./commands/`
    - `./agents/`
    - `./skills/`
-   - `./hooks/hooks.json`
+   - `./hooks/hook-config.json`
    - `./.mcp.json`
 
 2. **Custom paths**: Scans paths specified in manifest
@@ -374,7 +374,7 @@ When Claude Code loads components:
 
 ### Manifest Validation
 
-Claude Code validates the manifest on plugin load:
+coding assistant validates the manifest on plugin load:
 
 **Syntax validation**:
 - Valid JSON format
@@ -423,13 +423,13 @@ Fix: Use relative path
 **Missing ./ prefix**:
 ```json
 {
-  "hooks": "hooks/hooks.json"  // ❌ No ./
+  "hooks": "hooks/hook-config.json"  // ❌ No ./
 }
 ```
 Fix: Add ./ prefix
 ```json
 {
-  "hooks": "./hooks/hooks.json"  // ✅
+  "hooks": "./hooks/hook-config.json"  // ✅
 }
 ```
 
@@ -513,7 +513,7 @@ Full configuration with all features:
     "./admin-commands"
   ],
   "agents": "./specialized-agents",
-  "hooks": "./config/hooks.json",
+  "hooks": "./config/hook-config.json",
   "mcpServers": "./.mcp.json"
 }
 ```

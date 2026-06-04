@@ -97,6 +97,32 @@ function validateSkills() {
       continue;
     }
 
+    // Platform-neutrality checks
+    const neutralityIssues = [];
+
+    if (/\bClaude Code\b/i.test(content)) {
+      neutralityIssues.push('contains "Claude Code" reference');
+    }
+    if (/hooks\.json/.test(content)) {
+      neutralityIssues.push('references "hooks.json" (platform-specific hook config)');
+    }
+    if (/\$\{CLAUDE_PLUGIN_ROOT\}/.test(content)) {
+      neutralityIssues.push('references "${CLAUDE_PLUGIN_ROOT}" (platform-specific env var)');
+    }
+    if (/\.claude\//i.test(content)) {
+      neutralityIssues.push('references ".claude/" path (platform-specific directory)');
+    }
+    if (/`\/(commit|feature-dev|code-review|review-pr|hookify|mcp|clean_gone|commit-push-pr|ralph-loop|cancel-ralph|new-sdk-app|create-plugin|help)/.test(content)) {
+      neutralityIssues.push('contains slash commands (platform-specific CLI syntax)');
+    }
+
+    if (neutralityIssues.length > 0) {
+      console.error(`❌ [${skill}] Platform-neutrality violations:`);
+      neutralityIssues.forEach(issue => console.error(`    - ${issue}`));
+      errorsCount++;
+      continue;
+    }
+
     console.log(`✅ [${skill}] Valid (${meta.description.slice(0, 50)}...)`);
     successCount++;
   }

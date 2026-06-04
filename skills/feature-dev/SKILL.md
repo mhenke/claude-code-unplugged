@@ -23,9 +23,9 @@ Building features requires more than just writing code. You need to:
 - **Design thoughtfully** before implementing
 - **Review for quality** after building
 
-This plugin embeds these practices into a structured workflow that runs automatically when you use the `/feature-dev` command.
+This plugin embeds these practices into a structured workflow that runs automatically when you use the `feature-dev` command.
 
-## Command: `/feature-dev`
+## Command: `feature-dev`
 
 Launches a guided feature development workflow with 7 distinct phases.
 
@@ -371,7 +371,7 @@ Let the workflow guide you through all 7 phases.
 
 ## Requirements
 
-- Claude Code installed
+- coding assistant installed
 - Git repository (for code review)
 - Project with existing codebase (workflow assumes existing code to learn from)
 
@@ -422,7 +422,7 @@ Sid Bidasaria (sbidasaria@anthropic.com)
 
 ## Commands / Workflows
 
-### Command: `/feature-dev`
+### Command: `feature-dev`
 *Description*: Guided feature development with codebase understanding and architecture focus
 
 # Feature Development
@@ -674,3 +674,17 @@ Group issues by severity (Critical vs Important). If no high-confidence issues e
 Structure your response for maximum actionability - developers should know exactly what to fix and why.
 
 ---
+
+
+
+## 🔒 Phase Verification Gates
+
+Before transitioning to a new phase in the feature development lifecycle, you MUST output a `<phase_verification>` XML block evaluating the current phase's success criteria.
+
+Example:
+```xml
+<phase_verification>
+  <current_phase>Discovery</current_phase>
+  <criteria_met>PASS</criteria_met>
+</phase_verification>
+```

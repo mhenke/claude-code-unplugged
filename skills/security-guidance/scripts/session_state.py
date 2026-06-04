@@ -36,20 +36,20 @@ def _state_key(session_id):
 
 def get_state_file(session_id):
     """Get session-specific state file path."""
-    state_dir = os.environ.get("SECURITY_WARNINGS_STATE_DIR", os.path.expanduser("~/.claude/security"))
+    state_dir = os.environ.get("SECURITY_WARNINGS_STATE_DIR", os.path.expanduser("~/.agent/security"))
     return os.path.join(state_dir, f"security_warnings_state_{_state_key(session_id)}.json")
 
 
 def get_lock_file(session_id):
     """Get session-specific lock file path."""
-    state_dir = os.environ.get("SECURITY_WARNINGS_STATE_DIR", os.path.expanduser("~/.claude/security"))
+    state_dir = os.environ.get("SECURITY_WARNINGS_STATE_DIR", os.path.expanduser("~/.agent/security"))
     return os.path.join(state_dir, f"security_warnings_state_{_state_key(session_id)}.lock")
 
 
 def cleanup_old_state_files():
     """Remove state files and lock files older than 30 days."""
     try:
-        state_dir = os.environ.get("SECURITY_WARNINGS_STATE_DIR", os.path.expanduser("~/.claude/security"))
+        state_dir = os.environ.get("SECURITY_WARNINGS_STATE_DIR", os.path.expanduser("~/.agent/security"))
         if not os.path.exists(state_dir):
             return
 
@@ -68,11 +68,11 @@ def cleanup_old_state_files():
                 except (OSError, IOError):
                     pass
 
-        # Sweep legacy lock files left at ~/.claude/ root by versions
+        # Sweep legacy lock files left at ~/.agent/ root by versions
         # <1.1.66, where get_lock_file() didn't honor state_dir. Same
         # 30-day mtime gate as above so we don't race an older
         # concurrent peer that may still hold an active lock.
-        legacy_dir = os.path.expanduser("~/.claude")
+        legacy_dir = os.path.expanduser("~/.agent")
         for filename in os.listdir(legacy_dir):
             if filename.startswith("security_warnings_state_") and filename.endswith(".lock"):
                 file_path = os.path.join(legacy_dir, filename)

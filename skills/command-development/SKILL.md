@@ -1,10 +1,10 @@
 ---
 name: command-development
-description: This skill should be used when the user asks to "create a slash command", "add a command", "write a custom command", "define command arguments", "use command frontmatter", "organize commands", "create command with file references", "interactive command", "use AskUserQuestion in command", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for Claude Code.
+description: This skill should be used when the user asks to "create a slash command", "add a command", "write a custom command", "define command arguments", "use command frontmatter", "organize commands", "create command with file references", "interactive command", "use AskUserQuestion in command", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for coding assistant.
 version: 0.2.0
 ---
 
-# Command Development for Claude Code
+# Command Development for coding assistant
 
 ## Overview
 
@@ -54,21 +54,21 @@ The first example tells Claude what to do. The second tells the user what will h
 ### Command Locations
 
 **Project commands** (shared with team):
-- Location: `.claude/commands/`
+- Location: `.agent/commands/`
 - Scope: Available in specific project
-- Label: Shown as "(project)" in `/help`
+- Label: Shown as "(project)" in `help`
 - Use for: Team workflows, project-specific tasks
 
 **Personal commands** (available everywhere):
-- Location: `~/.claude/commands/`
+- Location: `~/.agent/commands/`
 - Scope: Available in all projects
-- Label: Shown as "(user)" in `/help`
+- Label: Shown as "(user)" in `help`
 - Use for: Personal workflows, cross-project utilities
 
 **Plugin commands** (bundled with plugins):
 - Location: `plugin-name/commands/`
 - Scope: Available when plugin installed
-- Label: Shown as "(plugin-name)" in `/help`
+- Label: Shown as "(plugin-name)" in `help`
 - Use for: Plugin-specific functionality
 
 ## File Format
@@ -78,7 +78,7 @@ The first example tells Claude what to do. The second tells the user what will h
 Commands are Markdown files with `.md` extension:
 
 ```
-.claude/commands/
+.agent/commands/
 ├── review.md           # /review command
 ├── test.md             # /test command
 └── deploy.md           # /deploy command
@@ -113,7 +113,7 @@ Review this code for security vulnerabilities...
 
 ### description
 
-**Purpose:** Brief description shown in `/help`
+**Purpose:** Brief description shown in `help`
 **Type:** String
 **Default:** First line of command prompt
 
@@ -332,7 +332,7 @@ For complete syntax, examples, and best practices, see `references/plugin-featur
 Simple organization for small command sets:
 
 ```
-.claude/commands/
+.agent/commands/
 ├── build.md
 ├── test.md
 ├── deploy.md
@@ -347,7 +347,7 @@ Simple organization for small command sets:
 Organize commands in subdirectories:
 
 ```
-.claude/commands/
+.agent/commands/
 ├── ci/
 │   ├── build.md        # /build (project:ci)
 │   ├── test.md         # /test (project:ci)
@@ -362,7 +362,7 @@ Organize commands in subdirectories:
 
 **Benefits:**
 - Logical grouping by category
-- Namespace shown in `/help`
+- Namespace shown in `help`
 - Easier to find related commands
 
 **Use when:** 15+ commands, clear categories
@@ -372,7 +372,7 @@ Organize commands in subdirectories:
 ### Command Design
 
 1. **Single responsibility:** One command, one task
-2. **Clear descriptions:** Self-explanatory in `/help`
+2. **Clear descriptions:** Self-explanatory in `help`
 3. **Explicit dependencies:** Use `allowed-tools` when needed
 4. **Document arguments:** Always provide `argument-hint`
 5. **Consistent naming:** Use verb-noun pattern (review-pr, fix-issue)
@@ -505,7 +505,7 @@ PR #$1 Workflow:
 - Check file is in correct directory
 - Verify `.md` extension present
 - Ensure valid Markdown format
-- Restart Claude Code
+- Restart coding assistant
 
 **Arguments not working:**
 - Verify `$1`, `$2` syntax correct
@@ -528,7 +528,7 @@ PR #$1 Workflow:
 
 ### CLAUDE_PLUGIN_ROOT Variable
 
-Plugin commands have access to `${CLAUDE_PLUGIN_ROOT}`, an environment variable that resolves to the plugin's absolute path.
+Plugin commands have access to `PLUGIN_ROOT`, an environment variable that resolves to the plugin's absolute path.
 
 **Purpose:**
 - Reference plugin files portably
@@ -544,7 +544,7 @@ description: Analyze using plugin script
 allowed-tools: Bash(node:*)
 ---
 
-Run analysis: !`node ${CLAUDE_PLUGIN_ROOT}/scripts/analyze.js $1`
+Run analysis: !`node PLUGIN_ROOT/scripts/analyze.js $1`
 
 Review results and report findings.
 ```
@@ -553,16 +553,16 @@ Review results and report findings.
 
 ```markdown
 # Execute plugin script
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/script.sh`
+!`bash PLUGIN_ROOT/scripts/script.sh`
 
 # Load plugin configuration
-@${CLAUDE_PLUGIN_ROOT}/config/settings.json
+@PLUGIN_ROOT/config/settings.json
 
 # Use plugin template
-@${CLAUDE_PLUGIN_ROOT}/templates/report.md
+@PLUGIN_ROOT/templates/report.md
 
 # Access plugin resources
-@${CLAUDE_PLUGIN_ROOT}/docs/reference.md
+@PLUGIN_ROOT/docs/reference.md
 ```
 
 **Why use it:**
@@ -587,7 +587,7 @@ plugin-name/
 
 **Namespace benefits:**
 - Logical command grouping
-- Shown in `/help` output
+- Shown in `help` output
 - Avoid name conflicts
 - Organize related commands
 
@@ -608,7 +608,7 @@ argument-hint: [environment]
 allowed-tools: Read, Bash(*)
 ---
 
-Load configuration: @${CLAUDE_PLUGIN_ROOT}/config/$1-deploy.json
+Load configuration: @PLUGIN_ROOT/config/$1-deploy.json
 
 Deploy to $1 using configuration settings.
 Monitor deployment and report status.
@@ -622,7 +622,7 @@ description: Generate docs from template
 argument-hint: [component]
 ---
 
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/docs.md
+Template: @PLUGIN_ROOT/templates/docs.md
 
 Generate documentation for $1 following template structure.
 ```
@@ -635,9 +635,9 @@ description: Complete build workflow
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh`
-Test: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/test.sh`
-Package: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/package.sh`
+Build: !`bash PLUGIN_ROOT/scripts/build.sh`
+Test: !`bash PLUGIN_ROOT/scripts/test.sh`
+Package: !`bash PLUGIN_ROOT/scripts/package.sh`
 
 Review outputs and report workflow status.
 ```
@@ -667,8 +667,8 @@ The agent will analyze:
 - Best practices
 
 Agent uses plugin resources:
-- ${CLAUDE_PLUGIN_ROOT}/config/rules.json
-- ${CLAUDE_PLUGIN_ROOT}/checklists/review.md
+- PLUGIN_ROOT/config/rules.json
+- PLUGIN_ROOT/checklists/review.md
 ```
 
 **Key points:**
@@ -728,7 +728,7 @@ allowed-tools: Bash(node:*), Read
 Target: @$1
 
 Phase 1 - Static Analysis:
-!`node ${CLAUDE_PLUGIN_ROOT}/scripts/lint.js $1`
+!`node PLUGIN_ROOT/scripts/lint.js $1`
 
 Phase 2 - Deep Review:
 Launch code-reviewer agent for detailed analysis.
@@ -737,7 +737,7 @@ Phase 3 - Standards Check:
 Use coding-standards skill for validation.
 
 Phase 4 - Report:
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/review.md
+Template: @PLUGIN_ROOT/templates/review.md
 
 Compile findings into report following template.
 ```
@@ -796,8 +796,8 @@ allowed-tools: Bash(test:*)
 ---
 
 Validate plugin setup:
-- Script: !`test -x ${CLAUDE_PLUGIN_ROOT}/bin/analyze && echo "✓" || echo "✗"`
-- Config: !`test -f ${CLAUDE_PLUGIN_ROOT}/config.json && echo "✓" || echo "✗"`
+- Script: !`test -x PLUGIN_ROOT/bin/analyze && echo "✓" || echo "✗"`
+- Config: !`test -f PLUGIN_ROOT/config.json && echo "✓" || echo "✗"`
 
 If all checks pass, run analysis.
 Otherwise, report missing components.
@@ -811,7 +811,7 @@ description: Build with error handling
 allowed-tools: Bash(*)
 ---
 
-Execute build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh 2>&1 || echo "BUILD_FAILED"`
+Execute build: !`bash PLUGIN_ROOT/scripts/build.sh 2>&1 || echo "BUILD_FAILED"`
 
 If build succeeded:
   Report success and output location

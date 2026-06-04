@@ -1,6 +1,6 @@
 # Command Development Skill
 
-Comprehensive guidance on creating Claude Code slash commands, including file format, frontmatter options, dynamic arguments, and best practices.
+Comprehensive guidance on creating coding assistant slash commands, including file format, frontmatter options, dynamic arguments, and best practices.
 
 ## Overview
 
@@ -12,7 +12,7 @@ This skill provides knowledge about:
 - Bash execution with !` syntax
 - Command organization and namespacing
 - Best practices for command development
-- Plugin-specific features (${CLAUDE_PLUGIN_ROOT}, plugin patterns)
+- Plugin-specific features (PLUGIN_ROOT, plugin patterns)
 - Integration with plugin components (agents, skills, hooks)
 - Validation patterns and error handling
 
@@ -34,7 +34,7 @@ Core skill content covering:
 - Troubleshooting
 
 **Plugin-Specific:**
-- ${CLAUDE_PLUGIN_ROOT} environment variable
+- PLUGIN_ROOT environment variable
 - Plugin command discovery and organization
 - Plugin command patterns (configuration, template, multi-script)
 - Integration with plugin components (agents, skills, hooks)
@@ -52,7 +52,7 @@ Detailed documentation:
 
 - **plugin-features-reference.md**: Plugin-specific command features
   - Plugin command discovery and organization
-  - ${CLAUDE_PLUGIN_ROOT} environment variable usage
+  - PLUGIN_ROOT environment variable usage
   - Plugin command patterns (configuration, template, multi-script)
   - Integration with plugin agents, skills, and hooks
   - Validation patterns and error handling
@@ -81,7 +81,7 @@ Practical command examples:
 
 ## When This Skill Triggers
 
-Claude Code activates this skill when users:
+coding assistant activates this skill when users:
 - Ask to "create a slash command" or "add a command"
 - Need to "write a custom command"
 - Want to "define command arguments"
@@ -129,8 +129,8 @@ Command prompt content with:
 
 ### Locations
 
-- **Project**: `.claude/commands/` (shared with team)
-- **Personal**: `~/.claude/commands/` (your commands)
+- **Project**: `.agent/commands/` (shared with team)
+- **Personal**: `~/.agent/commands/` (your commands)
 - **Plugin**: `plugin-name/commands/` (plugin-specific)
 
 ### Key Features
@@ -233,7 +233,7 @@ Recent commits: !`git log --oneline -5`
 ## Best Practices Summary
 
 1. **Single responsibility**: One command, one clear purpose
-2. **Clear descriptions**: Make discoverable in `/help`
+2. **Clear descriptions**: Make discoverable in `help`
 3. **Document arguments**: Always use argument-hint
 4. **Minimal tools**: Use most restrictive allowed-tools
 5. **Test thoroughly**: Verify all features work
@@ -243,7 +243,7 @@ Recent commits: !`git log --oneline -5`
 ## Status
 
 **Completed enhancements:**
-- ✓ Plugin command patterns (${CLAUDE_PLUGIN_ROOT}, discovery, organization)
+- ✓ Plugin command patterns (PLUGIN_ROOT, discovery, organization)
 - ✓ Integration patterns (agents, skills, hooks coordination)
 - ✓ Validation patterns (input, file, resource validation, error handling)
 
@@ -261,7 +261,7 @@ To update this skill:
 3. Add new examples/ for different use cases
 4. Update frontmatter when new fields added
 5. Ensure imperative/infinitive form throughout
-6. Test examples work with current Claude Code
+6. Test examples work with current coding assistant
 
 ## Version History
 

@@ -42,6 +42,23 @@ function parseArgs(args) {
   return options;
 }
 
+// Helper to clean and neutralize Claude Code platform specifics
+function cleanAndNeutralize(content) {
+  let cleaned = content
+    .replace(/Claude Code/g, 'coding assistant')
+    .replace(/hooks\.json/g, 'hook-config.json')
+    .replace(/\$\{CLAUDE_PLUGIN_ROOT\}/g, 'PLUGIN_ROOT')
+    .replace(/\.claude\//g, '.agent/')
+    .replace(/\.claude\b/g, '.agent');
+  
+  // Replace backticked slash commands: `/{cmd}` -> `cmd`
+  cleaned = cleaned.replace(/`\/(commit|feature-dev|code-review|review-pr|hookify|mcp|clean_gone|commit-push-pr|ralph-loop|cancel-ralph|new-sdk-app|create-plugin|help)([^`]*)`/g, (match, cmd, rest) => {
+    return `\`${cmd}${rest}\``;
+  });
+
+  return cleaned;
+}
+
 // Helper to copy recursively
 function copyRecursiveSync(src, dest) {
   const exists = fs.existsSync(src);
@@ -54,7 +71,19 @@ function copyRecursiveSync(src, dest) {
     });
   } else {
     fs.mkdirSync(path.dirname(dest), { recursive: true });
-    fs.copyFileSync(src, dest);
+    const base = path.basename(src);
+    let finalDest = dest;
+    if (base === 'hooks.json') {
+      finalDest = path.join(path.dirname(dest), 'hook-config.json');
+    }
+    const ext = path.extname(src);
+    if (['.js', '.ts', '.py', '.sh', '.md', '.json'].includes(ext)) {
+      let content = fs.readFileSync(src, 'utf8');
+      content = cleanAndNeutralize(content);
+      fs.writeFileSync(finalDest, content, 'utf8');
+    } else {
+      fs.copyFileSync(src, finalDest);
+    }
   }
 }
 
@@ -85,12 +114,27 @@ function stripFrontmatter(content) {
 // Helper to write standard SKILL.md
 function writeSkillMd(destDir, name, description, bodyContent) {
   fs.mkdirSync(destDir, { recursive: true });
+  
+  let processedBody = cleanAndNeutralize(bodyContent);
+  
+  if (name === 'security-guidance') {
+    processedBody += `\n\n## 🔒 Pre-Execution Verification Gate\n\nBefore executing any commands, creating files, or editing code, you MUST output a structured XML \`<verification_gate>\` block evaluating the following checks:\n1. \`secrets\`: Check for hardcoded API keys, secrets, credentials, or certificates. (PASS/FAIL)\n2. \`input_sanitization\`: Check for unsafe user input handling (e.g., innerHTML, eval, unvalidated parameters). (PASS/FAIL)\n3. \`paths\`: Check for path traversal vulnerabilities or directory escape attempts. (PASS/FAIL)\n\nExample output format:\n\`\`\`xml\n<verification_gate>\n  <secrets>PASS</secrets>\n  <input_sanitization>PASS</input_sanitization>\n  <paths>PASS</paths>\n</verification_gate>\n\`\`\`\nDo not execute tools or code edits until you have output this verification gate.`;
+  } else if (name === 'commit-commands' || name === 'code-review') {
+    processedBody += `\n\n## 🔒 Pre-Execution Verification Gate\n\nBefore executing commands or submitting reviews, you MUST output a structured XML \`<verification_gate>\` block evaluating the following checks:\n- \`conventions\`: All changes align with target guidelines. (PASS/FAIL)\n- \`correctness\`: Verify code correctness and lack of logical bugs. (PASS/FAIL)\n\nExample output format:\n\`\`\`xml\n<verification_gate>\n  <conventions>PASS</conventions>\n  <correctness>PASS</correctness>\n</verification_gate>\n\`\`\`\nDo not proceed until you have output this verification gate.`;
+  } else if (name === 'feature-dev') {
+    processedBody += `\n\n## 🔒 Phase Verification Gates\n\nBefore transitioning to a new phase in the feature development lifecycle, you MUST output a \`<phase_verification>\` XML block evaluating the current phase's success criteria.\n\nExample:\n\`\`\`xml\n<phase_verification>\n  <current_phase>Discovery</current_phase>\n  <criteria_met>PASS</criteria_met>\n</phase_verification>\n\`\`\``;
+  } else if (name === 'hookify') {
+    processedBody += `\n\n## 🔒 Hookify Cognitive Execution\n\nBefore executing any tools or modifying files, you MUST cognitively scan the workspace for Hookify rule files matching \`.agent/hookify.*.local.md\`.\nFor any matching rules:\n1. Inspect the defined regex patterns and trigger conditions.\n2. Verify that your planned tool execution or edits do not violate these rules.\n3. Alternatively, execute the rule engine script to programmatically validate compliance:\n   \`\`\`bash\n   python3 scripts/rule_engine.py\n   \`\`\``;
+  } else if (name === 'ralph-wiggum') {
+    processedBody += `\n\n## 🔒 Ralph Self-Enforced Cognitive Loop\n\nYou are responsible for self-enforcing the Ralph feedback loop within this session:\n1. Read the loop state file \`.agent/ralph-loop.local.md\` to extract current \`iteration\`, \`max_iterations\`, and \`completion_promise\`.\n2. If the task is finished, output the exact promise tag: \`<promise>COMPLETION_PROMISE</promise>\` and delete the state file using your bash tool.\n3. If \`max_iterations\` > 0 and \`iteration\` >= \`max_iterations\`, output a completion/termination message and delete the state file.\n4. If the task is incomplete and iterations remain:\n   - Increment the \`iteration\` count in the state file using your bash tool or file edits.\n   - Output a summary of progress and ask the user to reply to continue the loop (self-blocking exit pattern). Do NOT exit or close the task until complete.`;
+  }
+
   const mdContent = `---
 name: ${name}
-description: ${description}
+description: ${cleanAndNeutralize(description)}
 ---
 
-${bodyContent.trim()}
+${processedBody.trim()}
 `;
   fs.writeFileSync(path.join(destDir, 'SKILL.md'), mdContent, 'utf8');
 }
@@ -128,12 +172,14 @@ function copySkillNormalized(srcDir, destDir, skillName) {
         console.log(`  Normalizing name: "${meta.name}" -> "${skillName}"`);
         content = content.replace(/^name:\s*.+$/m, `name: ${skillName}`);
       }
+      content = cleanAndNeutralize(content);
       fs.writeFileSync(destItem, content, 'utf8');
     } else {
-      fs.copyFileSync(srcItem, destItem);
+      copyRecursiveSync(srcItem, destItem);
     }
   }
 }
+
 
 function main() {
   const args = process.argv.slice(2);
@@ -272,11 +318,31 @@ function main() {
     // Write merged file
     writeSkillMd(destSkillDir, config.skill, config.defaultDesc, body);
 
-    // If ralph-wiggum, copy its scripts folder as helper script
+    // If ralph-wiggum, copy its scripts folder and hooks folder as helper scripts
     if (config.plugin === 'ralph-wiggum') {
       const scriptSrc = path.join(pluginPath, 'scripts');
       if (fs.existsSync(scriptSrc)) {
         copyRecursiveSync(scriptSrc, path.join(destSkillDir, 'scripts'));
+      }
+      const hooksSrc = path.join(pluginPath, 'hooks');
+      if (fs.existsSync(hooksSrc)) {
+        copyRecursiveSync(hooksSrc, path.join(destSkillDir, 'scripts'));
+      }
+    }
+
+    // If hookify, copy hooks/, core/, and examples/ as helper scripts/examples
+    if (config.plugin === 'hookify') {
+      const hooksSrc = path.join(pluginPath, 'hooks');
+      if (fs.existsSync(hooksSrc)) {
+        copyRecursiveSync(hooksSrc, path.join(destSkillDir, 'scripts'));
+      }
+      const coreSrc = path.join(pluginPath, 'core');
+      if (fs.existsSync(coreSrc)) {
+        copyRecursiveSync(coreSrc, path.join(destSkillDir, 'scripts', 'core'));
+      }
+      const examplesSrc = path.join(pluginPath, 'examples');
+      if (fs.existsSync(examplesSrc)) {
+        copyRecursiveSync(examplesSrc, path.join(destSkillDir, 'examples'));
       }
     }
   }
@@ -318,7 +384,7 @@ function main() {
     if (fs.existsSync(pluginJsonSrc)) {
       const destPluginJsonDir = path.join(destSecDir, '.claude-plugin');
       fs.mkdirSync(destPluginJsonDir, { recursive: true });
-      fs.copyFileSync(pluginJsonSrc, path.join(destPluginJsonDir, 'plugin.json'));
+      copyRecursiveSync(pluginJsonSrc, path.join(destPluginJsonDir, 'plugin.json'));
       console.log('Copied security-guidance .claude-plugin/plugin.json for script compatibility.');
     }
 
@@ -331,7 +397,7 @@ function main() {
       const files = fs.readdirSync(hooksSrc);
       for (const file of files) {
         if (file !== 'hooks.json') {
-          fs.copyFileSync(path.join(hooksSrc, file), path.join(destScriptsDir, file));
+          copyRecursiveSync(path.join(hooksSrc, file), path.join(destScriptsDir, file));
         }
       }
       console.log('Copied security helper scripts to scripts/ directory.');
@@ -393,7 +459,7 @@ Upon completing code writing or editing:
     const scriptFiles = fs.readdirSync(sourceScriptsDir);
     let listContent = '';
     for (const file of scriptFiles) {
-      fs.copyFileSync(path.join(sourceScriptsDir, file), path.join(destMgmtScripts, file));
+      copyRecursiveSync(path.join(sourceScriptsDir, file), path.join(destMgmtScripts, file));
       listContent += `- \`${file}\`: Copied from repository scripts.\n`;
     }
     console.log(`Copied ${scriptFiles.length} GitHub script utilities.`);
