@@ -110,7 +110,7 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 
 **Review never finds anything** — verify your API path works. On 3P providers, check `SECURITY_REVIEW_MODEL` is set to a provider-specific id (not a bare `claude-opus-4-7`). On LLM gateways, check the gateway's logs for `POST /v1/messages` traffic from the plugin.
 
-**Too many false positives** — drop `SECURITY_REVIEW_MODEL` to a cheaper model (`claude-sonnet-4-6`) and re-evaluate; if precision is the priority, stay on Opus 4.7.
+**Too many false positives** — drop `SECURITY_REVIEW_MODEL` to a faster/cheaper model and re-evaluate; if precision is the priority, use your most capable model.
 
 **Want to silence a specific finding** — add a comment to the line explaining why it's safe; the LLM reviewer treats inline justifications as exclusions. For systemic exclusions, document them in your `security-guidance.md`.
 
