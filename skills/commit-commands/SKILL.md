@@ -1,7 +1,6 @@
 ---
 name: commit-commands
 description: Git commit and repository workflows
-version: 0.1.0
 ---
 
 # Commit Workflows

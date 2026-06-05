@@ -1,7 +1,6 @@
 ---
 name: agent-sdk-dev
 description: Help developers build Agent SDK applications
-version: 0.1.0
 ---
 
 # Agent SDK Development

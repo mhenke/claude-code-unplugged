@@ -4,12 +4,13 @@ context: |
   Tech stack: Node.js (no npm dependencies), vanilla JavaScript (CommonJS), Markdown
   Skill format: Each skill is a directory under skills/ with a SKILL.md file.
   SKILL.md must start with YAML frontmatter containing `name` (matching directory) and `description`.
+  Version and source provenance belong in generated skills.json, not SKILL.md frontmatter.
   Platform-neutral: skills must not reference Claude Code, CLAUDE.md, hooks.json,
   ${CLAUDE_PLUGIN_ROOT}, .claude/ paths, or platform-specific slash commands.
   Validation: node scripts/validate.js — exits 0 on pass, 1 on failure.
   Manifest: node scripts/generate-manifest.js — regenerates skills.json; must be
   re-run and committed whenever SKILL.md files are added or changed.
-  Tests: npm test (node --test) — 44 tests across validate, generate-manifest, extract.
+  Tests: npm test (node --test) — 46 tests across validate, generate-manifest, extract.
   Spec workflow: proposals → design → tasks in openspec/changes/<name>/;
   completed changes promoted to openspec/specs/.
 

@@ -111,6 +111,17 @@ function stripFrontmatter(content) {
   return content.replace(/^---[\s\S]*?---\r?\n/, '');
 }
 
+function normalizeSkillFrontmatter(content, skillName) {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return content;
+
+  const meta = parseFrontmatter(content);
+  const name = skillName || meta.name || '';
+  const description = meta.description || '';
+
+  return content.replace(/^---\r?\n[\s\S]*?\r?\n---/, `---\nname: ${name}\ndescription: ${description}\n---`);
+}
+
 // Helper to write standard SKILL.md
 function writeSkillMd(destDir, name, description, bodyContent) {
   fs.mkdirSync(destDir, { recursive: true });
@@ -170,8 +181,8 @@ function copySkillNormalized(srcDir, destDir, skillName) {
       const meta = parseFrontmatter(content);
       if (meta.name !== skillName) {
         console.log(`  Normalizing name: "${meta.name}" -> "${skillName}"`);
-        content = content.replace(/^name:\s*.+$/m, `name: ${skillName}`);
       }
+      content = normalizeSkillFrontmatter(content, skillName);
       content = cleanAndNeutralize(content);
       fs.writeFileSync(destItem, content, 'utf8');
     } else {

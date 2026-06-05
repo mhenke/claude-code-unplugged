@@ -1,7 +1,6 @@
 ---
 name: feature-dev
 description: Guided feature development workflow
-version: 0.1.0
 ---
 
 # Feature Development

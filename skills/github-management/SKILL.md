@@ -1,7 +1,6 @@
 ---
 name: github-management
 description: Issue and pull request lifecycle automation scripts
-version: 0.1.0
 ---
 
 # GitHub Management

@@ -40,11 +40,13 @@ describe('generate-manifest.js', () => {
   beforeEach(() => {
     cleanSkillsDir();
     if (fs.existsSync(ORIG_JSON)) fs.unlinkSync(ORIG_JSON);
+    delete process.env.SOURCE_REPOSITORY;
+    delete process.env.SOURCE_COMMIT;
   });
 
   it('generates manifest for valid skills', () => {
     mkSkillDir('alpha-skill', '---\nname: alpha-skill\ndescription: First test skill\n---\n\n# Alpha\n\nBody here.');
-    mkSkillDir('beta-skill', '---\nname: beta-skill\ndescription: Second test skill\nversion: 0.1.0\n---\n\n# Beta\n\nBody here.');
+    mkSkillDir('beta-skill', '---\nname: beta-skill\ndescription: Second test skill\n---\n\n# Beta\n\nBody here.');
 
     const result = execSync(`node "${MANIFEST_SCRIPT}"`, { stdio: 'pipe' });
     assert.match(result.toString(), /Generated skills.json with 2 skills/);
@@ -53,8 +55,23 @@ describe('generate-manifest.js', () => {
     assert.strictEqual(manifest.skills.length, 2);
     assert.strictEqual(manifest.skills[0].name, 'alpha-skill');
     assert.strictEqual(manifest.skills[1].name, 'beta-skill');
+    assert.strictEqual(manifest.skills[0].version, '0.1.0');
     assert.strictEqual(manifest.skills[1].version, '0.1.0');
     assert.ok(typeof manifest.skills[0].bodyLength === 'number');
+  });
+
+  it('writes source provenance from environment', () => {
+    process.env.SOURCE_REPOSITORY = 'https://github.com/anthropics/claude-code.git';
+    process.env.SOURCE_COMMIT = 'abc1234';
+    mkSkillDir('alpha-skill', '---\nname: alpha-skill\ndescription: First test skill\n---\n\n# Alpha\n\nBody here.');
+
+    execSync(`node "${MANIFEST_SCRIPT}"`, { stdio: 'pipe' });
+
+    const manifest = JSON.parse(fs.readFileSync(ORIG_JSON, 'utf8'));
+    assert.deepStrictEqual(manifest.provenance, {
+      sourceRepository: 'https://github.com/anthropics/claude-code.git',
+      sourceCommit: 'abc1234',
+    });
   });
 
   it('skips skill with no frontmatter', () => {

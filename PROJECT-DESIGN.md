@@ -149,6 +149,7 @@ Every skill must:
 * Avoid CLI-specific assumptions.
 * Avoid model-specific assumptions.
 * Use a single `SKILL.md` for metadata and core instructions.
+* Keep `SKILL.md` frontmatter limited to `name` and `description`; store version and source provenance in `skills.json`.
 * Put detailed guides, rules, and reference files in a `references/` directory.
 * Put utility scripts (Python/Bash/Node) in a `scripts/` directory.
 * Be understandable by humans.

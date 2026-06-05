@@ -282,7 +282,7 @@ describe('extract.js CLI integration', () => {
     fs.mkdirSync(path.join(mockPluginsDir, 'my-plugin', 'skills', 'my-skill'), { recursive: true });
     fs.writeFileSync(
       path.join(mockPluginsDir, 'my-plugin', 'skills', 'my-skill', 'SKILL.md'),
-      '---\nname: my-skill\ndescription: A test skill extracted from Claude Code\n---\n\n# My Skill\n\nBody content.',
+      '---\nname: my-skill\ndescription: A test skill extracted from Claude Code\nversion: 9.9.9\nlicense: Source license\n---\n\n# My Skill\n\nBody content.',
       'utf8'
     );
 
@@ -296,6 +296,8 @@ describe('extract.js CLI integration', () => {
     const content = fs.readFileSync(destSkillMd, 'utf8');
     assert.ok(!content.includes('Claude Code'));
     assert.ok(content.includes('coding assistant'));
+    assert.ok(!content.includes('version:'));
+    assert.ok(!content.includes('license:'));
   });
 
   it('merges commands for known plugin configs', () => {
@@ -320,6 +322,7 @@ describe('extract.js CLI integration', () => {
     assert.ok(content.includes('Commands / Workflows'));
     assert.ok(content.includes('commit'));
     assert.ok(content.includes('push'));
+    assert.ok(!content.includes('version:'));
   });
 
   it('handles empty source gracefully', () => {
