@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
+const manifestPath = path.resolve(__dirname, '../skills.json');
+const defaultSkillVersion = process.env.SKILL_VERSION || '0.1.0';
 const skipDirs = new Set(['.git', '.full-review', 'openspec', 'scripts', 'node_modules']);
 const skills = fs.readdirSync(skillsDir).filter(d => {
   if (d.startsWith('.')) return false;
@@ -35,9 +37,8 @@ for (const name of skills) {
     name,
     description: meta.description || '',
     path: `skills/${name}`,
+    version: defaultSkillVersion,
   };
-
-  if (meta.version) entry.version = meta.version;
 
   const body = content.replace(/^---[\s\S]*?---\r?\n/, '').trim();
   entry.bodyLength = body.length;
@@ -45,14 +46,29 @@ for (const name of skills) {
   manifest.push(entry);
 }
 
+let existing = {};
+if (fs.existsSync(manifestPath)) {
+  try {
+    existing = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {}
+}
+
+const provenance = {
+  ...(existing.provenance || {}),
+};
+if (process.env.SOURCE_REPOSITORY) provenance.sourceRepository = process.env.SOURCE_REPOSITORY;
+if (process.env.SOURCE_COMMIT) provenance.sourceCommit = process.env.SOURCE_COMMIT;
+
 const output = {
   name: 'claude-code-unplugged',
   description: 'Portable agent skills, workflows, and automation patterns extracted from Claude Code. Platform-neutral SKILL.md format.',
   skills: manifest,
 };
 
+if (Object.keys(provenance).length > 0) output.provenance = provenance;
+
 fs.writeFileSync(
-  path.resolve(__dirname, '../skills.json'),
+  manifestPath,
   JSON.stringify(output, null, 2) + '\n'
 );
 

@@ -109,4 +109,14 @@ describe('validate.js', () => {
       assert.strictEqual(e.status, 1);
     }
   });
+
+  it('rejects unsupported frontmatter fields', () => {
+    mkSkillDir('has-version', '---\nname: has-version\ndescription: Has extra field\nversion: 0.1.0\n---\n\n# Has Version');
+    try {
+      execSync(`node "${VALIDATE_SCRIPT}"`, { stdio: 'pipe' });
+      assert.fail('Should have exited with code 1');
+    } catch (e) {
+      assert.strictEqual(e.status, 1);
+    }
+  });
 });

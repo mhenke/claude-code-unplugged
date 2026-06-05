@@ -1,7 +1,6 @@
 ---
 name: pr-review-toolkit
 description: Comprehensive code review toolkit
-version: 0.1.0
 ---
 
 # PR Review Toolkit

@@ -1,7 +1,6 @@
 ---
 name: ralph-wiggum
 description: Iterative feedback loop commands
-version: 0.1.0
 ---
 
 # Ralph Feedback Loop

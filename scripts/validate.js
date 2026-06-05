@@ -65,6 +65,14 @@ function validateSkills() {
 
     const meta = parseFrontmatter(content);
     
+    const allowedFields = new Set(['name', 'description']);
+    const unsupportedFields = Object.keys(meta).filter(field => !allowedFields.has(field));
+    if (unsupportedFields.length > 0) {
+      console.error(`❌ [${skill}] Unsupported frontmatter fields: ${unsupportedFields.join(', ')}`);
+      errorsCount++;
+      continue;
+    }
+
     // Check metadata fields
     if (!meta.name) {
       console.error(`❌ [${skill}] Missing "name" field in frontmatter`);

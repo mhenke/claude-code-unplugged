@@ -1,7 +1,6 @@
 ---
 name: learning-output-style
 description: Prompts users for lightweight contributions to encourage learning
-version: 0.1.0
 ---
 
 # Learning Output Style
