@@ -8,6 +8,14 @@ Transform Claude Code-specific workflows, skills, commands, and automation patte
 
 ---
 
+## Prime Directive
+
+**Do not alter the behavior of the extracted Claude Code plugins.** The only transformation applied is platform-neutrality — replacing Claude-specific references (`Claude Code` → `coding assistant`, `.claude/` → `.agent/`, `hooks.json` → `hook-config.json`, `${CLAUDE_PLUGIN_ROOT}` → `PLUGIN_ROOT`, slash commands) with tool-agnostic equivalents. Everything else — the logic, structure, prompts, patterns — passes through unchanged.
+
+Plugin behavior is the source of truth. This repo is a porting layer, not a rewrite.
+
+---
+
 ## Problem Statement
 
 Today, many high-quality agent capabilities are trapped inside specific ecosystems:
@@ -53,7 +61,7 @@ Expose capabilities through `npx skills add` to make them instantly installable 
                                 ▼
                     ┌────────────────────────┐
                     │  Transformation Layer  │
-                    │   (Extraction Script)  │
+                    │   (extract.js + pipeline modules)  │
                     └───────────┬────────────┘
                                 │
                                 ▼
@@ -75,7 +83,32 @@ scripts/
 ```
 
 ### Transformation Layer
-Converts source assets into a flat `skills/` folder:
+
+The extraction pipeline is a thin orchestrator (`scripts/extract.js`) that delegates to stage modules:
+
+```
+extract.js (orchestrator, ~100 lines)
+  ├── pipeline/copy-direct.js        — Copy direct skills from plugin skill dirs
+  ├── pipeline/merge-commands.js     — Merge commands + agents into unified skills
+  ├── pipeline/output-styles.js      — Extract output style skills
+  ├── pipeline/security-guidance.js  — Translate security guidance plugin
+  └── pipeline/github-management.js  — Package GitHub management scripts as skill
+```
+
+Shared utilities:
+
+```
+lib/cli.js        — CLI argument parsing (--source, --target, --help)
+lib/files.js      — Recursive filesystem copy with transform/mapDest callbacks
+lib/gates.js      — Verification gate builder (6 variants, config-driven)
+lib/context.js    — Shell script context extraction
+lib/skill-md.js   — SKILL.md writer (composes neutralization + gates)
+lib/platform.js   — Platform-neutrality pattern detection and replacement
+lib/frontmatter.js— YAML frontmatter parsing and normalization
+```
+
+Each stage produces files in a flat `skills/` directory:
+
 ```text
 skills/
   commit-commands/
@@ -111,13 +144,37 @@ claude-code-unplugged/
 ├── skills.json                   # Auto-generated manifest (run generate-manifest.js)
 │
 ├── scripts/
+│   ├── extract.js                # Thin orchestrator — delegates to pipeline/ modules
 │   ├── validate.js               # Validate all skills (frontmatter, naming, neutrality)
 │   ├── generate-manifest.js      # Regenerate skills.json from skill directories
-│   ├── extract.js                # Pull and neutralize assets from a source repo
-│   └── test/
+│   │
+│   ├── lib/                      # Shared extraction utilities
+│   │   ├── cli.js                # CLI argument parsing
+│   │   ├── context.js            # Shell script context extraction
+│   │   ├── files.js              # Recursive copy with transform/mapDest
+│   │   ├── frontmatter.js        # YAML frontmatter parsing
+│   │   ├── gates.js              # Verification gate builder (6 variants)
+│   │   ├── platform.js           # Platform-neutrality pattern detection
+│   │   └── skill-md.js           # SKILL.md writer
+│   │
+│   ├── pipeline/                 # Extraction pipeline stage modules
+│   │   ├── copy-direct.js        # Stage 1: Copy direct skills
+│   │   ├── merge-commands.js     # Stage 2: Merge commands + agents
+│   │   ├── output-styles.js      # Stage 3: Output styles
+│   │   ├── security-guidance.js  # Stage 4: Security guidance
+│   │   └── github-management.js  # Stage 5: GitHub management
+│   │
+│   └── test/                     # Test suite
 │       ├── validate.test.js
 │       ├── generate-manifest.test.js
-│       └── extract.test.js
+│       ├── extract.test.js       # Integration tests only
+│       └── lib/                  # Per-module unit tests
+│           ├── cli.test.js
+│           ├── context.test.js
+│           ├── files.test.js
+│           ├── frontmatter.test.js
+│           ├── gates.test.js
+│           └── platform.test.js
 │
 ├── openspec/                     # Spec-driven change workflow
 │   ├── config.yaml
@@ -163,6 +220,17 @@ Since GUI-based coding environments (Cursor, Copilot, VS Code) lack JSON hook ru
 ### 1. Gatekeeper Pattern
 High-severity skills (like `security-guidance`, `code-review`, and `commit-commands`) inject a mandatory XML `<verification_gate>` section immediately before any tool use or code generation. The agent evaluates checklist items (e.g. `secrets`, `input_sanitization`, `paths`) and outputs PASS/FAIL status.
 
+The gate variants are built by `scripts/lib/gates.js` — a config-driven module that maps skill names to their gate templates. Adding a new variant is a single Map entry:
+
+| Skill | Gate Checks |
+|---|---|
+| `security-guidance` | secrets, input_sanitization, paths |
+| `code-review` | conventions, correctness |
+| `commit-commands` | conventions, correctness |
+| `feature-dev` | current_phase, criteria_met |
+| `hookify` | cognitive scan instructions |
+| `ralph-wiggum` | self-enforced loop instructions |
+
 ### 2. Split-Attention Critique Pattern
 To prevent confirmation bias, coding tasks are split: the agent outputs a draft, performs a `<self_critique>` evaluating potential bugs or convention mismatches, and only then produces `<final_code>`.
 
@@ -177,6 +245,7 @@ The project does not aim to:
 * Recreate Claude Code.
 * Support multiple runtime compilation outputs.
 * Maintain backward-compatible plugin directories for Claude Code installations.
+* Rewrite, improve, or modernize the source plugin logic — only port with neutralization.
 
 ---
 
