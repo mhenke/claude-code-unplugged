@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const { parseFrontmatter, stripFrontmatter } = require('./lib/frontmatter');
 
 const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
 const manifestPath = path.resolve(__dirname, '../skills.json');
@@ -20,18 +21,8 @@ for (const name of skills) {
   const mdPath = path.join(skillsDir, name, 'SKILL.md');
   const content = fs.readFileSync(mdPath, 'utf8');
   
-  const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!fmMatch) continue;
-  
-  const meta = {};
-  fmMatch[1].split('\n').forEach(line => {
-    const idx = line.indexOf(':');
-    if (idx !== -1) {
-      const key = line.slice(0, idx).trim();
-      const val = line.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
-      meta[key] = val;
-    }
-  });
+  const meta = parseFrontmatter(content);
+  if (Object.keys(meta).length === 0) continue;
 
   const entry = {
     name,
@@ -40,7 +31,7 @@ for (const name of skills) {
     version: defaultSkillVersion,
   };
 
-  const body = content.replace(/^---[\s\S]*?---\r?\n/, '').trim();
+  const body = stripFrontmatter(content).trim();
   entry.bodyLength = body.length;
 
   manifest.push(entry);

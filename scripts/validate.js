@@ -7,24 +7,8 @@
 
 const fs = require('fs');
 const path = require('path');
-
-function parseFrontmatter(content) {
-  const match = content.match(/^---([\s\S]*?)---/);
-  const metadata = {};
-  if (match) {
-    const lines = match[1].split('\n');
-    for (const line of lines) {
-      const idx = line.indexOf(':');
-      if (idx !== -1) {
-        const key = line.slice(0, idx).trim();
-        const val = line.slice(idx + 1).trim();
-        // Remove quotes if present
-        metadata[key] = val.replace(/^["']|["']$/g, '');
-      }
-    }
-  }
-  return metadata;
-}
+const { parseFrontmatter } = require('./lib/frontmatter');
+const { findNeutralityViolations } = require('./lib/platform');
 
 function validateSkills() {
   const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
@@ -108,23 +92,7 @@ function validateSkills() {
     }
 
     // Platform-neutrality checks
-    const neutralityIssues = [];
-
-    if (/\bClaude Code\b/i.test(content)) {
-      neutralityIssues.push('contains "Claude Code" reference');
-    }
-    if (/hooks\.json/.test(content)) {
-      neutralityIssues.push('references "hooks.json" (platform-specific hook config)');
-    }
-    if (/\$\{CLAUDE_PLUGIN_ROOT\}/.test(content)) {
-      neutralityIssues.push('references "${CLAUDE_PLUGIN_ROOT}" (platform-specific env var)');
-    }
-    if (/\.claude\//i.test(content)) {
-      neutralityIssues.push('references ".claude/" path (platform-specific directory)');
-    }
-    if (/`\/(commit|feature-dev|code-review|review-pr|hookify|mcp|clean_gone|commit-push-pr|ralph-loop|cancel-ralph|new-sdk-app|create-plugin|help)/.test(content)) {
-      neutralityIssues.push('contains slash commands (platform-specific CLI syntax)');
-    }
+    const neutralityIssues = findNeutralityViolations(content);
 
     if (neutralityIssues.length > 0) {
       console.error(`❌ [${skill}] Platform-neutrality violations:`);
