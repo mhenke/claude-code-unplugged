@@ -15,7 +15,7 @@ colors:
   on-dark: "#e8e6e1"
   on-dark-soft: "#9e9b95"
   border: "#e2ddd5"
-  text-muted: "#6b6760"
+  text-muted: "#656358"
   status-red: "#c64545"
   status-yellow: "#d4a017"
   status-green: "#5db872"
@@ -132,6 +132,7 @@ The palette is warm and grounded, inspired by natural materials rather than synt
 ### Primary: Terracotta
 - **Terracotta** (`#cc785c`): Primary actions, interactive accents, buttons, and links. Warm without being aggressive. Suggests craftsmanship and reliability.
 - **Terracotta Soft** (`#e8b4a0`): Hover states, background fills that need a warm tint.
+- **Terracotta Dark** (`#9a4f35`): WCAG AA contrast variant of terracotta — used where `#cc785c` fails 4.5:1 on light backgrounds. Applied to kicker text on canvas and feature card icons on card surfaces.
 
 ### Secondary: Sage
 - **Sage** (`#6b8f71`): Secondary accents, file-status indicators, success states. Grounds the warmer terracotta with a calm, natural counterpoint.
@@ -147,7 +148,7 @@ The palette is warm and grounded, inspired by natural materials rather than synt
 - **On-Dark** (`#e8e6e1`): Primary text on dark surfaces.
 - **On-Dark Soft** (`#9e9b95`): Secondary text, metadata on dark surfaces.
 - **Border** (`#e2ddd5`): Dividers, card outlines, subtle structural lines.
-- **Text Muted** (`#6b6760`): De-emphasized text, secondary information.
+- **Text Muted** (`#656358`): De-emphasized text, secondary information.
 
 ### Status
 - **Red** (`#c64545`), **Yellow** (`#d4a017`), **Green** (`#5db872`): Terminal window dot colors and status indicators.
@@ -173,6 +174,8 @@ The palette is warm and grounded, inspired by natural materials rather than synt
 - **Body** (400, 17px, 1.6): All continuous text. Max line length ~70ch.
 - **Label** (500, 14px, 1.4): Navigation links, button text, chip labels, metadata.
 - **Code** (400, 14px, 1.6): Terminal output, code blocks, install commands, inline `<code>`.
+
+> **Landing page display sizes:** The marketing landing page (`docs/index.html`) uses larger display sizes (h1: 64px, h2: 48px, h3: 36px) than the base design system, intentionally increased for marketing impact and visual hierarchy on hero/section headings.
 
 ## 4. Elevation
 
@@ -200,7 +203,7 @@ Depth is communicated entirely through tonal layering: surfaces shift between `c
 
 ### Navigation
 - **Style:** Fixed top bar, 40px height, blurred background (`backdrop-filter: blur(8px)`). Logo + wordmark on left, links on right.
-- **Typography:** Inter 500, 14px. Link color: text-muted (`#6b6760`). No underline on default state.
+- **Typography:** Inter 500, 14px. Link color: text-muted (`#656358`). No underline on default state.
 - **Active/Current:** Ink (`#1a1a1a`) or CTA (terracotta button pill).
 - **Mobile (<768px):** Links hidden, hamburger menu toggles a full-width overlay menu.
 

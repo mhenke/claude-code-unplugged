@@ -16,7 +16,7 @@
       --ink: #141413;
       --body: #3d3d3a;
       --body-strong: #252523;
-      --muted: #6c6a64;
+      --muted: #656358;
       --muted-soft: #8e8b82;
       --hairline: #e6dfd8;
       --hairline-soft: #ebe6df;
@@ -27,7 +27,7 @@
       --surface-dark: #181715;
       --surface-dark-elevated: #252320;
       --surface-dark-soft: #1f1e1b;
-      --on-primary: #ffffff;
+      --on-primary: #181715;
       --on-dark: #faf9f5;
       --on-dark-soft: #a09d96;
       --accent-teal: #5db8a6;
@@ -419,6 +419,10 @@
       margin: 0 auto;
     }
 
+    .section-header .kicker {
+      color: #9a4f35;
+    }
+
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -448,7 +452,7 @@
       justify-content: center;
       background-color: var(--surface-cream-strong);
       border-radius: 8px;
-      color: var(--primary);
+      color: #9a4f35;
     }
 
     .feature-icon svg {
@@ -557,6 +561,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(20, 20, 19, 0.08);
+      color: var(--on-dark);
     }
 
     .code-window-header {
@@ -566,6 +571,7 @@
       padding: 16px 24px;
       background-color: var(--surface-dark);
       border-bottom: 1px solid var(--surface-dark-elevated);
+      color: var(--on-dark-soft);
     }
 
     .code-window-dots {
@@ -626,13 +632,13 @@
     }
 
     .cta-band h2 {
-      color: var(--on-primary);
+      color: var(--surface-dark);
       font-size: 36px;
       letter-spacing: -0.5px;
     }
 
     .cta-band p {
-      color: rgba(255, 255, 255, 0.85);
+      color: var(--surface-dark);
       font-size: 18px;
       line-height: 1.55;
     }
@@ -731,7 +737,7 @@
       gap: 12px;
     }
 
-    .footer-column h4 {
+    .footer-column h3 {
       font-family: "Inter", sans-serif;
       font-size: 14px;
       font-weight: 500;
@@ -876,6 +882,36 @@
       }
     }
 
+    /* Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 0;
+      background: var(--surface-dark);
+      color: var(--canvas);
+      padding: 8px 16px;
+      z-index: 1000;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      text-decoration: none;
+      border-radius: 0 0 4px 0;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    .code-window-dot.red { background-color: #c64545; }
+    .code-window-dot.yellow { background-color: #d4a017; }
+    .code-window-dot.green { background-color: #5db872; }
+
     /* Animations */
     @keyframes fadeInUp {
       from {
@@ -903,12 +939,13 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- Navigation -->
   <nav class="top-nav">
     <div class="container nav-inner">
       <a href="#" class="nav-brand">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5L12 2Z" fill="var(--ink)"/>
         </svg>
         <span class="nav-brand-text">Claude Code Unplugged</span>
@@ -920,7 +957,7 @@
         <a href="https://github.com/mhenke/claude-code-unplugged" class="nav-link">GitHub</a>
         <a href="#get-started" class="nav-cta">Try Skills</a>
       </div>
-      <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
         <span></span>
         <span></span>
         <span></span>
@@ -935,6 +972,7 @@
     </div>
   </nav>
 
+  <main id="main-content">
   <!-- Hero -->
   <section class="hero">
     <div class="container hero-grid">
@@ -964,12 +1002,12 @@
 
 <span class="command">$</span> <span class="keyword">ls</span> skills/
 feature-dev/          code-review/          commit-commands/
-pr-review-toolkit/    explanatory-output/   learning-output/
+pr-review-toolkit/    explanatory-output-style/  learning-output-style/
 security-guidance/    github-management/    frontend-design/
 plugin-dev/           plugin-structure/     plugin-settings/
 agent-development/    hook-development/     hookify/
 command-development/  skill-development/    mcp-integration/
-writing-rules/        claude-opus-migration/ agent-sdk-dev/
+writing-rules/        claude-opus-4-5-migration/  agent-sdk-dev/
 ralph-wiggum/</pre>
       </div>
     </div>
@@ -985,7 +1023,7 @@ ralph-wiggum/</pre>
       <div class="feature-grid">
         <div class="feature-card animate-in delay-1">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2L2 7l10 5 10-5-10-5z"/>
               <path d="M2 17l10 5 10-5"/>
               <path d="M2 12l10 5 10-5"/>
@@ -996,7 +1034,7 @@ ralph-wiggum/</pre>
         </div>
         <div class="feature-card animate-in delay-2">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
@@ -1005,7 +1043,7 @@ ralph-wiggum/</pre>
         </div>
         <div class="feature-card animate-in delay-3">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
@@ -1015,7 +1053,7 @@ ralph-wiggum/</pre>
         </div>
         <div class="feature-card animate-in delay-1">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
               <line x1="3" y1="9" x2="21" y2="9"/>
               <line x1="9" y1="21" x2="9" y2="9"/>
@@ -1026,7 +1064,7 @@ ralph-wiggum/</pre>
         </div>
         <div class="feature-card animate-in delay-2">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
               <circle cx="9" cy="7" r="4"/>
               <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
@@ -1038,7 +1076,7 @@ ralph-wiggum/</pre>
         </div>
         <div class="feature-card animate-in delay-3">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
           </div>
@@ -1053,11 +1091,11 @@ ralph-wiggum/</pre>
   <section class="categories" id="categories">
     <div class="container">
       <div class="section-header">
-        <h2 class="animate-in">22 Skills, 5 Categories</h2>
+        <h2 class="animate-in">22 Skills, 6 Categories</h2>
         <p class="animate-in delay-1">Every skill is a portable, self-contained workflow ready for any agent.</p>
       </div>
       <div class="category-grid">
-        <div class="category-card animate-in delay-1">
+        <div class="category-card animate-in delay-1" tabindex="0" role="button">
           <div class="category-header">
             <div class="title-md">Workflows & Prompts</div>
             <span class="category-count">3</span>
@@ -1069,7 +1107,7 @@ ralph-wiggum/</pre>
             <span class="skill-pill">commit-commands</span>
           </div>
         </div>
-        <div class="category-card animate-in delay-2">
+        <div class="category-card animate-in delay-2" tabindex="0" role="button">
           <div class="category-header">
             <div class="title-md">Agent Personas</div>
             <span class="category-count">4</span>
@@ -1077,12 +1115,12 @@ ralph-wiggum/</pre>
           <p>Specialized reviewer personas and output styles.</p>
           <div class="category-skills">
             <span class="skill-pill">pr-review-toolkit</span>
-            <span class="skill-pill">explanatory-output</span>
-            <span class="skill-pill">learning-output</span>
+            <span class="skill-pill">explanatory-output-style</span>
+            <span class="skill-pill">learning-output-style</span>
             <span class="skill-pill">ralph-wiggum</span>
           </div>
         </div>
-        <div class="category-card animate-in delay-3">
+        <div class="category-card animate-in delay-3" tabindex="0" role="button">
           <div class="category-header">
             <div class="title-md">Automation</div>
             <span class="category-count">3</span>
@@ -1094,7 +1132,7 @@ ralph-wiggum/</pre>
             <span class="skill-pill">frontend-design</span>
           </div>
         </div>
-        <div class="category-card animate-in delay-1">
+        <div class="category-card animate-in delay-1" tabindex="0" role="button">
           <div class="category-header">
             <div class="title-md">Plugin & Agent Dev</div>
             <span class="category-count">9</span>
@@ -1108,10 +1146,10 @@ ralph-wiggum/</pre>
             <span class="skill-pill">hook-development</span>
           </div>
         </div>
-        <div class="category-card animate-in delay-2">
+        <div class="category-card animate-in delay-2" tabindex="0" role="button">
           <div class="category-header">
             <div class="title-md">More Plugin Dev</div>
-            <span class="category-count">—</span>
+            <span class="category-count">5</span>
           </div>
           <p>Continuing the plugin and agent development collection.</p>
           <div class="category-skills">
@@ -1122,14 +1160,14 @@ ralph-wiggum/</pre>
             <span class="skill-pill">writing-rules</span>
           </div>
         </div>
-        <div class="category-card animate-in delay-3">
+        <div class="category-card animate-in delay-3" tabindex="0" role="button">
           <div class="category-header">
             <div class="title-md">Migration & SDK</div>
             <span class="category-count">2</span>
           </div>
           <p>Migration guides and SDK development workflows.</p>
           <div class="category-skills">
-            <span class="skill-pill">claude-opus-migration</span>
+            <span class="skill-pill">claude-opus-4-5-migration</span>
             <span class="skill-pill">agent-sdk-dev</span>
           </div>
         </div>
@@ -1151,9 +1189,9 @@ ralph-wiggum/</pre>
       <div class="code-window animate-in delay-2">
         <div class="code-window-header">
           <div class="code-window-dots">
-            <div class="code-window-dot" style="background-color: #c64545;"></div>
-            <div class="code-window-dot" style="background-color: #d4a017;"></div>
-            <div class="code-window-dot" style="background-color: #5db872;"></div>
+            <div class="code-window-dot red"></div>
+            <div class="code-window-dot yellow"></div>
+            <div class="code-window-dot green"></div>
           </div>
           <span class="code-window-filename">skills/feature-dev/SKILL.md</span>
         </div>
@@ -1201,7 +1239,7 @@ ralph-wiggum/</pre>
       <div class="install-command animate-in delay-2">
         <span>npx skills add mhenke/claude-code-unplugged</span>
         <button onclick="copyCommand()" aria-label="Copy command">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
@@ -1211,13 +1249,15 @@ ralph-wiggum/</pre>
     </div>
   </section>
 
+  </main>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="footer-brand-row">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5L12 2Z" fill="var(--on-dark)"/>
             </svg>
             <span class="footer-brand-text">Claude Code Unplugged</span>
@@ -1225,7 +1265,7 @@ ralph-wiggum/</pre>
           <p>22 portable agent skills extracted from Claude Code. Use them anywhere. No lock-in. No rewrites. Pure porting.</p>
         </div>
         <div class="footer-column">
-          <h4>Skills</h4>
+          <h3>Skills</h3>
           <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/feature-dev">feature-dev</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/code-review">code-review</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/pr-review-toolkit">pr-review-toolkit</a>
@@ -1233,20 +1273,20 @@ ralph-wiggum/</pre>
           <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/plugin-dev">plugin-dev</a>
         </div>
         <div class="footer-column">
-          <h4>Resources</h4>
+          <h3>Resources</h3>
           <a href="https://github.com/mhenke/claude-code-unplugged">GitHub Repository</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/issues">Issues</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/discussions">Discussions</a>
           <a href="https://github.com/mhenke/claude-code-unplugged#readme">README</a>
         </div>
         <div class="footer-column">
-          <h4>Project</h4>
+          <h3>Project</h3>
           <a href="https://github.com/mhenke/claude-code-unplugged/blob/main/LICENSE">License</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/blob/main/CONTRIBUTING.md">Contributing</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/releases">Releases</a>
         </div>
         <div class="footer-column">
-          <h4>Connect</h4>
+          <h3>Connect</h3>
           <a href="https://github.com/mhenke">@mhenke</a>
           <a href="https://github.com/mhenke/claude-code-unplugged/stargazers">Star on GitHub</a>
         </div>
@@ -1262,6 +1302,9 @@ ralph-wiggum/</pre>
     function toggleMenu() {
       const menu = document.getElementById('mobileMenu');
       menu.classList.toggle('active');
+      const menuBtn = document.querySelector('.hamburger');
+      const isExpanded = menu.classList.contains('active');
+      menuBtn.setAttribute('aria-expanded', isExpanded);
     }
 
     function copyCommand() {
@@ -1269,7 +1312,7 @@ ralph-wiggum/</pre>
       navigator.clipboard.writeText(command).then(() => {
         const btn = document.querySelector('.install-command button');
         const original = btn.innerHTML;
-        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        btn.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
         setTimeout(() => {
           btn.innerHTML = original;
         }, 2000);
