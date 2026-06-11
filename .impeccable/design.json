@@ -1,0 +1,115 @@
+{
+  "project": "Claude Code Unplugged",
+  "description": "Portable agent skills extracted from Claude Code — CLI tool + static landing page",
+  "register": "product",
+  "updated": "2026-06-11",
+  "colors": {
+    "terracotta": "#cc785c",
+    "terracotta-soft": "#e8b4a0",
+    "sage": "#6b8f71",
+    "sage-soft": "#a8c4a8",
+    "ink": "#1a1a1a",
+    "canvas": "#faf9f5",
+    "surface": "#ffffff",
+    "surface-soft": "#f2f0eb",
+    "surface-dark": "#1e1e1e",
+    "surface-dark-elevated": "#2a2a2a",
+    "on-dark": "#e8e6e1",
+    "on-dark-soft": "#9e9b95",
+    "border": "#e2ddd5",
+    "text-muted": "#6b6760",
+    "status-red": "#c64545",
+    "status-yellow": "#d4a017",
+    "status-green": "#5db872"
+  },
+  "typography": {
+    "display": { "family": "Cormorant Garamond, Georgia, serif", "size": 56, "weight": 500, "lineHeight": 1.2, "letterSpacing": -1 },
+    "headline": { "family": "Cormorant Garamond, Georgia, serif", "size": 44, "weight": 500, "lineHeight": 1.2, "letterSpacing": -0.5 },
+    "title": { "family": "Cormorant Garamond, Georgia, serif", "size": 36, "weight": 500, "lineHeight": 1.2 },
+    "body": { "family": "Inter, -apple-system, sans-serif", "size": 17, "weight": 400, "lineHeight": 1.6 },
+    "label": { "family": "Inter, -apple-system, sans-serif", "size": 14, "weight": 500, "lineHeight": 1.4 },
+    "code": { "family": "JetBrains Mono, monospace", "size": 14, "weight": 400, "lineHeight": 1.6 }
+  },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "xl": 48,
+    "xxl": 80
+  },
+  "rounded": {
+    "sm": 8,
+    "md": 12
+  },
+  "breakpoints": {
+    "sm": 768
+  },
+  "components": {
+    "button-primary": {
+      "backgroundColor": "#cc785c",
+      "textColor": "#ffffff",
+      "rounded": 8,
+      "padding": "14px 28px",
+      "height": 48,
+      "font": "Inter 500 14px",
+      "transition": "0.2s ease",
+      "hover": { "backgroundColor": "#1a1a1a" }
+    },
+    "button-secondary": {
+      "backgroundColor": "#faf9f5",
+      "textColor": "#1a1a1a",
+      "rounded": 8,
+      "padding": "14px 28px",
+      "height": 48,
+      "font": "Inter 500 14px",
+      "transition": "0.2s ease",
+      "hover": { "backgroundColor": "#f2f0eb" }
+    },
+    "nav": {
+      "height": 40,
+      "backgroundColor": "rgba(250, 249, 245, 0.9)",
+      "backdropFilter": "blur(8px)",
+      "linkColor": "#6b6760",
+      "linkFont": "Inter 500 14px",
+      "ctaBackground": "#cc785c",
+      "ctaColor": "#ffffff",
+      "ctaRounded": 8,
+      "ctaPadding": "10px 24px"
+    },
+    "code-window": {
+      "backgroundColor": "#1e1e1e",
+      "rounded": 12,
+      "textColor": "#e8e6e1",
+      "font": "JetBrains Mono 14px",
+      "headerDotSize": 8,
+      "headerDotGap": 6,
+      "headerDotColors": ["#c64545", "#d4a017", "#5db872"]
+    },
+    "skill-pill": {
+      "backgroundColor": "#f2f0eb",
+      "textColor": "#1a1a1a",
+      "rounded": 8,
+      "padding": "6px 14px",
+      "font": "Inter 14px"
+    },
+    "install-command": {
+      "backgroundColor": "#1e1e1e",
+      "textColor": "#e8e6e1",
+      "rounded": 8,
+      "padding": "14px 24px",
+      "font": "JetBrains Mono 14px"
+    },
+    "card": {
+      "backgroundColor": "#ffffff",
+      "rounded": 12,
+      "padding": 24
+    },
+    "cta-band": {
+      "backgroundColor": "#1e1e1e",
+      "textColor": "#e8e6e1",
+      "mutedColor": "#9e9b95",
+      "padding": 80
+    }
+  }
+}
