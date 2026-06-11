@@ -2,7 +2,7 @@ const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
-const { copyRecursiveSync, ensureDir } = require('../../lib/files');
+const { copyRecursiveSync, ensureDir, sanitizePath } = require('../../lib/files');
 
 const TMP_DIR = path.resolve(__dirname, '../../../tmp-test-files');
 
@@ -69,5 +69,30 @@ describe('files.js', () => {
     assert.ok(fs.existsSync(path.join(destDir, 'image.png')));
     const content = fs.readFileSync(path.join(destDir, 'image.png'));
     assert.strictEqual(content[0], 0x89);
+  });
+
+  it('sanitizePath rejects names containing ".."', () => {
+    assert.throws(() => sanitizePath('.._evil'), /Path traversal detected/);
+  });
+
+  it('sanitizePath rejects names containing "/"', () => {
+    assert.throws(() => sanitizePath('foo/bar'), /Path traversal detected/);
+  });
+
+  it('sanitizePath allows valid directory names', () => {
+    assert.strictEqual(sanitizePath('my-skill'), 'my-skill');
+    assert.strictEqual(sanitizePath('skill-name-123'), 'skill-name-123');
+  });
+
+  it('copyRecursiveSync rejects directory names with path traversal', () => {
+    const srcDir = path.join(TMP_DIR, 'src-traversal');
+    const destDir = path.join(TMP_DIR, 'dest-traversal');
+    fs.mkdirSync(srcDir, { recursive: true });
+    fs.mkdirSync(path.join(srcDir, '.._evil'), { recursive: true });
+    fs.writeFileSync(path.join(srcDir, '.._evil', 'test.md'), 'content', 'utf8');
+
+    assert.throws(() => {
+      copyRecursiveSync(srcDir, destDir);
+    }, /Path traversal detected/);
   });
 });

@@ -18,6 +18,7 @@ function copyRecursiveSync(src, dest, opts = {}) {
   if (isDirectory) {
     fs.mkdirSync(dest, { recursive: true });
     fs.readdirSync(src).forEach((childItemName) => {
+      sanitizePath(childItemName);
       copyRecursiveSync(
         path.join(src, childItemName),
         path.join(dest, childItemName),
@@ -50,8 +51,26 @@ function copyRecursiveSync(src, dest, opts = {}) {
   }
 }
 
+/**
+ * Validate that a file/directory name does not contain path traversal sequences.
+ * Defense-in-depth: Node.js readdirSync never returns '.' or '..', and Linux
+ * filenames cannot contain '/', but we guard anyway.
+ * @param {string} name - A single file or directory name component
+ * @returns {string} The name unchanged if valid
+ * @throws {Error} If name contains '..' or '/'
+ */
+function sanitizePath(name) {
+  if (name.includes('..')) {
+    throw new Error(`Path traversal detected: "${name}"`);
+  }
+  if (name.includes('/')) {
+    throw new Error(`Path traversal detected: "${name}"`);
+  }
+  return name;
+}
+
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-module.exports = { copyRecursiveSync, ensureDir };
+module.exports = { copyRecursiveSync, ensureDir, sanitizePath };

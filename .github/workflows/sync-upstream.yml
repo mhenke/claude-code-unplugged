@@ -1,0 +1,215 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # Weekly: Monday 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Skip early-exit check and force re-extraction'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'mhenke/claude-code-unplugged'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check upstream
+        id: check
+        run: |
+          CURRENT=$(jq -r '.provenance.sourceCommit' skills.json)
+          UPSTREAM_LINE=$(git ls-remote https://github.com/anthropics/claude-code.git HEAD)
+          FULL_HASH=$(echo "$UPSTREAM_LINE" | awk '{print $1}')
+          SHORT_HASH=$(echo "$FULL_HASH" | cut -c1-7)
+          echo "current=$CURRENT"
+          echo "upstream=$SHORT_HASH"
+          echo "upstream_short=$SHORT_HASH" >> "$GITHUB_OUTPUT"
+          echo "upstream_full=$FULL_HASH" >> "$GITHUB_OUTPUT"
+          if [ "$CURRENT" = "$SHORT_HASH" ] && [ "${{ inputs.force }}" != "true" ]; then
+            echo "up-to-date=true" >> "$GITHUB_OUTPUT"
+            echo "Up to date with $CURRENT"
+          else
+            echo "up-to-date=false" >> "$GITHUB_OUTPUT"
+            echo "Upstream changed: $CURRENT → $SHORT_HASH"
+          fi
+
+      - name: Clone upstream repository
+        if: steps.check.outputs.up-to-date != 'true'
+        run: |
+          git clone --depth 1 https://github.com/anthropics/claude-code.git ${{ runner.temp }}/upstream
+
+      - name: Create temp working directory
+        if: steps.check.outputs.up-to-date != 'true'
+        run: |
+          mkdir -p ${{ runner.temp }}/sync-output/skills
+
+      - name: Run extraction pipeline
+        if: steps.check.outputs.up-to-date != 'true'
+        env:
+          SOURCE_REPOSITORY: https://github.com/anthropics/claude-code.git
+          SOURCE_COMMIT: ${{ steps.check.outputs.upstream_full }}
+        run: |
+          node scripts/extract.js \
+            --source ${{ runner.temp }}/upstream \
+            --target ${{ runner.temp }}/sync-output
+
+      - name: Verify extraction produced skills
+        if: steps.check.outputs.up-to-date != 'true'
+        run: |
+          SKILL_COUNT=$(find ${{ runner.temp }}/sync-output/skills -name "SKILL.md" | wc -l)
+          echo "Extracted $SKILL_COUNT skills"
+          if [ "$SKILL_COUNT" -lt "20" ]; then
+            echo "ERROR: Expected at least 20 skills, got $SKILL_COUNT"
+            exit 1
+          fi
+
+      - name: Generate manifest for extracted skills
+        if: steps.check.outputs.up-to-date != 'true'
+        env:
+          SKILLS_DIR: ${{ runner.temp }}/sync-output/skills
+          SOURCE_REPOSITORY: https://github.com/anthropics/claude-code.git
+          SOURCE_COMMIT: ${{ steps.check.outputs.upstream_full }}
+        run: |
+          node scripts/generate-manifest.js --output ${{ runner.temp }}/sync-output/skills.json
+
+      - name: Validate extracted skills
+        if: steps.check.outputs.up-to-date != 'true'
+        env:
+          SKILLS_DIR: ${{ runner.temp }}/sync-output/skills
+        run: |
+          node scripts/validate.js
+
+      - name: Diff extracted output
+        id: diff
+        if: steps.check.outputs.up-to-date != 'true'
+        run: |
+          diff -ru skills/ ${{ runner.temp }}/sync-output/skills/ > diff-output.txt || true
+          diff -u skills.json ${{ runner.temp }}/sync-output/skills.json >> diff-output.txt || true
+          if [ -s diff-output.txt ]; then
+            echo "has-changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-changes=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected after extraction"
+          fi
+
+      - name: List deleted skills
+        id: deleted
+        if: steps.check.outputs.up-to-date != 'true' && steps.diff.outputs.has-changes == 'true'
+        run: |
+          comm -23 <(ls skills/ | sort) <(ls ${{ runner.temp }}/sync-output/skills/ | sort) > deleted-skills.txt || true
+          echo "Deleted: $(cat deleted-skills.txt | tr '\n' ' ')"
+
+      - name: Check for existing PR
+        id: existing-pr
+        if: steps.check.outputs.up-to-date != 'true' && steps.diff.outputs.has-changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=$(gh pr list --head "sync/upstream-${{ steps.check.outputs.upstream_short }}" --json number --jq '.[0].number' || echo "none")
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          if [ "$PR_NUMBER" != "none" ] && [ -n "$PR_NUMBER" ]; then
+            echo "Found existing PR #$PR_NUMBER, will update"
+          else
+            echo "No existing PR found, will create new one"
+          fi
+
+      - name: Create or update pull request
+        if: steps.check.outputs.up-to-date != 'true' && steps.diff.outputs.has-changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Git config
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Switch to dedicated branch
+          SHORT_HASH="${{ steps.check.outputs.upstream_short }}"
+          git checkout -B "sync/upstream-${SHORT_HASH}"
+
+          # Copy extracted skills into repo
+          rsync -a --delete ${{ runner.temp }}/sync-output/skills/ skills/
+          cp ${{ runner.temp }}/sync-output/skills.json skills.json
+
+          # Stage all changes (scoped paths only)
+          git add -A skills/ skills.json
+
+          # Check if there are any changes
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          # Commit and push
+          git commit -m "chore: sync upstream claude-code ${SHORT_HASH}"
+          git push origin "sync/upstream-${SHORT_HASH}"
+
+          # Build PR body with source link, changes, new/removed skills, and pipeline status
+          PR_BODY="## Upstream Sync
+
+          Syncing upstream [anthropics/claude-code@${{ steps.check.outputs.upstream_full }}](https://github.com/anthropics/claude-code/commit/${{ steps.check.outputs.upstream_full }}) into \`claude-code-unplugged\`.
+
+          ### Changed Skills
+          \`\`\`
+          $(cat diff-output.txt 2>/dev/null | head -50)
+          \`\`\`
+
+          ### Removed Skills
+          $(cat deleted-skills.txt 2>/dev/null | sed 's/^/- /')
+
+          ### Pipeline Status
+          - Extraction: ✅ Complete
+          - Validation: ✅ Passed
+          - Manifest: ✅ Regenerated
+
+          > This PR was automatically generated by the \`Sync Upstream\` workflow."
+
+          # Check for existing PR
+          PR_NUMBER="${{ steps.existing-pr.outputs.pr_number }}"
+          if [ "$PR_NUMBER" != "none" ] && [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --body "$PR_BODY"
+          else
+            gh pr create \
+              --base main \
+              --head "sync/upstream-${SHORT_HASH}" \
+              --title "chore: sync upstream claude-code ${SHORT_HASH}" \
+              --body "$PR_BODY"
+          fi
+
+      - name: Create failure issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "upstream-sync: failure — ${{ steps.check.outputs.upstream_short }}" \
+            --label "sync,upstream" \
+            --body "## Upstream Sync Failure
+
+          **Commit:** anthropics/claude-code@${{ steps.check.outputs.upstream_full }}
+          **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          See workflow run logs linked above."
