@@ -142,6 +142,7 @@ The palette is warm and grounded, inspired by natural materials rather than synt
 - **Canvas** (`#faf9f5`): Page background — a warm off-white that makes the palette feel tactile and intentional.
 - **Surface** (`#ffffff`): Cards, code window backgrounds, elevated containers.
 - **Surface Soft** (`#f2f0eb`): Hover states, chip backgrounds, subtle dividers.
+- **Surface Card** (`#efe9de`): Warm-tinted card surface, slightly darker than surface-soft. Used for cards that need more visual weight against the canvas.
 - **Surface Dark** (`#1e1e1e`): Footer, CTA band, code window — dark sections that need visual weight.
 - **Surface Dark Elevated** (`#2a2a2a`): Borders and subtle elevation within dark surfaces.
 - **Ink** (`#1a1a1a`): Body text and headings on light surfaces. High-contrast and authoritative.
@@ -206,6 +207,7 @@ Depth is communicated entirely through tonal layering: surfaces shift between `c
 - **Typography:** Inter 500, 14px. Link color: text-muted (`#656358`). No underline on default state.
 - **Active/Current:** Ink (`#1a1a1a`) or CTA (terracotta button pill).
 - **Mobile (<768px):** Links hidden, hamburger menu toggles a full-width overlay menu.
+- **Landing page override:** The marketing landing page uses 64px nav height for increased presence and touch-target comfort on mobile.
 
 ### Code Window
 - **Style:** Terminal-style card with three macOS dot indicators (red/yellow/green, 8px circles, 6px gap) in the header bar. Filename label on the right side of the header.
@@ -226,8 +228,17 @@ Depth is communicated entirely through tonal layering: surfaces shift between `c
 - **Typography:** JetBrains Mono 14px.
 
 ### CTA Band
-- **Style:** Full-width dark section (`surface-dark`), centered content. Not a card — bleeds edge-to-edge.
+- **Style:** Full-width section, centered content. Not a card — bleeds edge-to-edge.
 - **Internal elements:** Headline (center-aligned, on-dark), description text (on-dark-soft), install command centered below, secondary button below that.
+- **Landing page override:** The marketing landing page uses terracotta (`#cc785c`) instead of surface-dark. This is a deliberate exception: the terracotta band serves as the page's emotional peak and call-to-action anchor. The Restraint Rule exemption is documented because the CTA band is the single conversion moment on the page.
+
+### Feature List
+- **Style:** Two-column icon+text layout for the marketing landing page features section. No card backgrounds — uses the canvas directly. Each item is an icon + title + description in a horizontal row. Creates visual variety from the category cards below.
+- **Columns:** 2-column grid on desktop, 1-column on mobile
+- **Gap:** 40px vertical, 64px horizontal
+
+### Stats Divider
+- **Style:** Horizontal stat row between sections. Centered numbers with labels, separated by thin vertical dividers. Uses hairline borders top and bottom. Cormorant Garamond for numbers, Inter uppercase for labels.
 
 ## 6. Do's and Don'ts
 
@@ -247,3 +258,13 @@ Depth is communicated entirely through tonal layering: surfaces shift between `c
 - **Don't** use Sans-serif for display headings — Cormorant Garamond is the designated heading face.
 - **Don't** add decorative illustrations or 3D renders. The code window IS the visual.
 - **Don't** break the warm palette with cool grays or blue-grays. Neutrals stay warm.
+
+## 7. Landing Page Exceptions
+
+The marketing landing page (`docs/index.html`) intentionally deviates from the base design system in these ways:
+
+- **Display sizes:** h1: 64px, h2: 48px, h3: 36px (vs 56px, 44px, 36px in the base system) — increased for marketing impact
+- **Nav height:** 64px (vs 40px) — increased for presence and mobile touch targets
+- **CTA band color:** Terracotta (`#cc785c`) instead of surface-dark — the band serves as the page's emotional peak and conversion anchor. Restraint Rule exemption documented in the CTA Band component spec.
+- **Feature layout:** Two-column icon+text list instead of card grid — creates visual variety from the category cards below
+- **Stats divider:** Horizontal stat row between features and categories — breaks the card-tunnel monotony
