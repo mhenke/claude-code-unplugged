@@ -73,6 +73,41 @@ After installation, the `code-review` skill is available in your workspace.
 
 ---
 
+## 🔄 Updating
+
+To update all installed skills to their latest versions:
+
+```bash
+npx skills update
+```
+
+Update specific skills by name:
+
+```bash
+npx skills update feature-dev code-review
+```
+
+Update only global or project-scoped skills:
+
+```bash
+npx skills update -g    # global only
+npx skills update -p    # project only
+```
+
+Skip the interactive scope prompt:
+
+```bash
+npx skills update -y
+```
+
+You can also re-run the install command to force a fresh copy:
+
+```bash
+npx skills add mhenke/claude-code-unplugged
+```
+
+---
+
 ## 🕊️ Philosophy
 
 * **CLI & Model Agnostic:** Translated from proprietary syntax (`!` command interpolations or Claude-only hooks) into standard English directives that any modern LLM can interpret.
