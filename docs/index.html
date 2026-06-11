@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Unplugged — Portable Agent Skills</title>
+  <meta name="description" content="22 portable agent skills extracted from Claude Code. Use them anywhere — Cursor, Gemini CLI, Copilot, VS Code, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc785c;
+      --primary-active: #a9583e;
+      --primary-disabled: #e6dfd8;
+      --ink: #141413;
+      --body: #3d3d3a;
+      --body-strong: #252523;
+      --muted: #6c6a64;
+      --muted-soft: #8e8b82;
+      --hairline: #e6dfd8;
+      --hairline-soft: #ebe6df;
+      --canvas: #faf9f5;
+      --surface-soft: #f5f0e8;
+      --surface-card: #efe9de;
+      --surface-cream-strong: #e8e0d2;
+      --surface-dark: #181715;
+      --surface-dark-elevated: #252320;
+      --surface-dark-soft: #1f1e1b;
+      --on-primary: #ffffff;
+      --on-dark: #faf9f5;
+      --on-dark-soft: #a09d96;
+      --accent-teal: #5db8a6;
+      --accent-amber: #e8a55a;
+      --success: #5db872;
+      --warning: #d4a017;
+      --error: #c64545;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--body);
+      background-color: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: "Cormorant Garamond", "Tiempos Headline", Garamond, "Times New Roman", serif;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    h1 {
+      font-size: 64px;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+    }
+
+    h2 {
+      font-size: 48px;
+      letter-spacing: -1px;
+    }
+
+    h3 {
+      font-size: 36px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+
+    h4 {
+      font-size: 28px;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .title-lg {
+      font-family: "Inter", sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .title-md {
+      font-family: "Inter", sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    .title-sm {
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    .body-sm {
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .caption {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .caption-uppercase {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .code-font {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--canvas);
+      height: 64px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .nav-brand svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .nav-brand-text {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary);
+      color: var(--on-primary);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      border: none;
+      cursor: pointer;
+      height: 40px;
+    }
+
+    .nav-cta:hover {
+      background-color: var(--primary-active);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: var(--ink);
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--canvas);
+      padding: 32px 24px;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 99;
+    }
+
+    .mobile-menu.active {
+      display: flex;
+    }
+
+    .mobile-menu .nav-link {
+      font-size: 18px;
+      padding: 8px 0;
+    }
+
+    .mobile-menu .nav-cta {
+      width: 100%;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    /* Hero */
+    .hero {
+      background-color: var(--canvas);
+      padding: 96px 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero h1 {
+      max-width: 520px;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--body);
+      max-width: 480px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary);
+      color: var(--on-primary);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      border: none;
+      cursor: pointer;
+      height: 44px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-active);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--canvas);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid var(--hairline);
+      transition: background-color 0.2s ease;
+      height: 44px;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--surface-soft);
+    }
+
+    .hero-card {
+      background-color: var(--surface-dark);
+      border-radius: 16px;
+      padding: 32px;
+      color: var(--on-dark);
+      box-shadow: 0 1px 3px rgba(20, 20, 19, 0.08);
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--surface-dark-elevated);
+    }
+
+    .hero-card-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .hero-card-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .hero-card-dot.red { background-color: #c64545; }
+    .hero-card-dot.yellow { background-color: #d4a017; }
+    .hero-card-dot.green { background-color: #5db872; }
+
+    .hero-card-title {
+      font-size: 13px;
+      color: var(--on-dark-soft);
+      margin-left: 8px;
+    }
+
+    .hero-card pre {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--on-dark);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .hero-card .comment { color: var(--muted-soft); }
+    .hero-card .keyword { color: var(--accent-teal); }
+    .hero-card .string { color: var(--accent-amber); }
+    .hero-card .command { color: var(--on-dark); font-weight: 500; }
+
+    /* Features */
+    .features {
+      background-color: var(--canvas);
+      padding: 96px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-header h2 {
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background-color: var(--surface-card);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 1px 3px rgba(20, 20, 19, 0.08);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--surface-cream-strong);
+      border-radius: 8px;
+      color: var(--primary);
+    }
+
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .feature-card p {
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* Categories */
+    .categories {
+      background-color: var(--surface-soft);
+      padding: 96px 0;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .category-card {
+      background-color: var(--canvas);
+      border-radius: 12px;
+      padding: 32px;
+      border: 1px solid var(--hairline);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 1px 3px rgba(20, 20, 19, 0.08);
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .category-count {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    .category-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .category-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .skill-pill {
+      background-color: var(--surface-card);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    /* Code Window */
+    .code-showcase {
+      background-color: var(--canvas);
+      padding: 96px 0;
+    }
+
+    .code-showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .code-showcase-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .code-showcase-content p {
+      color: var(--body);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .code-window {
+      background-color: var(--surface-dark);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(20, 20, 19, 0.08);
+    }
+
+    .code-window-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background-color: var(--surface-dark);
+      border-bottom: 1px solid var(--surface-dark-elevated);
+    }
+
+    .code-window-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .code-window-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .code-window-filename {
+      font-size: 13px;
+      color: var(--on-dark-soft);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .code-window-body {
+      padding: 24px;
+      background-color: var(--surface-dark-soft);
+      overflow-x: auto;
+    }
+
+    .code-window-body pre {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--on-dark);
+      white-space: pre;
+    }
+
+    .code-window-body .yaml-key { color: var(--accent-teal); }
+    .code-window-body .yaml-value { color: var(--accent-amber); }
+    .code-window-body .yaml-comment { color: var(--muted-soft); }
+    .code-window-body .yaml-dash { color: var(--muted-soft); }
+
+    /* CTA Band */
+    .cta-band {
+      background-color: var(--primary);
+      padding: 96px 0;
+      margin: 0 24px;
+      border-radius: 12px;
+      max-width: 1152px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-inner {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .cta-band h2 {
+      color: var(--on-primary);
+      font-size: 36px;
+      letter-spacing: -0.5px;
+    }
+
+    .cta-band p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .cta-band .btn-secondary {
+      background-color: var(--canvas);
+      color: var(--ink);
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 28px;
+      height: 48px;
+    }
+
+    .cta-band .btn-secondary:hover {
+      background-color: var(--surface-soft);
+    }
+
+    .install-command {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--surface-dark);
+      color: var(--on-dark);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 14px;
+      padding: 14px 24px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .install-command button {
+      background: none;
+      border: none;
+      color: var(--on-dark-soft);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+    }
+
+    .install-command button:hover {
+      color: var(--on-dark);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--surface-dark);
+      color: var(--on-dark-soft);
+      padding: 64px 0 32px;
+      margin-top: 96px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--on-dark);
+    }
+
+    .footer-brand-row svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .footer-brand-text {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--on-dark-soft);
+      max-width: 280px;
+    }
+
+    .footer-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-column h4 {
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--on-dark);
+      margin-bottom: 4px;
+    }
+
+    .footer-column a {
+      font-size: 14px;
+      color: var(--on-dark-soft);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-column a:hover {
+      color: var(--on-dark);
+    }
+
+    .footer-bottom {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--surface-dark-elevated);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--on-dark-soft);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 36px;
+        letter-spacing: -0.5px;
+      }
+
+      h2 {
+        font-size: 32px;
+        letter-spacing: -0.3px;
+      }
+
+      h3 {
+        font-size: 28px;
+      }
+
+      .hero {
+        padding: 48px 0;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero h1 {
+        max-width: 100%;
+      }
+
+      .hero-subtitle {
+        max-width: 100%;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-buttons .btn-primary,
+      .hero-buttons .btn-secondary {
+        width: 100%;
+      }
+
+      .features,
+      .categories,
+      .code-showcase {
+        padding: 48px 0;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .code-showcase-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .cta-band {
+        margin: 0 16px;
+        padding: 64px 24px;
+      }
+
+      .cta-band h2 {
+        font-size: 28px;
+      }
+
+      .footer {
+        margin-top: 48px;
+        padding: 48px 0 24px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu {
+        display: none !important;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      /* Visible by default — animation is progressive enhancement */
+    }
+
+    .animate-in.visible {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="top-nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5L12 2Z" fill="var(--ink)"/>
+        </svg>
+        <span class="nav-brand-text">Claude Code Unplugged</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Why Portable?</a>
+        <a href="#categories" class="nav-link">Skills</a>
+        <a href="#code" class="nav-link">Format</a>
+        <a href="https://github.com/mhenke/claude-code-unplugged" class="nav-link">GitHub</a>
+        <a href="#get-started" class="nav-cta">Try Skills</a>
+      </div>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features" class="nav-link" onclick="toggleMenu()">Why Portable?</a>
+      <a href="#categories" class="nav-link" onclick="toggleMenu()">Skills</a>
+      <a href="#code" class="nav-link" onclick="toggleMenu()">Format</a>
+      <a href="https://github.com/mhenke/claude-code-unplugged" class="nav-link" onclick="toggleMenu()">GitHub</a>
+      <a href="#get-started" class="nav-cta" onclick="toggleMenu()">Try Skills</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h1 class="animate-in">Portable agent skills extracted from Claude Code</h1>
+        <p class="hero-subtitle animate-in delay-1">Use battle-tested workflows anywhere — Cursor, Gemini CLI, Copilot, VS Code, and more. No rewrites, no behavioral changes. Pure porting with platform neutrality.</p>
+        <div class="hero-buttons animate-in delay-2">
+          <a href="#get-started" class="btn-primary">Get Started</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged" class="btn-secondary">View on GitHub</a>
+        </div>
+      </div>
+      <div class="hero-card animate-in delay-3">
+        <div class="hero-card-header">
+          <div class="hero-card-dots">
+            <div class="hero-card-dot red"></div>
+            <div class="hero-card-dot yellow"></div>
+            <div class="hero-card-dot green"></div>
+          </div>
+          <span class="hero-card-title">terminal</span>
+        </div>
+        <pre><span class="comment"># Install any skill in one command</span>
+<span class="command">$</span> npx skills add mhenke/claude-code-unplugged
+
+<span class="comment"># Feature development, code review, security guidance</span>
+<span class="comment"># PR review toolkit, plugin development, and more</span>
+<span class="comment"># — 22 skills, zero platform lock-in</span>
+
+<span class="command">$</span> <span class="keyword">ls</span> skills/
+feature-dev/          code-review/          commit-commands/
+pr-review-toolkit/    explanatory-output/   learning-output/
+security-guidance/    github-management/    frontend-design/
+plugin-dev/           plugin-structure/     plugin-settings/
+agent-development/    hook-development/     hookify/
+command-development/  skill-development/    mcp-integration/
+writing-rules/        claude-opus-migration/ agent-sdk-dev/
+ralph-wiggum/</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="animate-in">Why Portable Skills?</h2>
+        <p class="animate-in delay-1">Great workflows are trapped in Claude Code. This project liberates them.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card animate-in delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="title-md">Platform Neutral</div>
+          <p>Standard SKILL.md format works with any AI assistant. No Claude Code references, no platform-specific hooks, no lock-in.</p>
+        </div>
+        <div class="feature-card animate-in delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="title-md">Battle-Tested</div>
+          <p>Extracted from real Claude Code workflows. These are the same prompts and patterns that power production development teams.</p>
+        </div>
+        <div class="feature-card animate-in delay-3">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <div class="title-md">One-Command Install</div>
+          <p>Distributable via <code class="code-font">npx skills add</code>. Add individual skills or the entire collection to your agent in seconds.</p>
+        </div>
+        <div class="feature-card animate-in delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="9" y1="21" x2="9" y2="9"/>
+            </svg>
+          </div>
+          <div class="title-md">Progressive Disclosure</div>
+          <p>Each skill uses progressive disclosure — core instructions in SKILL.md, detailed guides in references/, scripts in scripts/.</p>
+        </div>
+        <div class="feature-card animate-in delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="title-md">22 Specialized Personas</div>
+          <p>From security guidance to PR review toolkits to frontend design skills. Each one a focused expert for a specific task.</p>
+        </div>
+        <div class="feature-card animate-in delay-3">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="title-md">Pure Porting</div>
+          <p>No rewrites, no behavioral changes. We extract the exact workflow logic and make it portable across every platform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="animate-in">22 Skills, 5 Categories</h2>
+        <p class="animate-in delay-1">Every skill is a portable, self-contained workflow ready for any agent.</p>
+      </div>
+      <div class="category-grid">
+        <div class="category-card animate-in delay-1">
+          <div class="category-header">
+            <div class="title-md">Workflows & Prompts</div>
+            <span class="category-count">3</span>
+          </div>
+          <p>End-to-end development workflows and commit automation.</p>
+          <div class="category-skills">
+            <span class="skill-pill">feature-dev</span>
+            <span class="skill-pill">code-review</span>
+            <span class="skill-pill">commit-commands</span>
+          </div>
+        </div>
+        <div class="category-card animate-in delay-2">
+          <div class="category-header">
+            <div class="title-md">Agent Personas</div>
+            <span class="category-count">4</span>
+          </div>
+          <p>Specialized reviewer personas and output styles.</p>
+          <div class="category-skills">
+            <span class="skill-pill">pr-review-toolkit</span>
+            <span class="skill-pill">explanatory-output</span>
+            <span class="skill-pill">learning-output</span>
+            <span class="skill-pill">ralph-wiggum</span>
+          </div>
+        </div>
+        <div class="category-card animate-in delay-3">
+          <div class="category-header">
+            <div class="title-md">Automation</div>
+            <span class="category-count">3</span>
+          </div>
+          <p>Security, GitHub management, and frontend design helpers.</p>
+          <div class="category-skills">
+            <span class="skill-pill">security-guidance</span>
+            <span class="skill-pill">github-management</span>
+            <span class="skill-pill">frontend-design</span>
+          </div>
+        </div>
+        <div class="category-card animate-in delay-1">
+          <div class="category-header">
+            <div class="title-md">Plugin & Agent Dev</div>
+            <span class="category-count">9</span>
+          </div>
+          <p>Comprehensive guides for building plugins, hooks, commands, and skills.</p>
+          <div class="category-skills">
+            <span class="skill-pill">plugin-dev</span>
+            <span class="skill-pill">plugin-structure</span>
+            <span class="skill-pill">plugin-settings</span>
+            <span class="skill-pill">agent-development</span>
+            <span class="skill-pill">hook-development</span>
+          </div>
+        </div>
+        <div class="category-card animate-in delay-2">
+          <div class="category-header">
+            <div class="title-md">More Plugin Dev</div>
+            <span class="category-count">—</span>
+          </div>
+          <p>Continuing the plugin and agent development collection.</p>
+          <div class="category-skills">
+            <span class="skill-pill">hookify</span>
+            <span class="skill-pill">command-development</span>
+            <span class="skill-pill">skill-development</span>
+            <span class="skill-pill">mcp-integration</span>
+            <span class="skill-pill">writing-rules</span>
+          </div>
+        </div>
+        <div class="category-card animate-in delay-3">
+          <div class="category-header">
+            <div class="title-md">Migration & SDK</div>
+            <span class="category-count">2</span>
+          </div>
+          <p>Migration guides and SDK development workflows.</p>
+          <div class="category-skills">
+            <span class="skill-pill">claude-opus-migration</span>
+            <span class="skill-pill">agent-sdk-dev</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code Window -->
+  <section class="code-showcase" id="code">
+    <div class="container code-showcase-grid">
+      <div class="code-showcase-content">
+        <h3 class="animate-in">Standard SKILL.md Format</h3>
+        <p class="animate-in delay-1">Every skill is a directory with a SKILL.md file. YAML frontmatter carries metadata. The body carries the instructions. Platform-neutral, human-readable, and version-controlled.</p>
+        <p class="animate-in delay-2">No proprietary formats. No lock-in. Just Markdown that any agent can read and any developer can edit.</p>
+        <div class="animate-in delay-3" style="margin-top: 8px;">
+          <a href="https://github.com/mhenke/claude-code-unplugged" class="btn-primary">Explore All Skills</a>
+        </div>
+      </div>
+      <div class="code-window animate-in delay-2">
+        <div class="code-window-header">
+          <div class="code-window-dots">
+            <div class="code-window-dot" style="background-color: #c64545;"></div>
+            <div class="code-window-dot" style="background-color: #d4a017;"></div>
+            <div class="code-window-dot" style="background-color: #5db872;"></div>
+          </div>
+          <span class="code-window-filename">skills/feature-dev/SKILL.md</span>
+        </div>
+        <div class="code-window-body">
+          <pre><span class="yaml-key">---</span>
+<span class="yaml-key">name</span>: <span class="yaml-value">feature-dev</span>
+<span class="yaml-key">description</span>: <span class="yaml-value">|
+  7-phase guided feature development:
+  Discovery → Exploration → Clarifying
+  Questions → Architecture Design →
+  Implementation → Quality Review → Summary</span>
+<span class="yaml-key">---</span>
+
+<span class="yaml-comment"># Feature Development Skill</span>
+
+<span class="yaml-comment">## Phase 1: Discovery</span>
+<span class="yaml-dash">-</span> Analyze requirements and constraints
+<span class="yaml-dash">-</span> Identify stakeholders and success criteria
+
+<span class="yaml-comment">## Phase 2: Exploration</span>
+<span class="yaml-dash">-</span> Research existing solutions
+<span class="yaml-dash">-</span> Map technical dependencies
+
+<span class="yaml-comment">## Phase 3: Architecture Design</span>
+<span class="yaml-dash">-</span> Propose system structure
+<span class="yaml-dash">-</span> Define interfaces and data flow
+
+<span class="yaml-comment">## Phase 4: Implementation</span>
+<span class="yaml-dash">-</span> Write code with progressive disclosure
+<span class="yaml-dash">-</span> Test and iterate
+
+<span class="yaml-comment">## Phase 5: Quality Review</span>
+<span class="yaml-dash">-</span> Self-review against acceptance criteria
+<span class="yaml-dash">-</span> Refactor and optimize</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Band -->
+  <section class="cta-band" id="get-started">
+    <div class="cta-inner">
+      <h2 class="animate-in">Get Started in Seconds</h2>
+      <p class="animate-in delay-1">Install the full collection with one command. Add individual skills to any agent. Break the platform lock-in.</p>
+      <div class="install-command animate-in delay-2">
+        <span>npx skills add mhenke/claude-code-unplugged</span>
+        <button onclick="copyCommand()" aria-label="Copy command">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      <a href="https://github.com/mhenke/claude-code-unplugged" class="btn-secondary animate-in delay-3">View on GitHub</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-brand-row">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5L12 2Z" fill="var(--on-dark)"/>
+            </svg>
+            <span class="footer-brand-text">Claude Code Unplugged</span>
+          </div>
+          <p>22 portable agent skills extracted from Claude Code. Use them anywhere. No lock-in. No rewrites. Pure porting.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Skills</h4>
+          <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/feature-dev">feature-dev</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/code-review">code-review</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/pr-review-toolkit">pr-review-toolkit</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/security-guidance">security-guidance</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/tree/main/skills/plugin-dev">plugin-dev</a>
+        </div>
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <a href="https://github.com/mhenke/claude-code-unplugged">GitHub Repository</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/issues">Issues</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/discussions">Discussions</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged#readme">README</a>
+        </div>
+        <div class="footer-column">
+          <h4>Project</h4>
+          <a href="https://github.com/mhenke/claude-code-unplugged/blob/main/LICENSE">License</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/blob/main/CONTRIBUTING.md">Contributing</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/releases">Releases</a>
+        </div>
+        <div class="footer-column">
+          <h4>Connect</h4>
+          <a href="https://github.com/mhenke">@mhenke</a>
+          <a href="https://github.com/mhenke/claude-code-unplugged/stargazers">Star on GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>Claude Code Unplugged — Portable agent skills for every platform.</span>
+        <span>Open source. No lock-in.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('active');
+    }
+
+    function copyCommand() {
+      const command = 'npx skills add mhenke/claude-code-unplugged';
+      navigator.clipboard.writeText(command).then(() => {
+        const btn = document.querySelector('.install-command button');
+        const original = btn.innerHTML;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        setTimeout(() => {
+          btn.innerHTML = original;
+        }, 2000);
+      });
+    }
+
+    // Intersection Observer for scroll animations
+    // Uses classList for robust triggering — content is always visible even if JS fails
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-in').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
