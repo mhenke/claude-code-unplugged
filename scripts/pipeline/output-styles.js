@@ -18,10 +18,11 @@ const styles = [
  * Process output style plugins by extracting their session-start.sh
  * additionalContext and writing them as skills.
  *
- * @param {string} pluginsDir    Path to the source plugins directory
+ * @param {string} sourcePath    Path to the source repository root
  * @param {string} skillsDestDir Path to the destination skills directory
  */
-function processOutputStyles(pluginsDir, skillsDestDir) {
+function processOutputStyles(sourcePath, skillsDestDir) {
+  const pluginsDir = path.join(sourcePath, 'plugins');
   for (const style of styles) {
     const shPath = path.join(pluginsDir, style.plugin, 'hooks-handlers', 'session-start.sh');
     if (fs.existsSync(shPath)) {

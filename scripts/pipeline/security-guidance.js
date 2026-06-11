@@ -13,10 +13,11 @@ const { copyRecursiveSync } = require('../lib/files');
 /**
  * Process the security-guidance plugin into a skill.
  *
- * @param {string} pluginsDir    Path to the source plugins directory
+ * @param {string} sourcePath    Path to the source repository root
  * @param {string} skillsDestDir Path to the destination skills directory
  */
-function processSecurityGuidance(pluginsDir, skillsDestDir) {
+function processSecurityGuidance(sourcePath, skillsDestDir) {
+  const pluginsDir = path.join(sourcePath, 'plugins');
   const secPath = path.join(pluginsDir, 'security-guidance');
   if (!fs.existsSync(secPath)) {
     console.log('Skipping missing plugin: security-guidance');

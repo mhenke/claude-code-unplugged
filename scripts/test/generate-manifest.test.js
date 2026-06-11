@@ -2,9 +2,11 @@ const { describe, it, before, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
+const crypto = require('node:crypto');
 const { execSync } = require('node:child_process');
 
-const TMP_DIR = path.resolve(__dirname, '../../tmp-test-skills-gen');
+const TMP_DIR = path.join(os.tmpdir(), 'ccu-test-manifest-' + crypto.randomUUID());
 const MANIFEST_SCRIPT = path.resolve(__dirname, '../generate-manifest.js');
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const ORIG_JSON = path.join(ROOT_DIR, 'skills.json');

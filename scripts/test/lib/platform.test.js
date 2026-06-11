@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const { cleanAndNeutralize } = require('../../lib/platform');
+const { cleanAndNeutralize, renamePath } = require('../../lib/platform');
 
 describe('extract.js cleanAndNeutralize', () => {
   it('replaces "Claude Code" with "coding assistant"', () => {
@@ -126,5 +126,23 @@ describe('extract.js cleanAndNeutralize', () => {
     const result = cleanAndNeutralize('Run claude-code --continue');
     assert.ok(result.includes('coding-assistant --continue'));
     assert.ok(!result.includes('claude-code'));
+  });
+});
+
+describe('renamePath', () => {
+  it('renames hooks.json to hook-config.json', () => {
+    assert.strictEqual(renamePath('/some/path/hooks.json'), '/some/path/hook-config.json');
+  });
+
+  it('leaves other .json files unchanged', () => {
+    assert.strictEqual(renamePath('/some/path/other.json'), '/some/path/other.json');
+  });
+
+  it('is case-sensitive — HOOKS.JSON is unchanged', () => {
+    assert.strictEqual(renamePath('/some/path/HOOKS.JSON'), '/some/path/HOOKS.JSON');
+  });
+
+  it('leaves non-JSON files unchanged', () => {
+    assert.strictEqual(renamePath('/some/path/skill.md'), '/some/path/skill.md');
   });
 });

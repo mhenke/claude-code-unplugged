@@ -2,9 +2,11 @@ const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
+const crypto = require('node:crypto');
 const { execSync } = require('node:child_process');
 
-const TMP_DIR = path.resolve(__dirname, '../../tmp-test-extract');
+const TMP_DIR = path.join(os.tmpdir(), 'ccu-test-extract-' + crypto.randomUUID());
 const EXTRACT_SCRIPT = path.resolve(__dirname, '../extract.js');
 
 function cleanTmpDir() {

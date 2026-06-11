@@ -7,8 +7,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const { discoverSkills } = require('./lib/discover-skills');
+const { validateSkill } = require('./lib/validate-skill');
 const { parseFrontmatter } = require('./lib/frontmatter');
-const { findNeutralityViolations } = require('./lib/platform');
 
 function validateSkills() {
   const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
@@ -18,9 +19,7 @@ function validateSkills() {
     process.exit(1);
   }
 
-  let skills = fs.readdirSync(skillsDir);
-  const skipDirs = new Set(['.git', '.full-review', 'openspec', 'scripts', 'node_modules']);
-  skills = skills.filter(d => !d.startsWith('.') && !skipDirs.has(d));
+  const skills = discoverSkills(skillsDir);
   console.log(`Validating ${skills.length} skills...\n`);
 
   let errorsCount = 0;
@@ -39,68 +38,18 @@ function validateSkills() {
     }
 
     const content = fs.readFileSync(skillMdPath, 'utf8');
-    
-    // Check if starts with YAML frontmatter
-    if (!content.startsWith('---')) {
-      console.error(`❌ [${skill}] SKILL.md does not start with YAML frontmatter delimiter (---)`);
+    const { valid, errors } = validateSkill(skill, content);
+
+    if (!valid) {
+      console.error(`❌ [${skill}] ${errors[0]}`);
+      for (let i = 1; i < errors.length; i++) {
+        console.error(`    ${errors[i]}`);
+      }
       errorsCount++;
       continue;
     }
 
     const meta = parseFrontmatter(content);
-    
-    const allowedFields = new Set(['name', 'description']);
-    const unsupportedFields = Object.keys(meta).filter(field => !allowedFields.has(field));
-    if (unsupportedFields.length > 0) {
-      console.error(`❌ [${skill}] Unsupported frontmatter fields: ${unsupportedFields.join(', ')}`);
-      errorsCount++;
-      continue;
-    }
-
-    // Check metadata fields
-    if (!meta.name) {
-      console.error(`❌ [${skill}] Missing "name" field in frontmatter`);
-      errorsCount++;
-      continue;
-    }
-
-    if (meta.name !== skill) {
-      console.error(`❌ [${skill}] Frontmatter name "${meta.name}" does not match folder name "${skill}"`);
-      errorsCount++;
-      continue;
-    }
-
-    if (!meta.description) {
-      console.error(`❌ [${skill}] Missing "description" field in frontmatter`);
-      errorsCount++;
-      continue;
-    }
-
-    // Check if name is a valid slug (alphanumeric, dashes, lowercase)
-    if (!/^[a-z0-9-]+$/.test(meta.name)) {
-      console.error(`❌ [${skill}] Name "${meta.name}" is not a valid slug (must contain only lowercase letters, numbers, and dashes)`);
-      errorsCount++;
-      continue;
-    }
-
-    // Check if body content exists (beyond frontmatter)
-    const body = content.replace(/^---[\s\S]*?---\r?\n/, '').trim();
-    if (body.length === 0) {
-      console.error(`❌ [${skill}] SKILL.md contains empty instruction body`);
-      errorsCount++;
-      continue;
-    }
-
-    // Platform-neutrality checks
-    const neutralityIssues = findNeutralityViolations(content);
-
-    if (neutralityIssues.length > 0) {
-      console.error(`❌ [${skill}] Platform-neutrality violations:`);
-      neutralityIssues.forEach(issue => console.error(`    - ${issue}`));
-      errorsCount++;
-      continue;
-    }
-
     console.log(`✅ [${skill}] Valid (${meta.description.slice(0, 50)}...)`);
     successCount++;
   }

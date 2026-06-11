@@ -2,9 +2,11 @@ const { describe, it, before, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
+const crypto = require('node:crypto');
 const { execSync } = require('node:child_process');
 
-const TMP_DIR = path.resolve(__dirname, '../../tmp-test-skills');
+const TMP_DIR = path.join(os.tmpdir(), 'ccu-test-validate-' + crypto.randomUUID());
 const VALIDATE_SCRIPT = path.resolve(__dirname, '../validate.js');
 
 function cleanSkillsDir() {
@@ -34,14 +36,10 @@ describe('validate.js', () => {
     cleanSkillsDir();
   });
 
-  it('rejects a skill with no SKILL.md', () => {
+  it('skips a directory with no SKILL.md (handled by discoverSkills)', () => {
     fs.mkdirSync(path.join(TMP_DIR, 'empty-skill'), { recursive: true });
-    try {
-      execSync(`node "${VALIDATE_SCRIPT}"`, { stdio: 'pipe' });
-      assert.fail('Should have exited with code 1');
-    } catch (e) {
-      assert.strictEqual(e.status, 1);
-    }
+    const result = execSync(`node "${VALIDATE_SCRIPT}"`, { stdio: 'pipe' });
+    assert.match(result.toString(), /Validation complete.*0 successful/);
   });
 
   it('rejects a skill missing frontmatter', () => {
