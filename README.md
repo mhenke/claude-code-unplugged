@@ -2,6 +2,8 @@
 
 > Portable agent skills, workflows, commands, and automation scripts extracted from Claude Code, ready to use in any AI coding assistant (Cursor, Gemini CLI, Copilot, VS Code, etc.).
 
+🌐 **Landing page:** [https://mhenke.github.io/claude-code-unplugged/](https://mhenke.github.io/claude-code-unplugged/)
+
 ## 💡 Why this exists
 
 Claude Code is fantastic, but some of its best features—like the structured multi-phase feature development loop, automated PR reviews, and smart commit generation—are tightly bound to its CLI. 
