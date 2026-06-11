@@ -72,7 +72,7 @@ Drop a `security-guidance.md` in any of:
 
 - `~/.agent/security-guidance.md` — user-wide rules
 - `<project>/.agent/security-guidance.md` — project rules, intended to be committed
-- `<project>/.agent/claude-security-guidance.local.md` — local overrides, intended to be `.gitignore`'d
+- `<project>/.agent/security-guidance.local.md` — local overrides, intended to be `.gitignore`'d
 
 All three are loaded and concatenated into the LLM diff review's prompt in the order user → project → project-local. If the combined size exceeds the 8 KB prompt budget, the tail is truncated, so user-wide rules are kept and project-local rules are dropped first. The agentic commit reviewer (layer 3) does not currently read this file. Example:
 
@@ -116,7 +116,7 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 
 ## Reporting issues
 
-Open an issue on the [security-guidance plugin repo](https://github.com/anthropics/claude-code/issues) with:
+Open an issue on the [security-guidance plugin repo](https://github.com/anthropics/coding-assistant/issues) with:
 - The coding assistant CLI version (`assistant --version`)
 - Provider setup (1P / Bedrock / Vertex / LLM gateway / etc.)
 - A minimal repro diff

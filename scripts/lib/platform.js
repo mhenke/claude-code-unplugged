@@ -15,9 +15,17 @@ const PLATFORM_PATTERNS = [
   { search: /Claude Code/g, replacement: 'coding assistant', detect: /\bClaude Code\b/i, label: 'contains "Claude Code" reference' },
   { search: /hooks\.json/g, replacement: 'hook-config.json', label: 'references "hooks.json" (platform-specific hook config)' },
   { search: /\$\{CLAUDE_PLUGIN_ROOT\}/g, replacement: 'PLUGIN_ROOT', label: 'references "${CLAUDE_PLUGIN_ROOT}" (platform-specific env var)' },
+  { search: /\$CLAUDE_PLUGIN_ROOT/g, replacement: 'PLUGIN_ROOT', detect: /\$CLAUDE_PLUGIN_ROOT/, label: 'references "$CLAUDE_PLUGIN_ROOT" (platform-specific env var)' },
+  { search: /\$CLAUDE_PROJECT_DIR/g, replacement: 'PROJECT_DIR', detect: /\$CLAUDE_PROJECT_DIR/, label: 'references "$CLAUDE_PROJECT_DIR" (platform-specific env var)' },
+  { search: /\$CLAUDE_ENV_FILE/g, replacement: 'ENV_FILE', detect: /\$CLAUDE_ENV_FILE/, label: 'references "$CLAUDE_ENV_FILE" (platform-specific env var)' },
+  { search: /\$CLAUDE_CODE_REMOTE/g, replacement: 'CODE_REMOTE', detect: /\$CLAUDE_CODE_REMOTE/, label: 'references "$CLAUDE_CODE_REMOTE" (platform-specific env var)' },
   { search: /\.claude\//g, replacement: '.agent/', detect: /\.claude\//i, label: 'references ".claude/" path (platform-specific directory)' },
   // Clean-only: broader .claude replacement for non-trailing-slash cases
   { search: /\.claude\b/g, replacement: '.agent' },
+  { search: /\bclaude-code\b/g, replacement: 'coding-assistant', detect: /\bclaude-code\b/i, label: 'references "claude-code" (platform-specific CLI)' },
+  { search: /\bclaude --/g, replacement: 'assistant --', detect: /\bclaude --/, label: 'references "claude --" (platform-specific CLI command)' },
+  { search: /\bclaude-security-guidance\b/g, replacement: 'security-guidance', detect: /\bclaude-security-guidance\b/i, label: 'references "claude-security-guidance" (platform-specific filename)' },
+  { search: /PLUGIN_ROOT\/hooks\//g, replacement: 'PLUGIN_ROOT/scripts/', detect: /PLUGIN_ROOT\/hooks\//, label: 'references "PLUGIN_ROOT/hooks/" (incorrect path, should be PLUGIN_ROOT/scripts/)' },
 ];
 
 /** Known slash commands that should have their leading / stripped in neutralized output */

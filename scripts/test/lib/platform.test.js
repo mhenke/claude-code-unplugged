@@ -67,4 +67,64 @@ describe('extract.js cleanAndNeutralize', () => {
     assert.ok(result.startsWith('Before'));
     assert.ok(result.endsWith('after.'));
   });
+
+  it('replaces $CLAUDE_PLUGIN_ROOT (without braces) with PLUGIN_ROOT', () => {
+    const result = cleanAndNeutralize('Path: $CLAUDE_PLUGIN_ROOT/scripts');
+    assert.ok(result.includes('PLUGIN_ROOT'));
+    assert.ok(!result.includes('$CLAUDE_PLUGIN_ROOT'));
+  });
+
+  it('replaces $CLAUDE_PROJECT_DIR with PROJECT_DIR', () => {
+    const result = cleanAndNeutralize('cd "$CLAUDE_PROJECT_DIR"');
+    assert.strictEqual(result, 'cd "PROJECT_DIR"');
+  });
+
+  it('replaces $CLAUDE_ENV_FILE with ENV_FILE', () => {
+    const result = cleanAndNeutralize('echo "export FOO=bar" >> "$CLAUDE_ENV_FILE"');
+    assert.ok(result.includes('ENV_FILE'));
+    assert.ok(!result.includes('CLAUDE_ENV_FILE'));
+  });
+
+  it('replaces $CLAUDE_CODE_REMOTE with CODE_REMOTE', () => {
+    const result = cleanAndNeutralize('if [ -n "$CLAUDE_CODE_REMOTE" ]; then');
+    assert.ok(result.includes('CODE_REMOTE'));
+    assert.ok(!result.includes('CLAUDE_CODE_REMOTE'));
+  });
+
+  it('replaces claude-code with coding-assistant', () => {
+    const result = cleanAndNeutralize('Run claude-code --continue');
+    assert.ok(result.includes('coding-assistant'));
+    assert.ok(!result.includes('claude-code'));
+  });
+
+  it('replaces claude -- with assistant --', () => {
+    const result = cleanAndNeutralize('Run claude --debug or claude --version');
+    assert.ok(result.includes('assistant --debug'));
+    assert.ok(result.includes('assistant --version'));
+    assert.ok(!result.includes('claude --'));
+  });
+
+  it('replaces claude-security-guidance with security-guidance', () => {
+    const result = cleanAndNeutralize('Create a claude-security-guidance.local.md file');
+    assert.ok(result.includes('security-guidance.local.md'));
+    assert.ok(!result.includes('claude-security-guidance'));
+  });
+
+  it('replaces PLUGIN_ROOT/hooks/ with PLUGIN_ROOT/scripts/', () => {
+    const result = cleanAndNeutralize('bash PLUGIN_ROOT/hooks/stop-hook.sh');
+    assert.ok(result.includes('PLUGIN_ROOT/scripts/stop-hook.sh'));
+    assert.ok(!result.includes('PLUGIN_ROOT/hooks/'));
+  });
+
+  it('prefers ${CLAUDE_PLUGIN_ROOT} over $CLAUDE_PLUGIN_ROOT', () => {
+    const result = cleanAndNeutralize('Path: ${CLAUDE_PLUGIN_ROOT}/scripts and $CLAUDE_PLUGIN_ROOT/bin');
+    assert.ok(!result.includes('CLAUDE_PLUGIN_ROOT'));
+    assert.ok(result.includes('PLUGIN_ROOT'));
+  });
+
+  it('prefers claude-code over claude -- for claude-code --flag', () => {
+    const result = cleanAndNeutralize('Run claude-code --continue');
+    assert.ok(result.includes('coding-assistant --continue'));
+    assert.ok(!result.includes('claude-code'));
+  });
 });
