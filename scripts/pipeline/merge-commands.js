@@ -25,10 +25,11 @@ const mergedSkillsConfig = [
 /**
  * Merge commands and agents from plugins into unified skills.
  *
- * @param {string} pluginsDir    Path to the source plugins directory
+ * @param {string} sourcePath    Path to the source repository root
  * @param {string} skillsDestDir Path to the destination skills directory
  */
-function mergeCommandsAndAgents(pluginsDir, skillsDestDir) {
+function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
+  const pluginsDir = path.join(sourcePath, 'plugins');
   for (const config of mergedSkillsConfig) {
     const pluginPath = path.join(pluginsDir, config.plugin);
     if (!fs.existsSync(pluginPath)) {

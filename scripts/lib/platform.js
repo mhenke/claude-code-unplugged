@@ -1,7 +1,22 @@
+const path = require('path');
+
 /**
  * Platform-specific pattern detection and neutralization.
  * Single source of truth for all platform-neutrality operations.
  */
+
+/**
+ * Apply platform-neutrality path renames.
+ * Currently renames hooks.json → hook-config.json.
+ * @param {string} destPath - The destination file path
+ * @returns {string} The renamed path if applicable, or the original path
+ */
+function renamePath(destPath) {
+  if (path.basename(destPath) === 'hooks.json') {
+    return path.join(path.dirname(destPath), 'hook-config.json');
+  }
+  return destPath;
+}
 
 /**
  * Platform-specific patterns and their neutral replacements.
@@ -78,4 +93,5 @@ function findNeutralityViolations(content) {
 module.exports = {
   cleanAndNeutralize,
   findNeutralityViolations,
+  renamePath,
 };

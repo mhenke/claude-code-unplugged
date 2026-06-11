@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const { discoverSkills } = require('./lib/discover-skills');
 const { parseFrontmatter, stripFrontmatter } = require('./lib/frontmatter');
 
 const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
 const manifestPath = path.resolve(__dirname, '../skills.json');
 const defaultSkillVersion = process.env.SKILL_VERSION || '0.1.0';
-const skipDirs = new Set(['.git', '.full-review', 'openspec', 'scripts', 'node_modules']);
 
 // Parse --output / -o flag
 const args = process.argv.slice(2);
@@ -17,13 +17,7 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 const finalManifestPath = outputPath || manifestPath;
-const skills = fs.readdirSync(skillsDir).filter(d => {
-  if (d.startsWith('.')) return false;
-  if (skipDirs.has(d)) return false;
-  const stat = fs.statSync(path.join(skillsDir, d));
-  if (!stat.isDirectory()) return false;
-  return fs.existsSync(path.join(skillsDir, d, 'SKILL.md'));
-});
+const skills = discoverSkills(skillsDir);
 
 const manifest = [];
 

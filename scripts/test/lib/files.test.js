@@ -2,9 +2,11 @@ const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
+const crypto = require('node:crypto');
 const { copyRecursiveSync, ensureDir, sanitizePath } = require('../../lib/files');
 
-const TMP_DIR = path.resolve(__dirname, '../../../tmp-test-files');
+const TMP_DIR = path.join(os.tmpdir(), 'ccu-test-files-' + crypto.randomUUID());
 
 describe('files.js', () => {
   before(() => {

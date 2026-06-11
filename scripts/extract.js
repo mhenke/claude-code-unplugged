@@ -64,32 +64,31 @@ function main() {
   // 1. Copy Direct Skills
   // -------------------------------------------------------------
   console.log('\n--- Copying Direct Skills ---');
-  const pluginsDir = path.join(sourcePath, 'plugins');
-  copyDirectSkills(pluginsDir, skillsDestDir);
+  copyDirectSkills(sourcePath, skillsDestDir);
 
   // -------------------------------------------------------------
   // 2. Merged Skills (Commands + Agents)
   // -------------------------------------------------------------
   console.log('\n--- Merging Commands and Agents ---');
-  mergeCommandsAndAgents(pluginsDir, skillsDestDir);
+  mergeCommandsAndAgents(sourcePath, skillsDestDir);
 
   // -------------------------------------------------------------
   // 3. Translate Output Styles
   // -------------------------------------------------------------
   console.log('\n--- Processing Output Styles ---');
-  processOutputStyles(pluginsDir, skillsDestDir);
+  processOutputStyles(sourcePath, skillsDestDir);
 
   // -------------------------------------------------------------
   // 4. Translate Security Guidance
   // -------------------------------------------------------------
   console.log('\n--- Translating Security Guidance ---');
-  processSecurityGuidance(pluginsDir, skillsDestDir);
+  processSecurityGuidance(sourcePath, skillsDestDir);
 
   // -------------------------------------------------------------
   // 5. Github Management Skill
   // -------------------------------------------------------------
   console.log('\n--- Packaging GitHub Management Skill ---');
-  processGitHubManagement(path.join(sourcePath, 'scripts'), skillsDestDir);
+  processGitHubManagement(sourcePath, skillsDestDir);
 
   console.log('\nExtraction completed successfully!');
 }

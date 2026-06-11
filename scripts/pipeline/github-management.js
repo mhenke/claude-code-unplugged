@@ -13,10 +13,11 @@ const { copyRecursiveSync } = require('../lib/files');
 /**
  * Process GitHub management scripts into a skill.
  *
- * @param {string} sourceScriptsDir Path to the source scripts directory (e.g. source repo scripts/)
- * @param {string} skillsDestDir    Path to the destination skills directory
+ * @param {string} sourcePath    Path to the source repository root
+ * @param {string} skillsDestDir Path to the destination skills directory
  */
-function processGitHubManagement(sourceScriptsDir, skillsDestDir) {
+function processGitHubManagement(sourcePath, skillsDestDir) {
+  const sourceScriptsDir = path.join(sourcePath, 'scripts');
   if (!fs.existsSync(sourceScriptsDir) || !fs.statSync(sourceScriptsDir).isDirectory()) {
     console.log('Skipping missing scripts directory for github-management.');
     return;

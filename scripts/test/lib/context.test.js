@@ -1,12 +1,19 @@
-const { describe, it } = require('node:test');
+const { describe, it, after } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
+const crypto = require('node:crypto');
 const { extractAdditionalContext } = require('../../lib/context');
 
-const TMP_DIR = path.resolve(__dirname, '../../../tmp-test-context');
+const TMP_DIR = path.join(os.tmpdir(), 'ccu-test-context-' + crypto.randomUUID());
 
 describe('extract.js extractAdditionalContext', () => {
+  after(() => {
+    if (fs.existsSync(TMP_DIR)) {
+      fs.rmSync(TMP_DIR, { recursive: true, force: true });
+    }
+  });
   it('returns empty string for nonexistent file', () => {
     const result = extractAdditionalContext('/nonexistent/path/script.sh');
     assert.strictEqual(result, '');

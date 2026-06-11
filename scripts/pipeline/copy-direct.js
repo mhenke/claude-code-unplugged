@@ -46,12 +46,13 @@ function copySkillNormalized(srcDir, destDir, skillName) {
 }
 
 /**
- * Copy direct skills from pluginsDir/skills/ directories into skillsDestDir.
+ * Copy direct skills from sourcePath/plugins (per-plugin skills/ dirs) into skillsDestDir.
  *
- * @param {string} pluginsDir    Path to the source plugins directory
+ * @param {string} sourcePath    Path to the source repository root
  * @param {string} skillsDestDir Path to the destination skills directory
  */
-function copyDirectSkills(pluginsDir, skillsDestDir) {
+function copyDirectSkills(sourcePath, skillsDestDir) {
+  const pluginsDir = path.join(sourcePath, 'plugins');
   if (!fs.existsSync(pluginsDir)) return;
 
   const plugins = fs.readdirSync(pluginsDir);
