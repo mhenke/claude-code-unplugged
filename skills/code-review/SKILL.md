@@ -283,11 +283,11 @@ To do this, follow these steps precisely:
    - The pull request is closed
    - The pull request is a draft
    - The pull request does not need code review (e.g. automated PR, trivial change that is obviously correct)
-   - An agent has already commented on this PR (check `gh pr view <PR> --comments` for comments left by an agent)
+   - Claude has already commented on this PR (check `gh pr view <PR> --comments` for comments left by claude)
 
    If any condition is true, stop and do not proceed.
 
-Note: Still review AI-generated PRs.
+Note: Still review Claude generated PR's.
 
 2. Launch a haiku agent to return a list of file paths (not their contents) for all relevant CLAUDE.md files including:
    - The root CLAUDE.md file, if it exists

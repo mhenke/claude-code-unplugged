@@ -26,26 +26,22 @@ function copyRecursiveSync(src, dest, opts = {}) {
       );
     });
   } else {
-    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    let finalDest = dest;
+    if (path.basename(finalDest) === 'hooks.json') {
+      finalDest = path.join(path.dirname(finalDest), 'hook-config.json');
+    }
+    if (opts.mapDest) {
+      finalDest = opts.mapDest(finalDest, src);
+    }
+    fs.mkdirSync(path.dirname(finalDest), { recursive: true });
     const ext = path.extname(src);
     if (TEXT_EXTENSIONS.has(ext)) {
       let content = fs.readFileSync(src, 'utf8');
       if (opts.transform) {
         content = opts.transform(content, src);
       }
-      // Apply mapDest for destination path override
-      let finalDest = dest;
-      if (opts.mapDest) {
-        finalDest = opts.mapDest(dest, src);
-      }
       fs.writeFileSync(finalDest, content, 'utf8');
     } else {
-      // For binary files, still apply mapDest
-      let finalDest = dest;
-      if (opts.mapDest) {
-        finalDest = opts.mapDest(dest, src);
-      }
-      fs.mkdirSync(path.dirname(finalDest), { recursive: true });
       fs.copyFileSync(src, finalDest);
     }
   }

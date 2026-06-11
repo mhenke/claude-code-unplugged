@@ -378,7 +378,7 @@ All skills emphasize:
 ✅ **Testing**
 - Validate configurations before deployment
 - Test hooks with sample inputs
-- Use debug mode
+- Use debug mode (`assistant --debug`)
 
 ✅ **Documentation**
 - Clear README files
@@ -705,7 +705,7 @@ Guide the user through creating a complete, high-quality coding assistant plugin
    - For skills: Ask questions using trigger phrases from descriptions
    - For commands: Run `/plugin-name:command-name` with various arguments
    - For agents: Create scenarios matching agent examples
-   - For hooks: Use debug mode to see hook execution
+   - For hooks: Use `assistant --debug` to see hook execution
    - For MCP: Use `mcp` to verify servers and tools
 
 4. **Ask user**: "I've prepared the plugin for testing. Would you like me to guide you through testing each component, or do you want to test it yourself?"

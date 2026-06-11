@@ -118,7 +118,7 @@ Modify hook behavior based on project configuration:
 
 ```bash
 #!/bin/bash
-cd "$CLAUDE_PROJECT_DIR" || exit 1
+cd "PROJECT_DIR" || exit 1
 
 # Read project-specific config
 if [ -f ".agent-hooks-config.json" ]; then
@@ -412,7 +412,7 @@ Create test scenarios that exercise the full hook workflow:
 # Set up test environment
 export CLAUDE_PROJECT_DIR="/tmp/test-project"
 export CLAUDE_PLUGIN_ROOT="$(pwd)"
-mkdir -p "$CLAUDE_PROJECT_DIR"
+mkdir -p "PROJECT_DIR"
 
 # Test SessionStart hook
 echo '{}' | bash hooks/session-start.sh
@@ -423,7 +423,7 @@ else
 fi
 
 # Clean up
-rm -rf "$CLAUDE_PROJECT_DIR"
+rm -rf "PROJECT_DIR"
 ```
 
 ## Best Practices for Advanced Hooks

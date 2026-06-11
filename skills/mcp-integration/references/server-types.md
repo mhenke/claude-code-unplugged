@@ -91,7 +91,7 @@ Execute local MCP servers as child processes with communication via stdin/stdout
 - Check command exists and is executable
 - Verify file paths are correct
 - Check permissions
-- Review `claude --debug` logs
+- Review `assistant --debug` logs
 
 **Communication fails:**
 - Ensure server uses stdin/stdout correctly

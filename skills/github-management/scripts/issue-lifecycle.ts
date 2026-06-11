@@ -5,7 +5,7 @@ export const lifecycle = [
     label: "invalid",
     days: 3,
     reason: "this doesn't appear to be about coding assistant",
-    nudge: "This doesn't appear to be about [coding assistant](https://github.com/anthropics/claude-code). For general Anthropic support, visit [support.anthropic.com](https://support.anthropic.com).",
+    nudge: "This doesn't appear to be about [coding assistant](https://github.com/anthropics/coding-assistant). For general Anthropic support, visit [support.anthropic.com](https://support.anthropic.com).",
   },
   {
     label: "needs-repro",
@@ -17,7 +17,7 @@ export const lifecycle = [
     label: "needs-info",
     days: 7,
     reason: "we still need a bit more information to move forward",
-    nudge: "We need more information to continue investigating. Can you make sure to include your coding assistant version (`claude --version`), OS, and any error messages or logs?",
+    nudge: "We need more information to continue investigating. Can you make sure to include your coding assistant version (`assistant --version`), OS, and any error messages or logs?",
   },
   {
     label: "stale",

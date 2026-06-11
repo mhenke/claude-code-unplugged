@@ -427,7 +427,7 @@ for id in task_ids:
 2. Install plugin locally (`.agent-plugin/`)
 3. Run `mcp` to verify server appears
 4. Test tool calls in commands
-5. Check debug logs for connection issues
+5. Check `assistant --debug` logs for connection issues
 
 ### Validation Checklist
 
@@ -534,7 +534,7 @@ Working examples in `examples/`:
 - **Official MCP Docs**: https://modelcontextprotocol.io/
 - **coding assistant MCP Docs**: https://docs.agent.com/en/docs/coding-assistant/mcp
 - **MCP SDK**: @modelcontextprotocol/sdk
-- **Testing**: Use debug mode and `mcp` command
+- **Testing**: Use `assistant --debug` and `mcp` command
 
 ## Implementation Workflow
 

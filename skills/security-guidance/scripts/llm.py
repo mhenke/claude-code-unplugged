@@ -1178,7 +1178,7 @@ def agentic_review(
             # is not exported to hook subprocesses there, so without this
             # candidate cli_path resolves to None and the SDK uses its
             # bundled CLI — which lags the running CC by builds.
-            "/opt/claude-code/bin/claude",
+            "/opt/coding-assistant/bin/claude",
         ):
             if p and os.path.isfile(p):
                 cli_path = p
