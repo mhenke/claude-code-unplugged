@@ -87,4 +87,48 @@ describe('generate-manifest.js', () => {
     const result = execSync(`node "${MANIFEST_SCRIPT}"`, { stdio: 'pipe' });
     assert.match(result.toString(), /Generated skills.json with 0 skills/);
   });
+
+  it('writes manifest to custom output path via --output flag', () => {
+    mkSkillDir('test-skill', '---\nname: test-skill\ndescription: Custom output test\n---\n\nBody.');
+    const customPath = path.join(TMP_DIR, 'custom-manifest.json');
+
+    execSync(`node "${MANIFEST_SCRIPT}" --output "${customPath}"`, { stdio: 'pipe' });
+
+    assert.ok(fs.existsSync(customPath), 'custom output file should exist');
+    const manifest = JSON.parse(fs.readFileSync(customPath, 'utf8'));
+    assert.strictEqual(manifest.skills.length, 1);
+    assert.strictEqual(manifest.skills[0].name, 'test-skill');
+
+    // Default path should not have been written
+    assert.ok(!fs.existsSync(ORIG_JSON), 'default path should not exist');
+  });
+
+  it('sorts skills alphabetically by name in manifest output', () => {
+    // Create skills in non-alphabetical order
+    mkSkillDir('zeta-skill', '---\nname: zeta-skill\ndescription: Z skill\n---\n\nBody.');
+    mkSkillDir('alpha-skill', '---\nname: alpha-skill\ndescription: A skill\n---\n\nBody.');
+    mkSkillDir('middle-skill', '---\nname: middle-skill\ndescription: M skill\n---\n\nBody.');
+
+    execSync(`node "${MANIFEST_SCRIPT}"`, { stdio: 'pipe' });
+
+    const manifest = JSON.parse(fs.readFileSync(ORIG_JSON, 'utf8'));
+    assert.strictEqual(manifest.skills.length, 3);
+    assert.strictEqual(manifest.skills[0].name, 'alpha-skill');
+    assert.strictEqual(manifest.skills[1].name, 'middle-skill');
+    assert.strictEqual(manifest.skills[2].name, 'zeta-skill');
+  });
+
+  it('default output path remains unchanged when --output is not used', () => {
+    mkSkillDir('default-path-skill', '---\nname: default-path-skill\ndescription: Default path test\n---\n\nBody.');
+
+    execSync(`node "${MANIFEST_SCRIPT}"`, { stdio: 'pipe' });
+
+    // Verify default path was written
+    assert.ok(fs.existsSync(ORIG_JSON), 'default skills.json should exist');
+    const manifest = JSON.parse(fs.readFileSync(ORIG_JSON, 'utf8'));
+    assert.strictEqual(manifest.skills.length, 1);
+    assert.strictEqual(manifest.skills[0].name, 'default-path-skill');
+    assert.strictEqual(manifest.skills[0].version, '0.1.0');
+    assert.ok(typeof manifest.skills[0].bodyLength === 'number');
+  });
 });
