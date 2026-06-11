@@ -6,3 +6,7 @@ node_modules/
 .full-review/
 .vscode/
 .idea/
+.impeccable/
+.playwright-mcp/
+landing-page-*.png
+
