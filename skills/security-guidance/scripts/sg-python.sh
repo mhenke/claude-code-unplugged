@@ -18,8 +18,8 @@
 #
 # Args after the shim path are passed straight through to the chosen
 # interpreter, so the hook-config.json invocation is:
-#   bash "PLUGIN_ROOT/hooks/sg-python.sh" \
-#        "PLUGIN_ROOT/hooks/security_reminder_hook.py"
+#   bash "PLUGIN_ROOT/scripts/sg-python.sh" \
+#        "PLUGIN_ROOT/scripts/security_reminder_hook.py"
 set -e
 
 probe() {

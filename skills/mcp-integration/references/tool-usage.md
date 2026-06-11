@@ -415,7 +415,7 @@ Ensure you're authenticated to Asana before running this command.
 2. **Install plugin locally** in `.agent-plugin/`
 3. **Verify tools available** with `mcp`
 4. **Test command** that uses tools
-5. **Check debug output**: `claude --debug`
+5. **Check debug output**: `assistant --debug`
 
 ### Test Scenarios
 
@@ -515,7 +515,7 @@ Steps:
 - Authentication is valid
 - Parameters match tool schema
 - Required parameters provided
-- Check `claude --debug` logs
+- Check `assistant --debug` logs
 
 ### Performance Issues
 

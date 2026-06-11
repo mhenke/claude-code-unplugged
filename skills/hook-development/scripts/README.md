@@ -124,7 +124,7 @@ Checks hook scripts for common issues and best practices violations.
 
 7. **Test in coding assistant**
    ```bash
-   claude --debug
+   assistant --debug
    ```
 
 ## Tips

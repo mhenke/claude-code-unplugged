@@ -28,21 +28,21 @@
       "description": "Automated PR and code reviewer guidelines",
       "path": "skills/code-review",
       "version": "0.1.0",
-      "bodyLength": 15413
+      "bodyLength": 15414
     },
     {
       "name": "command-development",
       "description": "This skill should be used when the user asks to \"create a slash command\", \"add a command\", \"write a custom command\", \"define command arguments\", \"use command frontmatter\", \"organize commands\", \"create command with file references\", \"interactive command\", \"use AskUserQuestion in command\", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for coding assistant.",
       "path": "skills/command-development",
       "version": "0.1.0",
-      "bodyLength": 18029
+      "bodyLength": 18036
     },
     {
       "name": "commit-commands",
       "description": "Git commit and repository workflows",
       "path": "skills/commit-commands",
       "version": "0.1.0",
-      "bodyLength": 9945
+      "bodyLength": 9948
     },
     {
       "name": "explanatory-output-style",
@@ -77,7 +77,7 @@
       "description": "This skill should be used when the user asks to \"create a hook\", \"add a PreToolUse/PostToolUse/Stop hook\", \"validate tool use\", \"implement prompt-based hooks\", \"use PLUGIN_ROOT\", \"set up event-driven automation\", \"block dangerous commands\", or mentions hook events (PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification). Provides comprehensive guidance for creating and implementing coding assistant plugin hooks with focus on advanced prompt-based hooks API.",
       "path": "skills/hook-development",
       "version": "0.1.0",
-      "bodyLength": 15577
+      "bodyLength": 15578
     },
     {
       "name": "hookify",
@@ -98,35 +98,35 @@
       "description": "This skill should be used when the user asks to \"add MCP server\", \"integrate MCP\", \"configure MCP in plugin\", \"use .mcp.json\", \"set up Model Context Protocol\", \"connect external service\", mentions \"PLUGIN_ROOT with MCP\", or discusses MCP server types (SSE, stdio, HTTP, WebSocket). Provides comprehensive guidance for integrating Model Context Protocol servers into coding assistant plugins for external tool and service integration.",
       "path": "skills/mcp-integration",
       "version": "0.1.0",
-      "bodyLength": 11924
+      "bodyLength": 11947
     },
     {
       "name": "plugin-dev",
       "description": "Development assistance for creating CLI plugins",
       "path": "skills/plugin-dev",
       "version": "0.1.0",
-      "bodyLength": 46187
+      "bodyLength": 46218
     },
     {
       "name": "plugin-settings",
       "description": "This skill should be used when the user asks about \"plugin settings\", \"store plugin configuration\", \"user-configurable plugin\", \".local.md files\", \"plugin state files\", \"read YAML frontmatter\", \"per-project plugin settings\", or wants to make plugin behavior configurable. Documents the .agent/plugin-name.local.md pattern for storing plugin-specific configuration with YAML frontmatter and markdown content.",
       "path": "skills/plugin-settings",
       "version": "0.1.0",
-      "bodyLength": 11626
+      "bodyLength": 11623
     },
     {
       "name": "plugin-structure",
       "description": "This skill should be used when the user asks to \"create a plugin\", \"scaffold a plugin\", \"understand plugin structure\", \"organize plugin components\", \"set up plugin.json\", \"use PLUGIN_ROOT\", \"add commands/agents/skills/hooks\", \"configure auto-discovery\", or needs guidance on plugin directory layout, manifest configuration, component organization, file naming conventions, or coding assistant plugin architecture best practices.",
       "path": "skills/plugin-structure",
       "version": "0.1.0",
-      "bodyLength": 12916
+      "bodyLength": 12924
     },
     {
       "name": "pr-review-toolkit",
       "description": "Comprehensive code review toolkit",
       "path": "skills/pr-review-toolkit",
       "version": "0.1.0",
-      "bodyLength": 43717
+      "bodyLength": 43723
     },
     {
       "name": "ralph-wiggum",
@@ -140,7 +140,7 @@
       "description": "Security warnings, patterns scanner, and LLM diff security reviews",
       "path": "skills/security-guidance",
       "version": "0.1.0",
-      "bodyLength": 9072
+      "bodyLength": 9091
     },
     {
       "name": "skill-development",
@@ -158,7 +158,7 @@
     }
   ],
   "provenance": {
-    "sourceRepository": "https://github.com/anthropics/claude-code.git",
-    "sourceCommit": "d84cee8"
+    "sourceRepository": "anthropics/claude-code",
+    "sourceCommit": "3a7c736101edbd00426fce4615e80b937f6467df"
   }
 }

@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-REPO="anthropics/claude-code"
+REPO="anthropics/coding-assistant"
 
 # Read from event payload so the issue number is bound to the triggering event.
 # Falls back to workflow_dispatch inputs for manual runs.

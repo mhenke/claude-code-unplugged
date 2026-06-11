@@ -255,9 +255,9 @@ Execute when coding assistant session begins. Use to load context and set enviro
 }
 ```
 
-**Special capability:** Persist environment variables using `$ENV_FILE`:
+**Special capability:** Persist environment variables using `ENV_FILE`:
 ```bash
-echo "export PROJECT_TYPE=nodejs" >> "$ENV_FILE"
+echo "export PROJECT_TYPE=nodejs" >> "ENV_FILE"
 ```
 
 See `examples/load-context.sh` for complete example.
@@ -470,11 +470,11 @@ See `examples/validate-write.sh` and `examples/validate-bash.sh` for complete ex
 ```bash
 # GOOD: Quoted
 echo "$file_path"
-cd "$PROJECT_DIR"
+cd "PROJECT_DIR"
 
 # BAD: Unquoted (injection risk)
 echo $file_path
-cd $PROJECT_DIR
+cd PROJECT_DIR
 ```
 
 ### Set Appropriate Timeouts
@@ -530,7 +530,7 @@ Create hooks that activate conditionally by checking for a flag file or configur
 ```bash
 #!/bin/bash
 # Only active when flag file exists
-FLAG_FILE="$PROJECT_DIR/.enable-strict-validation"
+FLAG_FILE="PROJECT_DIR/.enable-strict-validation"
 
 if [ ! -f "$FLAG_FILE" ]; then
   # Flag not present, skip validation
@@ -546,7 +546,7 @@ input=$(cat)
 ```bash
 #!/bin/bash
 # Check configuration for activation
-CONFIG_FILE="$PROJECT_DIR/.agent/plugin-config.json"
+CONFIG_FILE="PROJECT_DIR/.agent/plugin-config.json"
 
 if [ -f "$CONFIG_FILE" ]; then
   enabled=$(jq -r '.strictMode // false' "$CONFIG_FILE")
@@ -578,14 +578,14 @@ input=$(cat)
 - Editing `hooks/hook-config.json` won't affect current session
 - Adding new hook scripts won't be recognized
 - Changing hook commands/prompts won't update
-- Must restart coding assistant: exit and run it again
+- Must restart coding assistant: exit and run `claude` again
 
 **To test hook changes:**
 1. Edit hook configuration or scripts
 2. Exit coding assistant session
-3. Restart the coding assistant
+3. Restart: `claude` or `cc`
 4. New hook configuration loads
-5. Test hooks with debug mode enabled
+5. Test hooks with `assistant --debug`
 
 ### Hook Validation at Startup
 
@@ -601,7 +601,7 @@ Use `/hooks` command to review loaded hooks in current session.
 ### Enable Debug Mode
 
 ```bash
-coding-assistant --debug
+assistant --debug
 ```
 
 Look for hook registration, execution logs, input/output JSON, and timing information.
@@ -691,7 +691,7 @@ Development tools in `scripts/`:
 
 - **Official Docs**: https://docs.agent.com/en/docs/coding-assistant/hooks
 - **Examples**: See security-guidance plugin in marketplace
-- **Testing**: Use debug mode for detailed logs
+- **Testing**: Use `assistant --debug` for detailed logs
 - **Validation**: Use `jq` to validate hook JSON output
 
 ## Implementation Workflow
@@ -705,7 +705,7 @@ To implement hooks in a plugin:
 5. Use PLUGIN_ROOT for all file references
 6. Validate configuration with `scripts/validate-hook-schema.sh hooks/hook-config.json`
 7. Test hooks with `scripts/test-hook.sh` before deployment
-8. Test in coding assistant with debug mode enabled
+8. Test in coding assistant with `assistant --debug`
 9. Document hooks in plugin README
 
 Focus on prompt-based hooks for most use cases. Reserve command hooks for performance-critical or deterministic checks.
