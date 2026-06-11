@@ -218,7 +218,7 @@ hooks/
     "matcher": "Write|Edit",
     "hooks": [{
       "type": "command",
-      "command": "bash PLUGIN_ROOT/scripts/validate.sh",
+      "command": "bash PLUGIN_ROOT/scripts/scripts/validate.sh",
       "timeout": 30
     }]
   }]

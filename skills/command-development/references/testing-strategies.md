@@ -134,7 +134,7 @@ echo "✓ Frontmatter fields valid"
 
 ```bash
 # 1. Start coding assistant
-claude --debug
+assistant --debug
 
 # 2. Check command appears in help
 > /help
@@ -531,7 +531,7 @@ echo "  - Acceptable threshold: < 3 seconds for fast commands"
 ```bash
 # Monitor coding assistant during command execution
 # In terminal 1:
-claude --debug
+assistant --debug
 
 # In terminal 2:
 watch -n 1 'ps aux | grep claude'
@@ -650,7 +650,7 @@ chmod 644 .agent/commands/my-command.md
 head -n 20 .agent/commands/my-command.md
 
 # Restart coding assistant
-claude --debug
+assistant --debug
 ```
 
 **Issue: Arguments not substituting**

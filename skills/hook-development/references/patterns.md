@@ -69,15 +69,15 @@ Load project-specific context at session start:
 **Example script (load-context.sh):**
 ```bash
 #!/bin/bash
-cd "$CLAUDE_PROJECT_DIR" || exit 1
+cd "PROJECT_DIR" || exit 1
 
 # Detect project type
 if [ -f "package.json" ]; then
   echo "📦 Node.js project detected"
-  echo "export PROJECT_TYPE=nodejs" >> "$CLAUDE_ENV_FILE"
+  echo "export PROJECT_TYPE=nodejs" >> "ENV_FILE"
 elif [ -f "Cargo.toml" ]; then
   echo "🦀 Rust project detected"
-  echo "export PROJECT_TYPE=rust" >> "$CLAUDE_ENV_FILE"
+  echo "export PROJECT_TYPE=rust" >> "ENV_FILE"
 fi
 ```
 
@@ -265,7 +265,7 @@ Create hooks that only run when explicitly enabled via flag files:
 ```bash
 #!/bin/bash
 # Hook only active when flag file exists
-FLAG_FILE="$CLAUDE_PROJECT_DIR/.enable-security-scan"
+FLAG_FILE="PROJECT_DIR/.enable-security-scan"
 
 if [ ! -f "$FLAG_FILE" ]; then
   # Quick exit when disabled
@@ -303,7 +303,7 @@ Use JSON configuration to control hook behavior:
 
 ```bash
 #!/bin/bash
-CONFIG_FILE="$CLAUDE_PROJECT_DIR/.agent/my-plugin.local.json"
+CONFIG_FILE="PROJECT_DIR/.agent/my-plugin.local.json"
 
 # Read configuration
 if [ -f "$CONFIG_FILE" ]; then

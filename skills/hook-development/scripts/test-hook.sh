@@ -174,9 +174,9 @@ export CLAUDE_ENV_FILE="${CLAUDE_ENV_FILE:-/tmp/test-env-$$}"
 
 if [ "$VERBOSE" = true ]; then
   echo "Environment:"
-  echo "  CLAUDE_PROJECT_DIR=$CLAUDE_PROJECT_DIR"
-  echo "  CLAUDE_PLUGIN_ROOT=$CLAUDE_PLUGIN_ROOT"
-  echo "  CLAUDE_ENV_FILE=$CLAUDE_ENV_FILE"
+  echo "  CLAUDE_PROJECT_DIR=PROJECT_DIR"
+  echo "  CLAUDE_PLUGIN_ROOT=PLUGIN_ROOT"
+  echo "  CLAUDE_ENV_FILE=ENV_FILE"
   echo ""
 fi
 
@@ -233,11 +233,11 @@ else
 fi
 
 # Check for environment file
-if [ -f "$CLAUDE_ENV_FILE" ]; then
+if [ -f "ENV_FILE" ]; then
   echo ""
   echo "Environment file created:"
-  cat "$CLAUDE_ENV_FILE"
-  rm -f "$CLAUDE_ENV_FILE"
+  cat "ENV_FILE"
+  rm -f "ENV_FILE"
 fi
 
 echo ""

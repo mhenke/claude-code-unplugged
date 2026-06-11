@@ -2,7 +2,7 @@
 
 Two extensibility points, both additive only:
 
-1. ``claude-security-guidance.md`` — markdown appended to every LLM review prompt.
+1. ``security-guidance.md`` — markdown appended to every LLM review prompt.
    The customer's equivalent of org-specific security policy: "we use Vault,
    flag hardcoded creds but Vault refs are fine"; "every tenant-scoped query
    must include WHERE org_id"; "*.corp.example.com is internal".
@@ -46,7 +46,7 @@ GUIDANCE_MAX_BYTES = 8 * 1024
 PATTERN_MAX_RULES = 50
 PATTERN_REMINDER_MAX_BYTES = 1024
 
-GUIDANCE_BASENAME = "claude-security-guidance.md"
+GUIDANCE_BASENAME = "security-guidance.md"
 PATTERNS_BASENAMES = ("security-patterns.yaml", "security-patterns.yml", "security-patterns.json")
 
 # Module-level cache, loaded once per hook invocation by load_for_session().
@@ -67,7 +67,7 @@ def load_for_session(cwd: Optional[str]) -> None:
     try:
         _guidance_block = _wrap_guidance(_load_guidance(cwd))
     except Exception as e:
-        debug_log(f"extensibility: failed to load claude-security-guidance.md: {e}")
+        debug_log(f"extensibility: failed to load security-guidance.md: {e}")
         _guidance_block = ""
     try:
         _user_patterns = _load_user_patterns(cwd)
@@ -86,7 +86,7 @@ def user_patterns() -> List[Dict[str, Any]]:
     return _user_patterns
 
 
-# ── claude-security-guidance.md ───────────────────────────────────────────────────────
+# ── security-guidance.md ───────────────────────────────────────────────────────
 
 
 def _config_paths(cwd: Optional[str], basename: str) -> List[Tuple[str, str]]:
@@ -96,7 +96,7 @@ def _config_paths(cwd: Optional[str], basename: str) -> List[Tuple[str, str]]:
     paths = [("User", os.path.expanduser(os.path.join("~", ".agent", basename)))]
     if cwd:
         paths.append(("Project", os.path.join(cwd, ".agent", basename)))
-        # claude-security-guidance.local.md / security-patterns.local.yaml
+        # security-guidance.local.md / security-patterns.local.yaml
         stem, ext = os.path.splitext(basename)
         paths.append(("Project (local)", os.path.join(cwd, ".agent", f"{stem}.local{ext}")))
     return paths
@@ -118,7 +118,7 @@ def _load_guidance(cwd: Optional[str]) -> str:
     combined = "\n\n".join(parts)
     if len(combined) > GUIDANCE_MAX_BYTES:
         debug_log(
-            f"extensibility: claude-security-guidance.md combined size "
+            f"extensibility: security-guidance.md combined size "
             f"{len(combined)} > {GUIDANCE_MAX_BYTES}; truncating"
         )
         combined = combined[:GUIDANCE_MAX_BYTES]

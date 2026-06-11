@@ -375,7 +375,7 @@ Document in your README:
 After editing `.agent/my-plugin.local.md`:
 1. Save the file
 2. Exit coding assistant
-3. Restart the coding assistant
+3. Restart: `claude` or `cc`
 4. New settings will be loaded
 ```
 

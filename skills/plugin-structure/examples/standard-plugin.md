@@ -445,7 +445,7 @@ See language-specific guides for:
       "hooks": [
         {
           "type": "command",
-          "command": "bash PLUGIN_ROOT/hooks/scripts/validate-commit.sh",
+          "command": "bash PLUGIN_ROOT/scripts/scripts/validate-commit.sh",
           "timeout": 45
         }
       ]

@@ -383,7 +383,7 @@ export API_TOKEN="your-token"
 
 **Enable debug mode:**
 ```bash
-claude --debug
+assistant --debug
 ```
 
 Look for:
