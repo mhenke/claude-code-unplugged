@@ -89,7 +89,7 @@ Execute bash commands for deterministic checks:
         "hooks": [
           {
             "type": "command",
-            "command": "PLUGIN_ROOT/hooks/validate.sh"
+            "command": "PLUGIN_ROOT/scripts/validate.sh"
           }
         ]
       }
@@ -255,9 +255,9 @@ Execute when coding assistant session begins. Use to load context and set enviro
 }
 ```
 
-**Special capability:** Persist environment variables using `$CLAUDE_ENV_FILE`:
+**Special capability:** Persist environment variables using `$ENV_FILE`:
 ```bash
-echo "export PROJECT_TYPE=nodejs" >> "$CLAUDE_ENV_FILE"
+echo "export PROJECT_TYPE=nodejs" >> "$ENV_FILE"
 ```
 
 See `examples/load-context.sh` for complete example.
@@ -470,11 +470,11 @@ See `examples/validate-write.sh` and `examples/validate-bash.sh` for complete ex
 ```bash
 # GOOD: Quoted
 echo "$file_path"
-cd "$CLAUDE_PROJECT_DIR"
+cd "$PROJECT_DIR"
 
 # BAD: Unquoted (injection risk)
 echo $file_path
-cd $CLAUDE_PROJECT_DIR
+cd $PROJECT_DIR
 ```
 
 ### Set Appropriate Timeouts
@@ -530,7 +530,7 @@ Create hooks that activate conditionally by checking for a flag file or configur
 ```bash
 #!/bin/bash
 # Only active when flag file exists
-FLAG_FILE="$CLAUDE_PROJECT_DIR/.enable-strict-validation"
+FLAG_FILE="$PROJECT_DIR/.enable-strict-validation"
 
 if [ ! -f "$FLAG_FILE" ]; then
   # Flag not present, skip validation
@@ -546,7 +546,7 @@ input=$(cat)
 ```bash
 #!/bin/bash
 # Check configuration for activation
-CONFIG_FILE="$CLAUDE_PROJECT_DIR/.agent/plugin-config.json"
+CONFIG_FILE="$PROJECT_DIR/.agent/plugin-config.json"
 
 if [ -f "$CONFIG_FILE" ]; then
   enabled=$(jq -r '.strictMode // false' "$CONFIG_FILE")
@@ -689,7 +689,7 @@ Development tools in `scripts/`:
 
 ### External Resources
 
-- **Official Docs**: https://docs.agent.com/en/docs/claude-code/hooks
+- **Official Docs**: https://docs.agent.com/en/docs/coding-assistant/hooks
 - **Examples**: See security-guidance plugin in marketplace
 - **Testing**: Use debug mode for detailed logs
 - **Validation**: Use `jq` to validate hook JSON output

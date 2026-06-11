@@ -204,10 +204,10 @@ Use this workflow for structured, high-quality plugin development from concept t
 
 ## Installation
 
-Install from claude-code-marketplace:
+Install from coding-assistant-marketplace:
 
 ```bash
-/plugin install plugin-dev@claude-code-marketplace
+/plugin install plugin-dev@coding-assistant-marketplace
 ```
 
 Or for development, use directly:
@@ -387,7 +387,7 @@ All skills emphasize:
 
 ## Contributing
 
-This plugin is part of the claude-code-marketplace. To contribute improvements:
+This plugin is part of the coding-assistant-marketplace. To contribute improvements:
 
 1. Fork the marketplace repository
 2. Make changes to plugin-dev/

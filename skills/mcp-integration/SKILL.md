@@ -444,7 +444,7 @@ for id in task_ids:
 ### Enable Debug Logging
 
 ```bash
-claude --debug
+assistant --debug
 ```
 
 Look for:
@@ -532,7 +532,7 @@ Working examples in `examples/`:
 ### External Resources
 
 - **Official MCP Docs**: https://modelcontextprotocol.io/
-- **coding assistant MCP Docs**: https://docs.agent.com/en/docs/claude-code/mcp
+- **coding assistant MCP Docs**: https://docs.agent.com/en/docs/coding-assistant/mcp
 - **MCP SDK**: @modelcontextprotocol/sdk
 - **Testing**: Use debug mode and `mcp` command
 
