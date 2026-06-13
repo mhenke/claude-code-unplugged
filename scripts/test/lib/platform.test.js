@@ -127,6 +127,111 @@ describe('extract.js cleanAndNeutralize', () => {
     assert.ok(result.includes('coding-assistant --continue'));
     assert.ok(!result.includes('claude-code'));
   });
+
+  // --- New portable-bundle patterns ---
+
+  it('replaces "cc --plugin-dir" with "agent --plugin-dir"', () => {
+    const result = cleanAndNeutralize('Run cc --plugin-dir /path/to/plugins');
+    assert.ok(result.includes('agent --plugin-dir'));
+    assert.ok(!result.includes('cc --plugin-dir'));
+  });
+
+  it('replaces "/tmp/claude/" with "/tmp/agent/"', () => {
+    const result = cleanAndNeutralize('Output written to /tmp/claude/debug.txt');
+    assert.ok(result.includes('/tmp/agent/'));
+    assert.ok(!result.includes('/tmp/claude/'));
+  });
+
+  it('replaces "!`cmd`" inline interpolation with bash instruction', () => {
+    const result = cleanAndNeutralize('Run !`bash scripts/build.sh` to build');
+    assert.ok(result.includes('Retrieve by running'));
+    assert.ok(result.includes('bash scripts/build.sh'));
+    assert.ok(!result.includes('!`'));
+  });
+
+  it('replaces "@file" reference (path/to/file.ext) with neutral "see file"', () => {
+    const result = cleanAndNeutralize('Execute @scripts/build.sh');
+    assert.ok(result.includes('(see scripts/build.sh)'));
+    assert.ok(!result.includes('@scripts'));
+  });
+
+  it('replaces "@file" reference with directory and extension like @references/notes.md', () => {
+    const result = cleanAndNeutralize('See @references/notes.md for details');
+    assert.ok(result.includes('(see references/notes.md)'));
+    assert.ok(!result.includes('@references/notes.md'));
+  });
+
+  it('does NOT replace bare @filename without directory separator', () => {
+    const input = 'Review @package.json and @tsconfig.json';
+    assert.strictEqual(cleanAndNeutralize(input), input);
+  });
+
+  it('does NOT replace @-prefixed email addresses', () => {
+    const input = 'Contact user@example.com for access';
+    assert.strictEqual(cleanAndNeutralize(input), input);
+  });
+
+  it('does NOT replace scoped npm package names with @ prefix', () => {
+    const input = 'npm install @scope/package-name';
+    assert.strictEqual(cleanAndNeutralize(input), input);
+  });
+
+  it('does NOT replace @version tag annotations', () => {
+    const input = 'Use the @latest tag for releases, tag @v1.2.3 for stable';
+    assert.strictEqual(cleanAndNeutralize(input), input);
+  });
+
+  it('does NOT replace @model references in AI context', () => {
+    const input = 'Invoke the @claude-3.5 model for analysis';
+    assert.strictEqual(cleanAndNeutralize(input), input);
+  });
+
+  it('does NOT replace !`cmd` with backtick-neutralized @ references', () => {
+    const input = 'Run !`ls @path` to list files';
+    const result = cleanAndNeutralize(input);
+    // The !`cmd` pattern should be rewritten, but the @path inside should not become (see path)
+    assert.ok(result.includes('@path') || !result.includes('(see path)'));
+  });
+
+  it('replaces bare CLAUDE_PLUGIN_ROOT (non-$, non-${}) with PLUGIN_ROOT', () => {
+    const result = cleanAndNeutralize("os.environ.get('CLAUDE_PLUGIN_ROOT')");
+    assert.ok(result.includes("os.environ.get('PLUGIN_ROOT')"));
+    assert.ok(!result.includes('CLAUDE_PLUGIN_ROOT'));
+  });
+
+  it('neutralizes multiple new patterns in same content', () => {
+    const input = 'Run cc --plugin-dir and check /tmp/claude/ for debug logs';
+    const result = cleanAndNeutralize(input);
+    assert.ok(!result.includes('cc --plugin-dir'));
+    assert.ok(!result.includes('/tmp/claude/'));
+    assert.ok(result.includes('agent --plugin-dir'));
+    assert.ok(result.includes('/tmp/agent/'));
+  });
+
+  it('does not match cc --plugin-dir partially', () => {
+    const result = cleanAndNeutralize('some-cc --plugin-dir-other');
+    // Should only match exact "cc --plugin-dir" pattern
+    assert.strictEqual(result, 'some-cc --plugin-dir-other');
+  });
+
+  it('does not match !` without closing backtick', () => {
+    const input = 'Not a complete !`pattern';
+    const result = cleanAndNeutralize(input);
+    assert.strictEqual(result, input);
+  });
+
+  it('preserves order of overlapping patterns — CLAUDE_PLUGIN_ROOT $ form first', () => {
+    // $CLAUDE_PLUGIN_ROOT should be matched before bare CLAUDE_PLUGIN_ROOT
+    const result = cleanAndNeutralize('$CLAUDE_PLUGIN_ROOT and CLAUDE_PLUGIN_ROOT');
+    assert.ok(!result.includes('CLAUDE_PLUGIN_ROOT'));
+    // Both should be PLUGIN_ROOT now
+    assert.strictEqual(result, 'PLUGIN_ROOT and PLUGIN_ROOT');
+  });
+
+  it('replacements work on claude-code skill text references', () => {
+    const result = cleanAndNeutralize('Use cc --plugin-dir to load plugins.');
+    assert.ok(result.includes('agent --plugin-dir'));
+  });
 });
 
 describe('renamePath', () => {
