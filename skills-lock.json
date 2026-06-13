@@ -1,11 +1,21 @@
 {
-  "version": 1,
+  "version": 2,
+  "generated": {
+    "lastExtracted": "2026-06-13T01:36:15.832Z",
+    "stalenessThresholdDays": 30
+  },
   "skills": {
-    "impeccable": {
-      "source": "pbakaus/impeccable",
-      "sourceType": "github",
-      "skillPath": ".agents/skills/impeccable/SKILL.md",
-      "computedHash": "d0cf58213e8581548a63a717d69a3b1c1eaed4c68d25887ca7b0698393b0530f"
+    "commit-commands": {
+      "fileHashes": {
+        "SKILL.md": "c8b8495073b52161502d82b89ea512e34a075107991a8c7a6ec4973f27acae60"
+      },
+      "combinedHash": "832414df103eaa4f570147366a0363249d43997e8c4e0eec5a3ccf184b2efe86"
+    },
+    "my-skill": {
+      "fileHashes": {
+        "SKILL.md": "9b01cac3f1aa2f136dec6684224516e07421e9857e197d11d3dcadc22cc4778c"
+      },
+      "combinedHash": "f994811752309fbf98145cd7ab2b9d22ce364b0acdb818db848976c4c0fc1e12"
     }
   }
 }

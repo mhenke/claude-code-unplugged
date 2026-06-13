@@ -41,6 +41,18 @@ const PLATFORM_PATTERNS = [
   { search: /\bclaude --/g, replacement: 'assistant --', detect: /\bclaude --/, label: 'references "claude --" (platform-specific CLI command)' },
   { search: /\bclaude-security-guidance\b/g, replacement: 'security-guidance', detect: /\bclaude-security-guidance\b/i, label: 'references "claude-security-guidance" (platform-specific filename)' },
   { search: /PLUGIN_ROOT\/hooks\//g, replacement: 'PLUGIN_ROOT/scripts/', detect: /PLUGIN_ROOT\/hooks\//, label: 'references "PLUGIN_ROOT/hooks/" (incorrect path, should be PLUGIN_ROOT/scripts/)' },
+  // Clean-only: inline command interpolation !`cmd` -> bash instruction
+  // Runs before @file pattern so content inside !`cmd` is protected from @ neutralization
+  { search: /!`([^`]+)`/g, replacement: '(Retrieve by running `$1` with your bash tool)' },
+  { search: /(?<![-\w])cc --plugin-dir(?![-\w])/g, replacement: 'agent --plugin-dir', detect: /(?<![-\w])cc --plugin-dir(?![-\w])/, label: 'references "cc --plugin-dir" (platform-specific CLI flag)' },
+  { search: /\/tmp\/claude\//g, replacement: '/tmp/agent/', detect: /\/tmp\/claude\//, label: 'references "/tmp/claude/" (platform-specific temp path)' },
+  // @file reference: matches @path/to/file.ext where the path includes both a directory
+  // separator (/) and a file extension (.). This avoids matching npm scoped packages
+  // (@scope/name), version tags (@latest, @v1.2.3), model refs (@claude-3.5), email
+  // addresses (user@example.com), and bare words (like @path inside !`cmd`).
+  // Negative lookbehind (?<!\S) ensures @ is preceded by whitespace or line start.
+  { search: /(?<!\S)@(\S+\/\S+\.\S+)/g, replacement: '(see $1)', detect: /(?<!\S)@\S+\/\S+\.\S+/, label: 'contains "@file" reference (path/to/file.ext — must have directory & extension)' },
+  { search: /\bCLAUDE_PLUGIN_ROOT\b/g, replacement: 'PLUGIN_ROOT', detect: /\bCLAUDE_PLUGIN_ROOT\b/, label: 'references "CLAUDE_PLUGIN_ROOT" (platform-specific env var)' },
 ];
 
 /** Known slash commands that should have their leading / stripped in neutralized output */

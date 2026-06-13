@@ -61,8 +61,6 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
         const fileContent = fs.readFileSync(path.join(commandsPath, file), 'utf8');
         const meta = parseFrontmatter(fileContent);
         let commandBody = stripFrontmatter(fileContent);
-        // Replace Claude Code CLI proprietary command interpolation syntax with general-purpose instruction
-        commandBody = commandBody.replace(/!`([^`]+)`/g, '(Retrieve by running `$1` with your bash tool)');
         const name = path.basename(file, '.md');
         const desc = meta.description || 'No description provided.';
 
@@ -81,8 +79,6 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
         const fileContent = fs.readFileSync(path.join(agentsPath, file), 'utf8');
         const meta = parseFrontmatter(fileContent);
         let agentBody = stripFrontmatter(fileContent);
-        // Replace Claude Code CLI proprietary command interpolation syntax with general-purpose instruction
-        agentBody = agentBody.replace(/!`([^`]+)`/g, '(Retrieve by running `$1` with your bash tool)');
         const name = meta.name || path.basename(file, '.md');
         const desc = meta.description || 'Specialized development subagent.';
 

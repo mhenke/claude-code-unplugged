@@ -13,6 +13,7 @@ const { mergeCommandsAndAgents } = require('./pipeline/merge-commands');
 const { processOutputStyles } = require('./pipeline/output-styles');
 const { processSecurityGuidance } = require('./pipeline/security-guidance');
 const { processGitHubManagement } = require('./pipeline/github-management');
+const { generateLockFile } = require('./lib/lockfile');
 
 function main() {
   const args = process.argv.slice(2);
@@ -89,6 +90,17 @@ function main() {
   // -------------------------------------------------------------
   console.log('\n--- Packaging GitHub Management Skill ---');
   processGitHubManagement(sourcePath, skillsDestDir);
+
+  // -------------------------------------------------------------
+  // 6. Generate skills-lock.json
+  // -------------------------------------------------------------
+  console.log('\n--- Generating skills-lock.json ---');
+  const lockData = generateLockFile(skillsDestDir, {
+    stalenessThresholdDays: 30,
+  });
+  const lockPath = path.resolve(cwd, 'skills-lock.json');
+  fs.writeFileSync(lockPath, JSON.stringify(lockData, null, 2) + '\n', 'utf8');
+  console.log(`Wrote lock file to ${lockPath}`);
 
   console.log('\nExtraction completed successfully!');
 }

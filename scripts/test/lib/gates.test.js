@@ -39,4 +39,36 @@ describe('gates.js buildGate', () => {
     const result = buildGate(undefined);
     assert.strictEqual(result, '');
   });
+
+  it('maps all 6 gate builders to expected skill names', () => {
+    const expectedKeys = ['security-guidance', 'commit-commands', 'code-review', 'feature-dev', 'hookify', 'ralph-wiggum'];
+    // buildGate returns non-empty string for each
+    for (const key of expectedKeys) {
+      const result = buildGate(key);
+      assert.ok(result.length > 0, `Expected non-empty gate for "${key}"`);
+    }
+  });
+
+  it('returns distinct gates for hookify vs ralph-wiggum vs security-guidance', () => {
+    const hookify = buildGate('hookify');
+    const ralph = buildGate('ralph-wiggum');
+    const security = buildGate('security-guidance');
+    assert.notStrictEqual(hookify, ralph);
+    assert.notStrictEqual(security, hookify);
+    assert.notStrictEqual(security, ralph);
+  });
+
+  it('verifies no accidental GATE_BUILDERS overlap with non-gate skills', () => {
+    // These skills should NOT have gates
+    const nonGateSkills = [
+      'agent-development', 'agent-sdk-dev', 'claude-opus-4-5-migration',
+      'command-development', 'explanatory-output-style', 'frontend-design',
+      'github-management', 'hook-development', 'learning-output-style',
+      'mcp-integration', 'plugin-dev', 'plugin-settings', 'plugin-structure',
+      'pr-review-toolkit', 'skill-development', 'writing-rules',
+    ];
+    for (const skill of nonGateSkills) {
+      assert.strictEqual(buildGate(skill), '', `Expected empty gate for "${skill}"`);
+    }
+  });
 });

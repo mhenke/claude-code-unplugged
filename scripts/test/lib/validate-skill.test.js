@@ -101,4 +101,19 @@ describe('validateSkill()', () => {
     // Should report missing frontmatter, missing name, missing description
     assert.ok(result.errors.some(e => e.includes('does not start with YAML frontmatter delimiter')));
   });
+
+  it('detects new portable-bundle neutrality violations via platform.js delegation', () => {
+    const content = '---\nname: test-skill\ndescription: Test\n---\n\n' +
+      'Use cc --plugin-dir to load plugins. Temp files go in /tmp/claude/.\n' +
+      'Run !`bash build.sh` and reference CLAUDE_PLUGIN_ROOT.';
+    const result = validateSkill('test-skill', content);
+    assert.strictEqual(result.valid, false);
+    // Should detect multiple violations from the new patterns
+    const violations = result.errors.filter(e => e.includes('Platform-neutrality violation'));
+    // !`cmd` is clean-only (no label), so expect 3 violations: cc --plugin-dir, /tmp/claude/, CLAUDE_PLUGIN_ROOT
+    assert.ok(violations.length >= 3, `Expected >=3 violations, got ${violations.length}: ${violations.join(', ')}`);
+    assert.ok(violations.some(v => v.includes('cc --plugin-dir')));
+    assert.ok(violations.some(v => v.includes('/tmp/claude/')));
+    assert.ok(violations.some(v => v.includes('CLAUDE_PLUGIN_ROOT')));
+  });
 });
