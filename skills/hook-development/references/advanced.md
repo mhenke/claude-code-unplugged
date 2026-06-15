@@ -411,7 +411,7 @@ Create test scenarios that exercise the full hook workflow:
 
 # Set up test environment
 export CLAUDE_PROJECT_DIR="/tmp/test-project"
-export CLAUDE_PLUGIN_ROOT="$(pwd)"
+export PLUGIN_ROOT="$(pwd)"
 mkdir -p "PROJECT_DIR"
 
 # Test SessionStart hook

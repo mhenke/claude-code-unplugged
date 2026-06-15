@@ -78,8 +78,8 @@ check_script() {
     ((warnings++))
   fi
 
-  # Check 8: Uses CLAUDE_PLUGIN_ROOT
-  if ! grep -q "CLAUDE_PLUGIN_ROOT\|CLAUDE_PROJECT_DIR" "$script"; then
+  # Check 8: Uses PLUGIN_ROOT
+  if ! grep -q "PLUGIN_ROOT\|CLAUDE_PROJECT_DIR" "$script"; then
     echo "💡 Tip: Use \PLUGIN_ROOT for plugin-relative paths"
   fi
 

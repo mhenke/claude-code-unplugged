@@ -106,7 +106,7 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 
 ## Troubleshooting
 
-**Plugin doesn't seem to fire** — check that `~/.agent/security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with `--debug-file /tmp/claude/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
+**Plugin doesn't seem to fire** — check that `~/.agent/security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with `--debug-file /tmp/agent/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
 
 **Review never finds anything** — verify your API path works. On 3P providers, check `SECURITY_REVIEW_MODEL` is set to a provider-specific id (not a bare `claude-opus-4-7`). On LLM gateways, check the gateway's logs for `POST /v1/messages` traffic from the plugin.
 

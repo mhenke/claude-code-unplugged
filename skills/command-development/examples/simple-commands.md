@@ -97,7 +97,7 @@ allowed-tools: Bash(npm:*), Bash(jest:*)
 
 Run tests for $1:
 
-Test execution: !`npm test $1`
+Test execution: (Retrieve by running `npm test $1` with your bash tool)
 
 Analyze results:
 - Tests passed/failed
@@ -172,13 +172,13 @@ allowed-tools: Bash(git:*)
 
 Repository Status Summary:
 
-**Current Branch:** !`git branch --show-current`
+**Current Branch:** (Retrieve by running `git branch --show-current` with your bash tool)
 
-**Status:** !`git status --short`
+**Status:** (Retrieve by running `git status --short` with your bash tool)
 
-**Recent Commits:** !`git log --oneline -5`
+**Recent Commits:** (Retrieve by running `git log --oneline -5` with your bash tool)
 
-**Remote Status:** !`git fetch && git status -sb`
+**Remote Status:** (Retrieve by running `git fetch && git status -sb` with your bash tool)
 
 Provide:
 - Summary of changes
@@ -209,7 +209,7 @@ Deploy to $1 environment using version $2
 **Pre-deployment Checks:**
 1. Verify $1 configuration exists
 2. Check version $2 is valid
-3. Verify cluster accessibility: !`kubectl cluster-info`
+3. Verify cluster accessibility: (Retrieve by running `kubectl cluster-info` with your bash tool)
 
 **Deployment Steps:**
 1. Update deployment manifest with version $2
@@ -428,7 +428,7 @@ Analyze but don't modify...
 allowed-tools: Bash(git:*)
 ---
 
-!`git status`
+(Retrieve by running `git status` with your bash tool)
 Analyze and suggest...
 ```
 
@@ -485,7 +485,7 @@ Compare @$1 with @$2...
 allowed-tools: Bash(git:*), Read
 ---
 
-Context: !`git status`
+Context: (Retrieve by running `git status` with your bash tool)
 Files: @file1 @file2
 
 Analyze...

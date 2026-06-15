@@ -35,7 +35,7 @@
       "description": "This skill should be used when the user asks to \"create a slash command\", \"add a command\", \"write a custom command\", \"define command arguments\", \"use command frontmatter\", \"organize commands\", \"create command with file references\", \"interactive command\", \"use AskUserQuestion in command\", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for coding assistant.",
       "path": "skills/command-development",
       "version": "0.1.0",
-      "bodyLength": 18036
+      "bodyLength": 18643
     },
     {
       "name": "commit-commands",
@@ -84,7 +84,7 @@
       "description": "Extensible user-configured prompt hooks",
       "path": "skills/hookify",
       "version": "0.1.0",
-      "bodyLength": 30640
+      "bodyLength": 30643
     },
     {
       "name": "learning-output-style",
@@ -105,7 +105,7 @@
       "description": "Development assistance for creating CLI plugins",
       "path": "skills/plugin-dev",
       "version": "0.1.0",
-      "bodyLength": 46218
+      "bodyLength": 46227
     },
     {
       "name": "plugin-settings",
@@ -140,14 +140,14 @@
       "description": "Security warnings, patterns scanner, and LLM diff security reviews",
       "path": "skills/security-guidance",
       "version": "0.1.0",
-      "bodyLength": 9091
+      "bodyLength": 9090
     },
     {
       "name": "skill-development",
       "description": "This skill should be used when the user wants to \"create a skill\", \"add a skill to plugin\", \"write a new skill\", \"improve skill description\", \"organize skill content\", or needs guidance on skill structure, progressive disclosure, or skill development best practices for coding assistant plugins.",
       "path": "skills/skill-development",
       "version": "0.1.0",
-      "bodyLength": 22219
+      "bodyLength": 22222
     },
     {
       "name": "writing-rules",
@@ -158,7 +158,7 @@
     }
   ],
   "provenance": {
-    "sourceRepository": "anthropics/claude-code",
-    "sourceCommit": "3a7c736101edbd00426fce4615e80b937f6467df"
+    "sourceRepository": "https://github.com/anthropics/claude-code.git",
+    "sourceCommit": "ca9f6045fc90c8244f9e787fb57d54b380f9a27c"
   }
 }

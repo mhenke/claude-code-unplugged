@@ -5,7 +5,7 @@ This reference covers features and patterns specific to commands bundled in codi
 ## Table of Contents
 
 - [Plugin Command Discovery](#plugin-command-discovery)
-- [CLAUDE_PLUGIN_ROOT Environment Variable](#claude_plugin_root-environment-variable)
+- [PLUGIN_ROOT Environment Variable](#claude_plugin_root-environment-variable)
 - [Plugin Command Patterns](#plugin-command-patterns)
 - [Integration with Plugin Components](#integration-with-plugin-components)
 - [Validation Patterns](#validation-patterns)
@@ -72,7 +72,7 @@ Avoid:
 - /do-stuff           (not descriptive)
 ```
 
-## CLAUDE_PLUGIN_ROOT Environment Variable
+## PLUGIN_ROOT Environment Variable
 
 ### Purpose
 
@@ -94,16 +94,16 @@ description: Analyze using plugin script
 allowed-tools: Bash(node:*), Read
 ---
 
-Run analysis: !`node PLUGIN_ROOT/scripts/analyze.js`
+Run analysis: (Retrieve by running `node PLUGIN_ROOT/scripts/analyze.js` with your bash tool)
 
-Read template: @PLUGIN_ROOT/templates/report.md
+Read template: (see PLUGIN_ROOT/templates/report.md)
 ```
 
 **Expands to:**
 ```
-Run analysis: !`node /path/to/plugins/plugin-name/scripts/analyze.js`
+Run analysis: (Retrieve by running `node /path/to/plugins/plugin-name/scripts/analyze.js` with your bash tool)
 
-Read template: @/path/to/plugins/plugin-name/templates/report.md
+Read template: (see /path/to/plugins/plugin-name/templates/report.md)
 ```
 
 ### Common Patterns
@@ -116,7 +116,7 @@ description: Run custom linter from plugin
 allowed-tools: Bash(node:*)
 ---
 
-Lint results: !`node PLUGIN_ROOT/bin/lint.js $1`
+Lint results: (Retrieve by running `node PLUGIN_ROOT/bin/lint.js $1` with your bash tool)
 
 Review the linting output and suggest fixes.
 ```
@@ -129,7 +129,7 @@ description: Deploy using plugin configuration
 allowed-tools: Read, Bash(*)
 ---
 
-Configuration: @PLUGIN_ROOT/config/deploy-config.json
+Configuration: (see PLUGIN_ROOT/config/deploy-config.json)
 
 Deploy application using the configuration above for $1 environment.
 ```
@@ -141,7 +141,7 @@ Deploy application using the configuration above for $1 environment.
 description: Generate report from template
 ---
 
-Use this template: @PLUGIN_ROOT/templates/api-report.md
+Use this template: (see PLUGIN_ROOT/templates/api-report.md)
 
 Generate a report for @$1 following the template format.
 ```
@@ -154,9 +154,9 @@ description: Complete plugin workflow
 allowed-tools: Bash(*), Read
 ---
 
-Step 1 - Prepare: !`bash PLUGIN_ROOT/scripts/prepare.sh $1`
-Step 2 - Config: @PLUGIN_ROOT/config/$1.json
-Step 3 - Execute: !`PLUGIN_ROOT/bin/execute $1`
+Step 1 - Prepare: (Retrieve by running `bash PLUGIN_ROOT/scripts/prepare.sh $1` with your bash tool)
+Step 2 - Config: (see PLUGIN_ROOT/config/$1.json)
+Step 3 - Execute: (Retrieve by running `PLUGIN_ROOT/bin/execute $1` with your bash tool)
 
 Review results and report status.
 ```
@@ -166,10 +166,10 @@ Review results and report status.
 1. **Always use for plugin-internal paths:**
    ```markdown
    # Good
-   @PLUGIN_ROOT/templates/foo.md
+   (see PLUGIN_ROOT/templates/foo.md)
 
    # Bad
-   @./templates/foo.md  # Relative to current directory, not plugin
+   (see ./templates/foo.md)  # Relative to current directory, not plugin
    ```
 
 2. **Validate file existence:**
@@ -179,9 +179,9 @@ Review results and report status.
    allowed-tools: Bash(test:*), Read
    ---
 
-   !`test -f PLUGIN_ROOT/config.json && echo "exists" || echo "missing"`
+   (Retrieve by running `test -f PLUGIN_ROOT/config.json && echo "exists" || echo "missing"` with your bash tool)
 
-   If config exists, load it: @PLUGIN_ROOT/config.json
+   If config exists, load it: (see PLUGIN_ROOT/config.json)
    Otherwise, use defaults...
    ```
 
@@ -198,7 +198,7 @@ Review results and report status.
 
 4. **Combine with arguments:**
    ```markdown
-   Run: !`PLUGIN_ROOT/bin/process.sh $1 $2`
+   Run: (Retrieve by running `PLUGIN_ROOT/bin/process.sh $1 $2` with your bash tool)
    ```
 
 ### Troubleshooting
@@ -230,12 +230,12 @@ description: Deploy using plugin settings
 allowed-tools: Read, Bash(*)
 ---
 
-Load configuration: @PLUGIN_ROOT/deploy-config.json
+Load configuration: (see PLUGIN_ROOT/deploy-config.json)
 
 Deploy to $1 environment using:
 1. Configuration settings above
-2. Current git branch: !`git branch --show-current`
-3. Application version: !`cat package.json | grep version`
+2. Current git branch: (Retrieve by running `git branch --show-current` with your bash tool)
+3. Application version: (Retrieve by running `cat package.json | grep version` with your bash tool)
 
 Execute deployment and monitor progress.
 ```
@@ -252,7 +252,7 @@ description: Generate documentation from template
 argument-hint: [component-name]
 ---
 
-Template: @PLUGIN_ROOT/templates/component-docs.md
+Template: (see PLUGIN_ROOT/templates/component-docs.md)
 
 Generate documentation for $1 component following the template structure.
 Include:
@@ -274,9 +274,9 @@ description: Complete build and test workflow
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash PLUGIN_ROOT/scripts/build.sh`
-Validate: !`bash PLUGIN_ROOT/scripts/validate.sh`
-Test: !`bash PLUGIN_ROOT/scripts/test.sh`
+Build: (Retrieve by running `bash PLUGIN_ROOT/scripts/build.sh` with your bash tool)
+Validate: (Retrieve by running `bash PLUGIN_ROOT/scripts/validate.sh` with your bash tool)
+Test: (Retrieve by running `bash PLUGIN_ROOT/scripts/test.sh` with your bash tool)
 
 Review all outputs and report:
 1. Build status
@@ -297,9 +297,9 @@ description: Deploy based on environment
 argument-hint: [dev|staging|prod]
 ---
 
-Environment config: @PLUGIN_ROOT/config/$1.json
+Environment config: (see PLUGIN_ROOT/config/$1.json)
 
-Environment check: !`echo "Deploying to: $1"`
+Environment check: (Retrieve by running `echo "Deploying to: $1"` with your bash tool)
 
 Deploy application using $1 environment configuration.
 Verify deployment and run smoke tests.
@@ -320,7 +320,7 @@ allowed-tools: Bash(*), Read, Write
 Cache directory: PLUGIN_ROOT/cache/
 
 Analyze @$1 and save results to cache:
-!`mkdir -p PLUGIN_ROOT/cache && date > PLUGIN_ROOT/cache/last-run.txt`
+(Retrieve by running `mkdir -p PLUGIN_ROOT/cache && date > PLUGIN_ROOT/cache/last-run.txt` with your bash tool)
 
 Store analysis for future reference and comparison.
 ```
@@ -420,7 +420,7 @@ File to review: @$1
 Execute comprehensive review:
 
 1. **Static Analysis** (via plugin scripts)
-   !`node PLUGIN_ROOT/scripts/lint.js $1`
+   (Retrieve by running `node PLUGIN_ROOT/scripts/lint.js $1` with your bash tool)
 
 2. **Deep Review** (via plugin agent)
    Launch the code-reviewer agent for detailed analysis.
@@ -429,7 +429,7 @@ Execute comprehensive review:
    Use the code-standards skill to ensure compliance.
 
 4. **Documentation** (via plugin template)
-   Template: @PLUGIN_ROOT/templates/review-report.md
+   Template: (see PLUGIN_ROOT/templates/review-report.md)
 
 Generate final report combining all outputs.
 ```
@@ -448,7 +448,7 @@ description: Deploy to environment with validation
 argument-hint: [environment]
 ---
 
-Validate environment: !`echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"`
+Validate environment: (Retrieve by running `echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"` with your bash tool)
 
 $IF($1 in [dev, staging, prod],
   Deploy to $1 environment using validated configuration,
@@ -471,7 +471,7 @@ description: Process configuration file
 argument-hint: [config-file]
 ---
 
-Check file: !`test -f $1 && echo "EXISTS" || echo "MISSING"`
+Check file: (Retrieve by running `test -f $1 && echo "EXISTS" || echo "MISSING"` with your bash tool)
 
 Process configuration if file exists: @$1
 
@@ -491,7 +491,7 @@ description: Create deployment with version
 argument-hint: [environment] [version]
 ---
 
-Validate inputs: !`test -n "$1" -a -n "$2" && echo "OK" || echo "MISSING"`
+Validate inputs: (Retrieve by running `test -n "$1" -a -n "$2" && echo "OK" || echo "MISSING"` with your bash tool)
 
 $IF($1 AND $2,
   Deploy version $2 to $1 environment,
@@ -510,9 +510,9 @@ allowed-tools: Bash(test:*)
 ---
 
 Validate plugin setup:
-- Config exists: !`test -f PLUGIN_ROOT/config.json && echo "✓" || echo "✗"`
-- Scripts exist: !`test -d PLUGIN_ROOT/scripts && echo "✓" || echo "✗"`
-- Tools available: !`test -x PLUGIN_ROOT/bin/analyze && echo "✓" || echo "✗"`
+- Config exists: (Retrieve by running `test -f PLUGIN_ROOT/config.json && echo "✓" || echo "✗"` with your bash tool)
+- Scripts exist: (Retrieve by running `test -d PLUGIN_ROOT/scripts && echo "✓" || echo "✗"` with your bash tool)
+- Tools available: (Retrieve by running `test -x PLUGIN_ROOT/bin/analyze && echo "✓" || echo "✗"` with your bash tool)
 
 If all checks pass, proceed with analysis.
 Otherwise, report missing components and installation steps.
@@ -528,12 +528,12 @@ description: Build and validate output
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash PLUGIN_ROOT/scripts/build.sh`
+Build: (Retrieve by running `bash PLUGIN_ROOT/scripts/build.sh` with your bash tool)
 
 Validate output:
-- Exit code: !`echo $?`
-- Output exists: !`test -d dist && echo "✓" || echo "✗"`
-- File count: !`find dist -type f | wc -l`
+- Exit code: (Retrieve by running `echo $?` with your bash tool)
+- Output exists: (Retrieve by running `test -d dist && echo "✓" || echo "✗"` with your bash tool)
+- File count: (Retrieve by running `find dist -type f | wc -l` with your bash tool)
 
 Report build status and any validation failures.
 ```
@@ -548,7 +548,7 @@ description: Process file with error handling
 argument-hint: [file-path]
 ---
 
-Try processing: !`node PLUGIN_ROOT/scripts/process.js $1 2>&1 || echo "ERROR: $?"`
+Try processing: (Retrieve by running `node PLUGIN_ROOT/scripts/process.js $1 2>&1 || echo "ERROR: $?"` with your bash tool)
 
 If processing succeeded:
 - Report results

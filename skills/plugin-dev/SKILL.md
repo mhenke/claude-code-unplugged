@@ -213,7 +213,7 @@ Install from coding-assistant-marketplace:
 Or for development, use directly:
 
 ```bash
-cc --plugin-dir /path/to/plugin-dev
+agent --plugin-dir /path/to/plugin-dev
 ```
 
 ## Quick Start
@@ -391,7 +391,7 @@ This plugin is part of the coding-assistant-marketplace. To contribute improveme
 
 1. Fork the marketplace repository
 2. Make changes to plugin-dev/
-3. Test locally with `cc --plugin-dir`
+3. Test locally with `agent --plugin-dir`
 4. Create PR following marketplace-publishing guidelines
 
 ## Version
@@ -689,7 +689,7 @@ Guide the user through creating a complete, high-quality coding assistant plugin
 1. **Installation instructions**:
    - Show user how to test locally:
      ```bash
-     cc --plugin-dir /path/to/plugin-name
+     agent --plugin-dir /path/to/plugin-name
      ```
    - Or copy to `.agent-plugin/` for project testing
 

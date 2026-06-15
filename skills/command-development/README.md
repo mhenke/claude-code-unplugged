@@ -9,7 +9,7 @@ This skill provides knowledge about:
 - YAML frontmatter configuration fields
 - Dynamic arguments ($ARGUMENTS, $1, $2, etc.)
 - File references with @ syntax
-- Bash execution with !` syntax
+- Bash execution with (Retrieve by running ` syntax
 - Command organization and namespacing
 - Best practices for command development
 - Plugin-specific features (PLUGIN_ROOT, plugin patterns)
@@ -28,7 +28,7 @@ Core skill content covering:
 - YAML frontmatter fields overview
 - Dynamic arguments ($ARGUMENTS and positional)
 - File references (@ syntax)
-- Bash execution (!` syntax)
+- Bash execution (!` with your bash tool) syntax)
 - Command organization patterns
 - Best practices and common patterns
 - Troubleshooting
@@ -124,7 +124,7 @@ allowed-tools: Read, Bash(git:*)
 Command prompt content with:
 - Arguments: $1, $2, or $ARGUMENTS
 - Files: @path/to/file
-- Bash: !`command here`
+- Bash: (Retrieve by running `command here` with your bash tool)
 ```
 
 ### Locations
@@ -143,7 +143,7 @@ Command prompt content with:
 - `@path/to/file` - Include file contents
 
 **Bash execution:**
-- `!`command`` - Execute and include output
+- `(Retrieve by running `command` with your bash tool)` - Execute and include output
 
 ## Frontmatter Fields Quick Reference
 
@@ -197,8 +197,8 @@ description: Show Git status
 allowed-tools: Bash(git:*)
 ---
 
-Current status: !`git status`
-Recent commits: !`git log --oneline -5`
+Current status: (Retrieve by running `git status` with your bash tool)
+Recent commits: (Retrieve by running `git log --oneline -5` with your bash tool)
 ```
 
 ## Development Workflow
