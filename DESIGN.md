@@ -22,16 +22,16 @@ colors:
 typography:
   display:
     fontFamily: "Cormorant Garamond, Georgia, serif"
-    fontSize: "56px"
+    fontSize: "64px"
+    fontWeight: 500
+    lineHeight: 1.2
+    letterSpacing: "-1.5px"
+  headline:
+    fontFamily: "Cormorant Garamond, Georgia, serif"
+    fontSize: "48px"
     fontWeight: 500
     lineHeight: 1.2
     letterSpacing: "-1px"
-  headline:
-    fontFamily: "Cormorant Garamond, Georgia, serif"
-    fontSize: "44px"
-    fontWeight: 500
-    lineHeight: 1.2
-    letterSpacing: "-0.5px"
   title:
     fontFamily: "Cormorant Garamond, Georgia, serif"
     fontSize: "36px"
@@ -169,8 +169,8 @@ The palette is warm and grounded, inspired by natural materials rather than synt
 
 ### Hierarchy
 
-- **Display** (500, 56px, 1.2, -1px letter-spacing): Hero headlines only. Never used for subheadings or body text.
-- **Headline** (500, 44px, 1.2, -0.5px letter-spacing): Section titles. The primary voice for page structure.
+- **Display** (500, 64px, 1.2, -1.5px letter-spacing): Hero headlines only. Never used for subheadings or body text.
+- **Headline** (500, 48px, 1.2, -1px letter-spacing): Section titles. The primary voice for page structure.
 - **Title** (500, 36px, 1.2): Sub-section headings, modal titles, card titles.
 - **Body** (400, 17px, 1.6): All continuous text. Max line length ~70ch.
 - **Label** (500, 14px, 1.4): Navigation links, button text, chip labels, metadata.
@@ -263,7 +263,6 @@ Depth is communicated entirely through tonal layering: surfaces shift between `c
 
 The marketing landing page (`docs/index.html`) intentionally deviates from the base design system in these ways:
 
-- **Display sizes:** h1: 64px, h2: 48px, h3: 36px (vs 56px, 44px, 36px in the base system) — increased for marketing impact
 - **Nav height:** 64px (vs 40px) — increased for presence and mobile touch targets
 - **CTA band color:** Terracotta (`#cc785c`) instead of surface-dark — the band serves as the page's emotional peak and conversion anchor. Restraint Rule exemption documented in the CTA Band component spec.
 - **Feature layout:** Two-column icon+text list instead of card grid — creates visual variety from the category cards below

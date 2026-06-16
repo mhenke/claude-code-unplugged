@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Claude Code Unplugged: Portable Agent Skills</title>
-  <meta name="description" content="22 portable agent skills extracted from Claude Code. Use them anywhere, including Cursor, Gemini CLI, Copilot, and VS Code.">
+  <meta name="description" content="22 portable agent skills from Claude Code. Use them with Cursor, Gemini CLI, Copilot, VS Code, or any AI assistant.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -136,6 +136,26 @@
       padding: 0 24px;
     }
 
+    /* Systemic safeguards */
+    .hero-grid > *,
+    .code-showcase-grid > *,
+    .category-grid > *,
+    .footer-grid > *,
+    .feature-list > * {
+      min-width: 0;
+    }
+
+    /* Minimum touch targets for compact controls */
+    .hamburger,
+    .nav-link,
+    .nav-cta,
+    .btn-primary,
+    .btn-secondary,
+    .install-command button {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
     /* Navigation */
     .top-nav {
       position: sticky;
@@ -181,6 +201,8 @@
     }
 
     .nav-link {
+      display: inline-flex;
+      align-items: center;
       font-size: 14px;
       font-weight: 500;
       color: var(--muted);
@@ -200,13 +222,13 @@
       color: var(--on-primary);
       font-size: 14px;
       font-weight: 500;
-      padding: 10px 24px;
+      padding: 12px 24px;
       border-radius: 8px;
       text-decoration: none;
       transition: background-color 0.2s ease;
       border: none;
       cursor: pointer;
-      height: 40px;
+      height: 44px;
     }
 
     .nav-cta:hover {
@@ -216,11 +238,15 @@
     .hamburger {
       display: none;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
       gap: 5px;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 8px;
+      padding: 0;
+      width: 44px;
+      height: 44px;
     }
 
     .hamburger span {
@@ -342,6 +368,8 @@
       border-radius: 16px;
       padding: 32px;
       color: var(--on-dark);
+      width: 100%;
+      overflow-x: auto;
     }
 
     .hero-card-header {
@@ -364,9 +392,9 @@
       border-radius: 50%;
     }
 
-    .hero-card-dot.red { background-color: #c64545; }
-    .hero-card-dot.yellow { background-color: #d4a017; }
-    .hero-card-dot.green { background-color: #5db872; }
+    .hero-card-dot.red, .code-window-dot.red { background-color: #c64545; }
+    .hero-card-dot.yellow, .code-window-dot.yellow { background-color: #d4a017; }
+    .hero-card-dot.green, .code-window-dot.green { background-color: #5db872; }
 
     .hero-card-title {
       font-size: 13px;
@@ -689,7 +717,9 @@
       border: none;
       color: var(--on-dark-soft);
       cursor: pointer;
-      padding: 4px;
+      padding: 0;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -699,6 +729,15 @@
     .install-command button:hover {
       color: var(--on-dark);
     }
+
+    .cta-note {
+      color: var(--surface-dark);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .mt-4 { margin-top: 4px; }
+    .mt-8 { margin-top: 8px; }
 
     /* Footer */
     .footer {
@@ -926,10 +965,6 @@
       border-radius: 2px;
     }
 
-    .code-window-dot.red { background-color: #c64545; }
-    .code-window-dot.yellow { background-color: #d4a017; }
-    .code-window-dot.green { background-color: #5db872; }
-
     /* Animations */
     @keyframes fadeInUp {
       from {
@@ -1019,7 +1054,7 @@
     <div class="container hero-grid">
       <div class="hero-content">
         <h1 class="animate-in">Portable agent skills extracted from Claude Code</h1>
-        <p class="hero-subtitle animate-in delay-1">You can run these workflows in Cursor, Copilot, Gemini CLI, or VS Code without changing your codebase. We port the prompt logic directly to keep it platform neutral.</p>
+        <p class="hero-subtitle animate-in delay-1">Run these workflows in Cursor, Copilot, Gemini CLI, or VS Code without touching your codebase. The prompt logic is ported so it works wherever your assistant runs.</p>
         <div class="hero-buttons animate-in delay-2">
           <a href="#get-started" class="btn-primary">Get Started</a>
           <a href="https://github.com/mhenke/claude-code-unplugged" class="btn-secondary">View on GitHub</a>
@@ -1058,8 +1093,8 @@ ralph-wiggum/</pre>
   <section class="features" id="features">
     <div class="container">
       <div class="section-header">
-        <h2 class="animate-in">Why portable skills?</h2>
-        <p class="animate-in delay-1">We extracted these workflows from Claude Code so you can use them with other models.</p>
+        <h2 class="animate-in">Why make skills portable?</h2>
+        <p class="animate-in delay-1">These workflows started in Claude Code. Now they work with other assistants too.</p>
       </div>
       <div class="feature-list">
         <div class="feature-item animate-in delay-1">
@@ -1072,7 +1107,7 @@ ralph-wiggum/</pre>
           </div>
           <div class="feature-text">
             <div class="title-md">Platform neutral</div>
-            <p>The standard markdown format is compatible with any AI assistant because we removed platform-specific hooks and CLI dependencies.</p>
+            <p>Plain Markdown with YAML frontmatter. No platform hooks, no CLI lock-in.</p>
           </div>
         </div>
         <div class="feature-item animate-in delay-2">
@@ -1082,8 +1117,8 @@ ralph-wiggum/</pre>
             </svg>
           </div>
           <div class="feature-text">
-            <div class="title-md">Battle tested</div>
-            <p>These prompts and patterns come directly from the source code and power real development teams every day.</p>
+            <div class="title-md">From the source</div>
+            <p>These prompts come from the source. They are the same patterns teams already use.</p>
           </div>
         </div>
         <div class="feature-item animate-in delay-3">
@@ -1095,7 +1130,7 @@ ralph-wiggum/</pre>
           </div>
           <div class="feature-text">
             <div class="title-md">One-command installation</div>
-            <p>You can add individual skills or the entire collection to your local workspace with a single command.</p>
+            <p>Add one skill or the whole collection with a single command.</p>
           </div>
         </div>
         <div class="feature-item animate-in delay-1">
@@ -1107,8 +1142,8 @@ ralph-wiggum/</pre>
             </svg>
           </div>
           <div class="feature-text">
-            <div class="title-md">Progressive disclosure</div>
-            <p>Every skill contains core instructions in its main markdown file, while detailed guides and helper scripts live in separate directories.</p>
+            <div class="title-md">Layered detail</div>
+            <p>Core instructions stay in the main SKILL.md file. Detailed guides and helper scripts live in subdirectories.</p>
           </div>
         </div>
         <div class="feature-item animate-in delay-2">
@@ -1122,7 +1157,7 @@ ralph-wiggum/</pre>
           </div>
           <div class="feature-text">
             <div class="title-md">22 specialized personas</div>
-            <p>We packaged everything from security scanners to pull request review toolkits into focused personas for specific tasks.</p>
+            <p>Security reviews, PR toolkits, commit helpers, and more. Each skill does one thing well.</p>
           </div>
         </div>
         <div class="feature-item animate-in delay-3">
@@ -1132,8 +1167,8 @@ ralph-wiggum/</pre>
             </svg>
           </div>
           <div class="feature-text">
-            <div class="title-md">Direct porting</div>
-            <p>We preserve the exact workflow logic from the original repository while adapting the syntax for other environments.</p>
+            <div class="title-md">Faithful ports</div>
+            <p>The workflow logic stays intact. Only the syntax is adapted for other assistants.</p>
           </div>
         </div>
       </div>
@@ -1210,7 +1245,7 @@ ralph-wiggum/</pre>
         <div class="category-card animate-in delay-1">
           <div class="category-header">
             <div class="title-md">Plugin and agent development</div>
-            <span class="category-count">9</span>
+            <span class="category-count">5</span>
           </div>
           <p>Comprehensive guides for building plugins, hooks, commands, and skills.</p>
           <div class="category-skills">
@@ -1255,9 +1290,9 @@ ralph-wiggum/</pre>
     <div class="container code-showcase-grid">
       <div class="code-showcase-content">
         <h3 class="animate-in">Standard SKILL.md format</h3>
-        <p class="animate-in delay-1">Every skill lives in its own directory with a standard markdown file. YAML frontmatter handles the metadata, and the body contains the instructions. This format is readable by both humans and AI models.</p>
-        <p class="animate-in delay-2">Because there are no proprietary formats, you can run or edit these files in any editor.</p>
-        <div class="animate-in delay-3" style="margin-top: 8px;">
+        <p class="animate-in delay-1">Each skill is a directory with a SKILL.md file. YAML frontmatter carries the metadata; the body holds the instructions. Both you and your assistant can read it.</p>
+        <p class="animate-in delay-2">No proprietary format means you can open, edit, or version these files like any other Markdown.</p>
+        <div class="animate-in delay-3 mt-8">
           <a href="https://github.com/mhenke/claude-code-unplugged" class="btn-primary">Explore All Skills</a>
         </div>
       </div>
@@ -1309,8 +1344,8 @@ ralph-wiggum/</pre>
   <!-- CTA Band -->
   <section class="cta-band" id="get-started">
     <div class="cta-inner">
-      <h2 class="animate-in">Get started in seconds</h2>
-      <p class="animate-in delay-1">You can install the entire collection with one command, or copy individual skills directly into your workspace.</p>
+      <h2 class="animate-in">Get started</h2>
+      <p class="animate-in delay-1">Install the whole collection with one command, or copy just the skills you want.</p>
       <div class="install-command animate-in delay-2">
         <span>npx skills add mhenke/claude-code-unplugged</span>
         <button id="copyBtn" aria-label="Copy command">
@@ -1320,8 +1355,8 @@ ralph-wiggum/</pre>
           </svg>
         </button>
       </div>
-      <p class="animate-in delay-2" style="color: var(--surface-dark); font-size: 14px; margin-top: 8px; opacity: 0.8;">If you already have it installed, you can update all skills by running:</p>
-      <div class="install-command animate-in delay-3" style="margin-top: 4px;">
+      <p class="animate-in delay-2 cta-note">If you already have it installed, you can update all skills by running:</p>
+      <div class="install-command animate-in delay-3 mt-4">
         <span>npx skills update</span>
         <button id="copyUpdateBtn" aria-label="Copy update command">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1347,7 +1382,7 @@ ralph-wiggum/</pre>
             </svg>
             <span class="footer-brand-text">Claude Code Unplugged</span>
           </div>
-          <p>A collection of 22 portable agent skills extracted from Claude Code for Cursor, Copilot, Gemini, and other assistants.</p>
+          <p>22 portable agent skills from Claude Code, ready for Cursor, Copilot, Gemini, and other assistants.</p>
         </div>
         <div class="footer-column">
           <h3>Skills</h3>
@@ -1390,6 +1425,10 @@ ralph-wiggum/</pre>
       const menuBtn = document.querySelector('.hamburger');
       const isExpanded = menu.classList.contains('active');
       menuBtn.setAttribute('aria-expanded', isExpanded);
+      if (isExpanded) {
+        const firstLink = menu.querySelector('.nav-link');
+        if (firstLink) firstLink.focus();
+      }
     }
 
     function copyCommand() {
