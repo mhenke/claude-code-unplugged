@@ -96,13 +96,13 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
       const scriptSrc = path.join(pluginPath, 'scripts');
       if (fs.existsSync(scriptSrc)) {
         copyRecursiveSync(scriptSrc, path.join(destSkillDir, 'scripts'), {
-          transform: (content) => cleanAndNeutralize(content),
+          transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
       const hooksSrc = path.join(pluginPath, 'hooks');
       if (fs.existsSync(hooksSrc)) {
         copyRecursiveSync(hooksSrc, path.join(destSkillDir, 'scripts'), {
-          transform: (content) => cleanAndNeutralize(content),
+          transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
     }
@@ -112,19 +112,19 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
       const hooksSrc = path.join(pluginPath, 'hooks');
       if (fs.existsSync(hooksSrc)) {
         copyRecursiveSync(hooksSrc, path.join(destSkillDir, 'scripts'), {
-          transform: (content) => cleanAndNeutralize(content),
+          transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
       const coreSrc = path.join(pluginPath, 'core');
       if (fs.existsSync(coreSrc)) {
         copyRecursiveSync(coreSrc, path.join(destSkillDir, 'scripts', 'core'), {
-          transform: (content) => cleanAndNeutralize(content),
+          transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
       const examplesSrc = path.join(pluginPath, 'examples');
       if (fs.existsSync(examplesSrc)) {
         copyRecursiveSync(examplesSrc, path.join(destSkillDir, 'examples'), {
-          transform: (content) => cleanAndNeutralize(content),
+          transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
     }

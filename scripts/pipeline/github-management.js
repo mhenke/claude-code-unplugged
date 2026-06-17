@@ -31,7 +31,7 @@ function processGitHubManagement(sourcePath, skillsDestDir) {
   let listContent = '';
   for (const file of scriptFiles) {
     copyRecursiveSync(path.join(sourceScriptsDir, file), path.join(destMgmtScripts, file), {
-      transform: (content) => cleanAndNeutralize(content),
+      transform: (content) => cleanAndNeutralize(content, { skillName: 'github-management' }),
     });
     listContent += `- \`${file}\`: Copied from repository scripts.\n`;
   }

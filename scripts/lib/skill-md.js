@@ -11,7 +11,7 @@ const { buildGate } = require('./gates');
 function writeSkillMd(destDir, name, description, bodyContent) {
   fs.mkdirSync(destDir, { recursive: true });
 
-  let processedBody = cleanAndNeutralize(bodyContent);
+  let processedBody = cleanAndNeutralize(bodyContent, { skillName: name });
 
   const gateText = buildGate(name);
   if (gateText) {
@@ -20,7 +20,7 @@ function writeSkillMd(destDir, name, description, bodyContent) {
 
   const mdContent = `---
 name: ${name}
-description: ${cleanAndNeutralize(description)}
+description: ${cleanAndNeutralize(description, { skillName: name })}
 ---
 
 ${processedBody.trim()}
