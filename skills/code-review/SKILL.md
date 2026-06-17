@@ -35,7 +35,7 @@ Performs automated code review on a pull request using multiple specialized agen
 
 **Usage:**
 ```bash
-/code-review [--comment]
+code-review [--comment]
 ```
 
 **Options:**
@@ -44,12 +44,12 @@ Performs automated code review on a pull request using multiple specialized agen
 **Example workflow:**
 ```bash
 # On a PR branch, run locally (outputs to terminal):
-/code-review
+code-review
 
 # Post review as PR comment:
-/code-review --comment
+code-review --comment
 
-# Claude will:
+# The coding assistant will:
 # - Launch 4 review agents in parallel
 # - Score each issue for confidence
 # - Output issues ≥80 confidence (to terminal or PR depending on flag)
@@ -101,7 +101,7 @@ https://github.com/owner/repo/blob/abc123.../src/utils.ts#L23-L28
 
 ## Installation
 
-This plugin is included in the coding assistant repository. The command is automatically available when using coding assistant.
+This plugin is included in the coding assistant repository. The command is automatically available when using the coding assistant.
 
 ## Best Practices
 
@@ -130,13 +130,13 @@ This plugin is included in the coding assistant repository. The command is autom
 ```bash
 # Create PR with changes
 # Run local review (outputs to terminal)
-/code-review
+code-review
 
 # Review the automated feedback
 # Make any necessary fixes
 
 # Optionally post as PR comment
-/code-review --comment
+code-review --comment
 
 # Merge when ready
 ```
@@ -145,7 +145,7 @@ This plugin is included in the coding assistant repository. The command is autom
 ```bash
 # Trigger on PR creation or update
 # Use --comment flag to post review comments
-/code-review --comment
+code-review --comment
 # Skip if review already exists
 ```
 
@@ -279,31 +279,31 @@ Provide a code review for the given pull request.
 
 To do this, follow these steps precisely:
 
-1. Launch a haiku agent to check if any of the following are true:
+1. Launch a fast lightweight agent to check if any of the following are true:
    - The pull request is closed
    - The pull request is a draft
    - The pull request does not need code review (e.g. automated PR, trivial change that is obviously correct)
-   - Claude has already commented on this PR (check `gh pr view <PR> --comments` for comments left by claude)
+   - The coding assistant has already commented on this PR (check `gh pr view <PR> --comments` for comments left by the coding assistant)
 
    If any condition is true, stop and do not proceed.
 
-Note: Still review Claude generated PR's.
+Note: Still review AI-generated PRs.
 
-2. Launch a haiku agent to return a list of file paths (not their contents) for all relevant CLAUDE.md files including:
+2. Launch a fast lightweight agent to return a list of file paths (not their contents) for all relevant CLAUDE.md files including:
    - The root CLAUDE.md file, if it exists
    - Any CLAUDE.md files in directories containing files modified by the pull request
 
-3. Launch a sonnet agent to view the pull request and return a summary of the changes
+3. Launch a standard agent to view the pull request and return a summary of the changes
 
 4. Launch 4 agents in parallel to independently review the changes. Each agent should return the list of issues, where each issue includes a description and the reason it was flagged (e.g. "CLAUDE.md adherence", "bug"). The agents should do the following:
 
-   Agents 1 + 2: CLAUDE.md compliance sonnet agents
+   Agents 1 + 2: CLAUDE.md compliance standard agents
    Audit changes for CLAUDE.md compliance in parallel. Note: When evaluating CLAUDE.md compliance for a file, you should only consider CLAUDE.md files that share a file path with the file or parents.
 
-   Agent 3: Opus bug agent (parallel subagent with agent 4)
+   Agent 3: High-capability bug agent (parallel subagent with agent 4)
    Scan for obvious bugs. Focus only on the diff itself without reading extra context. Flag only significant bugs; ignore nitpicks and likely false positives. Do not flag issues that you cannot validate without looking at context outside of the git diff.
 
-   Agent 4: Opus bug agent (parallel subagent with agent 3)
+   Agent 4: High-capability bug agent (parallel subagent with agent 3)
    Look for problems that exist in the introduced code. This could be security issues, incorrect logic, etc. Only look for issues that fall within the changed code.
 
    **CRITICAL: We only want HIGH SIGNAL issues.** Flag issues where:
@@ -320,7 +320,7 @@ Note: Still review Claude generated PR's.
 
    In addition to the above, each subagent should be told the PR title and description. This will help provide context regarding the author's intent.
 
-5. For each issue found in the previous step by agents 3 and 4, launch parallel subagents to validate the issue. These subagents should get the PR title and description along with a description of the issue. The agent's job is to review the issue to validate that the stated issue is truly an issue with high confidence. For example, if an issue such as "variable is not defined" was flagged, the subagent's job would be to validate that is actually true in the code. Another example would be CLAUDE.md issues. The agent should validate that the CLAUDE.md rule that was violated is scoped for this file and is actually violated. Use Opus subagents for bugs and logic issues, and sonnet agents for CLAUDE.md violations.
+5. For each issue found in the previous step by agents 3 and 4, launch parallel subagents to validate the issue. These subagents should get the PR title and description along with a description of the issue. The agent's job is to review the issue to validate that the stated issue is truly an issue with high confidence. For example, if an issue such as "variable is not defined" was flagged, the subagent's job would be to validate that is actually true in the code. Another example would be CLAUDE.md issues. The agent should validate that the CLAUDE.md rule that was violated is scoped for this file and is actually violated. Use high-capability subagents for bugs and logic issues, and standard agents for CLAUDE.md violations.
 
 6. Filter out any issues that were not validated in step 5. This step will give us our list of high signal issues for our review.
 
@@ -371,14 +371,10 @@ No issues found. Checked for bugs and CLAUDE.md compliance.
 - When linking to code in inline comments, follow the following format precisely, otherwise the Markdown preview won't render correctly: https://github.com/anthropics/coding-assistant/blob/c21d3c10bc8e898b7ac1a2d745bdc9bc4e423afe/package.json#L10-L15
   - Requires full git sha
   - You must provide the full sha. Commands like `https://github.com/owner/repo/blob/$(git rev-parse HEAD)/foo/bar` will not work, since your comment will be directly rendered in Markdown.
-  - Repo name must match the repo you're code reviewing
+  - Repo name must match the repo you are code reviewing
   - # sign after the file name
   - Line range format is L[start]-L[end]
   - Provide at least 1 line of context before and after, centered on the line you are commenting about (eg. if you are commenting about lines 5-6, you should link to `L4-7`)
-
----
-
-
 
 ## 🔒 Pre-Execution Verification Gate
 

@@ -234,6 +234,74 @@ describe('extract.js cleanAndNeutralize', () => {
   });
 });
 
+describe('model-tier neutralization', () => {
+  it('replaces "haiku agent" with "fast lightweight agent"', () => {
+    const result = cleanAndNeutralize('Launch a haiku agent to check');
+    assert.ok(result.includes('fast lightweight agent'));
+    assert.ok(!result.includes('haiku agent'));
+  });
+
+  it('replaces "sonnet agent" with "standard agent"', () => {
+    const result = cleanAndNeutralize('Launch a sonnet agent to summarize');
+    assert.ok(result.includes('standard agent'));
+    assert.ok(!result.includes('sonnet agent'));
+  });
+
+  it('replaces "sonnet agents" (plural) with "standard agents"', () => {
+    const result = cleanAndNeutralize('CLAUDE.md compliance sonnet agents');
+    assert.ok(result.includes('standard agents'));
+    assert.ok(!result.includes('sonnet agents'));
+  });
+
+  it('replaces "Opus bug agent" with "high-capability agent"', () => {
+    const result = cleanAndNeutralize('Agent 3: Opus bug agent for scanning');
+    assert.ok(result.includes('high-capability agent'));
+    assert.ok(!result.includes('Opus bug agent'));
+  });
+
+  it('replaces "Opus agent" with "high-capability agent"', () => {
+    const result = cleanAndNeutralize('Use Opus agent for complex analysis');
+    assert.ok(result.includes('high-capability agent'));
+    assert.ok(!result.includes('Opus agent'));
+  });
+
+  it('replaces "Opus subagents" with "high-capability subagents"', () => {
+    const result = cleanAndNeutralize('Use Opus subagents for validation');
+    assert.ok(result.includes('high-capability subagents'));
+    assert.ok(!result.includes('Opus subagents'));
+  });
+
+  it('does NOT replace "model: sonnet" in YAML frontmatter', () => {
+    const input = 'model: sonnet';
+    const result = cleanAndNeutralize(input);
+    assert.strictEqual(result, input);
+  });
+
+  it('does NOT replace API model IDs like "claude-opus-4-7"', () => {
+    const input = 'SECURITY_REVIEW_MODEL=claude-opus-4-7';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-opus-4-7'));
+  });
+
+  it('does NOT replace "haiku" in model version strings', () => {
+    const input = 'claude-haiku-4-5-20251001';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('haiku'));
+  });
+
+  it('handles case-insensitive "Haiku agent" replacement', () => {
+    const result = cleanAndNeutralize('Launch a Haiku agent');
+    assert.ok(result.includes('fast lightweight agent'));
+    assert.ok(!result.includes('Haiku agent'));
+  });
+
+  it('handles case-insensitive "Sonnet agents" replacement', () => {
+    const result = cleanAndNeutralize('CLAUDE.md compliance Sonnet agents');
+    assert.ok(result.includes('standard agents'));
+    assert.ok(!result.includes('Sonnet agents'));
+  });
+});
+
 describe('renamePath', () => {
   it('renames hooks.json to hook-config.json', () => {
     assert.strictEqual(renamePath('/some/path/hooks.json'), '/some/path/hook-config.json');
