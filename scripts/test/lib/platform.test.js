@@ -271,10 +271,9 @@ describe('model-tier neutralization', () => {
     assert.ok(!result.includes('Opus subagents'));
   });
 
-  it('does NOT replace "model: sonnet" in YAML frontmatter', () => {
-    const input = 'model: sonnet';
-    const result = cleanAndNeutralize(input);
-    assert.strictEqual(result, input);
+  it('replaces "model: sonnet" to "model: standard" in YAML frontmatter', () => {
+    const result = cleanAndNeutralize('model: sonnet');
+    assert.strictEqual(result, 'model: standard');
   });
 
   it('does NOT replace API model IDs like "claude-opus-4-7"', () => {
@@ -299,6 +298,134 @@ describe('model-tier neutralization', () => {
     const result = cleanAndNeutralize('CLAUDE.md compliance Sonnet agents');
     assert.ok(result.includes('standard agents'));
     assert.ok(!result.includes('Sonnet agents'));
+  });
+
+  it('replaces "model: haiku" with "model: fast"', () => {
+    const result = cleanAndNeutralize('model: haiku');
+    assert.strictEqual(result, 'model: fast');
+  });
+
+  it('replaces "model: opus" with "model: high-capability"', () => {
+    const result = cleanAndNeutralize('model: opus');
+    assert.strictEqual(result, 'model: high-capability');
+  });
+
+  it('does NOT replace "model: claude-opus-4-7" (API ID)', () => {
+    const input = 'model: claude-opus-4-7';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-opus-4-7'));
+  });
+
+  it('replaces backtick-quoted `haiku` with `fast`', () => {
+    const result = cleanAndNeutralize('Use `haiku` for simple tasks');
+    assert.ok(result.includes('`fast`'));
+    assert.ok(!result.includes('`haiku`'));
+  });
+
+  it('replaces backtick-quoted `sonnet` with `standard`', () => {
+    const result = cleanAndNeutralize('Use `sonnet` for balanced workflows');
+    assert.ok(result.includes('`standard`'));
+    assert.ok(!result.includes('`sonnet`'));
+  });
+
+  it('replaces backtick-quoted `opus` with `high-capability`', () => {
+    const result = cleanAndNeutralize('Use `opus` for complex analysis');
+    assert.ok(result.includes('`high-capability`'));
+    assert.ok(!result.includes('`opus`'));
+  });
+
+  it('does NOT replace backtick-quoted API IDs like `claude-opus-4-7`', () => {
+    const input = 'Set SECURITY_REVIEW_MODEL to `claude-opus-4-7`';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-opus-4-7'));
+  });
+
+  it('replaces "inherit/sonnet/opus/haiku" enum with "inherit/standard/high-capability/fast"', () => {
+    const result = cleanAndNeutralize('model: inherit/sonnet/opus/haiku');
+    assert.ok(result.includes('inherit/standard/high-capability/fast'));
+    assert.ok(!result.includes('sonnet'));
+  });
+
+  it('replaces "sonnet, opus, haiku" enum with "standard, high-capability, fast"', () => {
+    const result = cleanAndNeutralize('Valid values: sonnet, opus, haiku');
+    assert.ok(result.includes('standard, high-capability, fast'));
+  });
+
+  it('replaces "Opus 4.7" with "high-capability model"', () => {
+    const result = cleanAndNeutralize('Uses Opus 4.7 by default');
+    assert.ok(result.includes('high-capability model'));
+    assert.ok(!result.includes('Opus 4.7'));
+  });
+
+  it('replaces "Sonnet 4.5" with "standard model"', () => {
+    const result = cleanAndNeutralize('Migrate from Sonnet 4.5');
+    assert.ok(result.includes('standard model'));
+    assert.ok(!result.includes('Sonnet 4.5'));
+  });
+
+  it('replaces "Haiku 4.5" with "fast model"', () => {
+    const result = cleanAndNeutralize('Do NOT migrate Haiku 4.5 models');
+    assert.ok(result.includes('fast model'));
+    assert.ok(!result.includes('Haiku 4.5'));
+  });
+
+  it('does NOT replace API IDs like "claude-opus-4-7"', () => {
+    const input = 'SECURITY_REVIEW_MODEL=claude-opus-4-7';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-opus-4-7'));
+  });
+
+  it('does NOT replace Bedrock IDs like "anthropic.agent-opus-4-7"', () => {
+    const input = 'anthropic.agent-opus-4-7-v1:0';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('anthropic.agent-opus-4-7'));
+  });
+
+  it('skips model-tier patterns when skillName is exempted', () => {
+    const content = 'Migrate from Opus 4.5 to Opus 4.7. Use `sonnet` for balanced work.';
+    const result = cleanAndNeutralize(content, { skillName: 'claude-opus-4-5-migration' });
+    // Model-tier patterns should be skipped for exempt skills
+    assert.ok(result.includes('Opus 4.5'));
+    assert.ok(result.includes('Opus 4.7'));
+    assert.ok(result.includes('`sonnet`'));
+  });
+
+  it('applies model-tier patterns for non-exempt skills', () => {
+    const content = 'Migrate from Opus 4.5 to Opus 4.7. Use `sonnet` for balanced work.';
+    const result = cleanAndNeutralize(content, { skillName: 'code-review' });
+    assert.ok(!result.includes('Opus 4.5'));
+    assert.ok(!result.includes('`sonnet`'));
+  });
+
+  it('applies model-tier patterns when no skillName is provided (backward compat)', () => {
+    const content = 'Use `sonnet` for balanced work.';
+    const result = cleanAndNeutralize(content);
+    assert.ok(result.includes('`standard`'));
+    assert.ok(!result.includes('`sonnet`'));
+  });
+});
+
+describe('findNeutralityViolations with model-tier patterns', () => {
+  const { findNeutralityViolations } = require('../../lib/platform');
+
+  it('detects model-tier violations in non-exempt skill', () => {
+    const content = 'Launch a sonnet agent and use `opus` for analysis.';
+    const issues = findNeutralityViolations(content, { skillName: 'code-review' });
+    assert.ok(issues.some(i => i.includes('sonnet agent')));
+    assert.ok(issues.some(i => i.includes('`opus`')));
+  });
+
+  it('skips model-tier violations for exempt skill', () => {
+    const content = 'Migrate from Opus 4.5 to Opus 4.7. Use `sonnet` for balanced work.';
+    const issues = findNeutralityViolations(content, { skillName: 'claude-opus-4-5-migration' });
+    // Should NOT flag model-tier violations for exempt skills
+    assert.ok(!issues.some(i => i.includes('model tier')));
+  });
+
+  it('detects model-tier violations when no skillName provided (backward compat)', () => {
+    const content = 'Launch a sonnet agent.';
+    const issues = findNeutralityViolations(content);
+    assert.ok(issues.some(i => i.includes('sonnet agent')));
   });
 });
 

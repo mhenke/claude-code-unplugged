@@ -46,13 +46,6 @@ const PLATFORM_PATTERNS = [
   { search: /!`([^`]+)`/g, replacement: '(Retrieve by running `$1` with your bash tool)' },
   { search: /(?<![-\w])cc --plugin-dir(?![-\w])/g, replacement: 'agent --plugin-dir', detect: /(?<![-\w])cc --plugin-dir(?![-\w])/, label: 'references "cc --plugin-dir" (platform-specific CLI flag)' },
   { search: /\/tmp\/claude\//g, replacement: '/tmp/agent/', detect: /\/tmp\/claude\//, label: 'references "/tmp/claude/" (platform-specific temp path)' },
-  // Model-tier capability references: replace provider-specific model names used as
-  // agent capability tiers with neutral descriptions.
-  { search: /\bhaiku\s+agent\b/gi, replacement: 'fast lightweight agent', detect: /\bhaiku\s+agent\b/i, label: 'references "haiku agent" (provider-specific model tier)' },
-  { search: /\bsonnet\s+agent\b/gi, replacement: 'standard agent', detect: /\bsonnet\s+agent\b/i, label: 'references "sonnet agent" (provider-specific model tier)' },
-  { search: /\bOpus\s+(?:bug\s+)?agent\b/g, replacement: 'high-capability agent', detect: /\bOpus\s+(?:bug\s+)?agent\b/, label: 'references "Opus agent" (provider-specific model tier)' },
-  { search: /\bOpus\s+subagents?\b/g, replacement: 'high-capability subagents', detect: /\bOpus\s+subagents?\b/, label: 'references "Opus subagents" (provider-specific model tier)' },
-  { search: /\bsonnet\s+agents\b/gi, replacement: 'standard agents', detect: /\bsonnet\s+agents\b/i, label: 'references "sonnet agents" (provider-specific model tier)' },
   // @file reference: matches @path/to/file.ext where the path includes both a directory
   // separator (/) and a file extension (.). This avoids matching npm scoped packages
   // (@scope/name), version tags (@latest, @v1.2.3), model refs (@claude-3.5), email
@@ -61,6 +54,47 @@ const PLATFORM_PATTERNS = [
   { search: /(?<!\S)@(\S+\/\S+\.\S+)/g, replacement: '(see $1)', detect: /(?<!\S)@\S+\/\S+\.\S+/, label: 'contains "@file" reference (path/to/file.ext — must have directory & extension)' },
   { search: /\bCLAUDE_PLUGIN_ROOT\b/g, replacement: 'PLUGIN_ROOT', detect: /\bCLAUDE_PLUGIN_ROOT\b/, label: 'references "CLAUDE_PLUGIN_ROOT" (platform-specific env var)' },
 ];
+
+/**
+ * Model-tier capability patterns and their neutral replacements.
+ * These are provider-specific model tier references that should be neutralized
+ * unless the skill is explicitly exempt (e.g., version migration skills).
+ * Each entry:
+ *   search      - regex for replacement (with 'g' flag)
+ *   replacement - text to replace matches with
+ *   detect      - regex for validation detection (defaults to search without 'g')
+ *   label       - human-readable description for validation (omitted => clean-only)
+ */
+const MODEL_TIER_PATTERNS = [
+  // Agent capability tier references
+  { search: /\bhaiku\s+agent\b/gi, replacement: 'fast lightweight agent', detect: /\bhaiku\s+agent\b/i, label: 'references "haiku agent" (provider-specific model tier)' },
+  { search: /\bsonnet\s+agent\b/gi, replacement: 'standard agent', detect: /\bsonnet\s+agent\b/i, label: 'references "sonnet agent" (provider-specific model tier)' },
+  { search: /\bOpus\s+(?:bug\s+)?agent\b/g, replacement: 'high-capability agent', detect: /\bOpus\s+(?:bug\s+)?agent\b/, label: 'references "Opus agent" (provider-specific model tier)' },
+  { search: /\bOpus\s+subagents?\b/g, replacement: 'high-capability subagents', detect: /\bOpus\s+subagents?\b/, label: 'references "Opus subagents" (provider-specific model tier)' },
+  { search: /\bsonnet\s+agents\b/gi, replacement: 'standard agents', detect: /\bsonnet\s+agents\b/i, label: 'references "sonnet agents" (provider-specific model tier)' },
+
+  // YAML model: values (provider-specific model tier in config)
+  { search: /model:\s*haiku\b/gi, replacement: 'model: fast', detect: /model:\s*haiku\b/i, label: 'references "model: haiku" (provider-specific model tier)' },
+  { search: /model:\s*sonnet\b/gi, replacement: 'model: standard', detect: /model:\s*sonnet\b/i, label: 'references "model: sonnet" (provider-specific model tier)' },
+  { search: /model:\s*opus\b/gi, replacement: 'model: high-capability', detect: /model:\s*opus\b/i, label: 'references "model: opus" (provider-specific model tier)' },
+
+  // Backtick-quoted model names (provider-specific model tier references)
+  { search: /`haiku`/gi, replacement: '`fast`', detect: /`haiku`/i, label: 'references "`haiku`" (provider-specific model tier)' },
+  { search: /`sonnet`/gi, replacement: '`standard`', detect: /`sonnet`/i, label: 'references "`sonnet`" (provider-specific model tier)' },
+  { search: /`opus`/gi, replacement: '`high-capability`', detect: /`opus`/i, label: 'references "`opus`" (provider-specific model tier)' },
+
+  // Enum sequences (provider-specific model tier value lists)
+  { search: /inherit\/sonnet\/opus\/haiku/gi, replacement: 'inherit/standard/high-capability/fast', detect: /inherit\/sonnet\/opus\/haiku/i, label: 'references "inherit/sonnet/opus/haiku" (provider-specific model tier enum)' },
+  { search: /sonnet,\s*opus,\s*haiku/gi, replacement: 'standard, high-capability, fast', detect: /sonnet,\s*opus,\s*haiku/i, label: 'references "sonnet, opus, haiku" (provider-specific model tier enum)' },
+
+  // Versioned model prose references (Opus 4.7, Sonnet 4.5, Haiku 4.5)
+  { search: /\bOpus\s+\d+\.\d+/g, replacement: 'high-capability model', detect: /\bOpus\s+\d+\.\d+/, label: 'references "Opus X.Y" (provider-specific model version)' },
+  { search: /\bSonnet\s+\d+\.\d+/g, replacement: 'standard model', detect: /\bSonnet\s+\d+\.\d+/, label: 'references "Sonnet X.Y" (provider-specific model version)' },
+  { search: /\bHaiku\s+\d+\.\d+/g, replacement: 'fast model', detect: /\bHaiku\s+\d+\.\d+/, label: 'references "Haiku X.Y" (provider-specific model version)' },
+];
+
+/** Skills exempt from model-tier neutralization (their content is about specific model versions). */
+const MODEL_TIER_EXEMPT_SKILLS = new Set(['claude-opus-4-5-migration']);
 
 /** Known slash commands that should have their leading / stripped in neutralized output */
 const SLASH_COMMANDS = [
@@ -77,10 +111,17 @@ const SLASH_COMMAND_DETECT_REGEX = new RegExp(`\`/(${SLASH_COMMANDS.join('|')})`
  * Replaces Claude Code references, hooks.json, $CLAUDE_PLUGIN_ROOT,
  * .claude/ paths, and slash commands with neutral equivalents.
  */
-function cleanAndNeutralize(content) {
+function cleanAndNeutralize(content, options = {}) {
+  const { skillName } = options;
+  const skipModelTier = skillName && MODEL_TIER_EXEMPT_SKILLS.has(skillName);
   let cleaned = content;
   for (const p of PLATFORM_PATTERNS) {
     cleaned = cleaned.replace(p.search, p.replacement);
+  }
+  if (!skipModelTier) {
+    for (const p of MODEL_TIER_PATTERNS) {
+      cleaned = cleaned.replace(p.search, p.replacement);
+    }
   }
   cleaned = cleaned.replace(SLASH_COMMAND_REPLACE_REGEX, (match, cmd, rest) => `\`${cmd}${rest}\``);
   return cleaned;
@@ -91,7 +132,9 @@ function cleanAndNeutralize(content) {
  * Returns an array of human-readable issue descriptions.
  * Returns empty array if no violations found.
  */
-function findNeutralityViolations(content) {
+function findNeutralityViolations(content, options = {}) {
+  const { skillName } = options;
+  const skipModelTier = skillName && MODEL_TIER_EXEMPT_SKILLS.has(skillName);
   const issues = [];
 
   for (const p of PLATFORM_PATTERNS) {
@@ -99,6 +142,16 @@ function findNeutralityViolations(content) {
     const detect = p.detect || new RegExp(p.search.source);
     if (detect.test(content)) {
       issues.push(p.label);
+    }
+  }
+
+  if (!skipModelTier) {
+    for (const p of MODEL_TIER_PATTERNS) {
+      if (!p.label) continue;
+      const detect = p.detect || new RegExp(p.search.source);
+      if (detect.test(content)) {
+        issues.push(p.label);
+      }
     }
   }
 

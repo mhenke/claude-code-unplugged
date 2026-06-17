@@ -33,7 +33,7 @@ function processSecurityGuidance(sourcePath, skillsDestDir) {
     const destPluginJsonDir = path.join(destSecDir, '.claude-plugin');
     fs.mkdirSync(destPluginJsonDir, { recursive: true });
     copyRecursiveSync(pluginJsonSrc, path.join(destPluginJsonDir, 'plugin.json'), {
-      transform: (content) => cleanAndNeutralize(content),
+      transform: (content) => cleanAndNeutralize(content, { skillName: 'security-guidance' }),
     });
     console.log('Copied security-guidance .claude-plugin/plugin.json for script compatibility.');
   }
@@ -48,7 +48,7 @@ function processSecurityGuidance(sourcePath, skillsDestDir) {
     for (const file of files) {
       if (file !== 'hooks.json') {
         copyRecursiveSync(path.join(hooksSrc, file), path.join(destScriptsDir, file), {
-          transform: (content) => cleanAndNeutralize(content),
+          transform: (content) => cleanAndNeutralize(content, { skillName: 'security-guidance' }),
         });
       }
     }

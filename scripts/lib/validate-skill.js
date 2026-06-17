@@ -60,7 +60,7 @@ function validateSkill(name, content) {
   }
 
   // 8. Platform-neutrality checks
-  const neutralityIssues = findNeutralityViolations(content);
+  const neutralityIssues = findNeutralityViolations(content, { skillName: name });
   neutralityIssues.forEach(issue => {
     errors.push(`Platform-neutrality violation: ${issue}`);
   });

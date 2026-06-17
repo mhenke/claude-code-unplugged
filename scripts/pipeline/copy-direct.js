@@ -29,7 +29,7 @@ function copySkillNormalized(srcDir, destDir, skillName) {
     const destItem = path.join(destDir, item);
     const stats = fs.statSync(srcItem);
     if (stats.isDirectory()) {
-      copyRecursiveSync(srcItem, destItem, { transform: (content) => cleanAndNeutralize(content) });
+      copyRecursiveSync(srcItem, destItem, { transform: (content) => cleanAndNeutralize(content, { skillName }) });
     } else if (item === 'SKILL.md') {
       let content = fs.readFileSync(srcItem, 'utf8');
       const meta = parseFrontmatter(content);
@@ -37,10 +37,10 @@ function copySkillNormalized(srcDir, destDir, skillName) {
         console.log(`  Normalizing name: "${meta.name}" -> "${skillName}"`);
       }
       content = normalizeSkillFrontmatter(content, skillName);
-      content = cleanAndNeutralize(content);
+      content = cleanAndNeutralize(content, { skillName });
       fs.writeFileSync(destItem, content, 'utf8');
     } else {
-      copyRecursiveSync(srcItem, destItem, { transform: (content) => cleanAndNeutralize(content) });
+      copyRecursiveSync(srcItem, destItem, { transform: (content) => cleanAndNeutralize(content, { skillName }) });
     }
   }
 }
