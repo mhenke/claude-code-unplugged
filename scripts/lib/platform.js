@@ -46,6 +46,13 @@ const PLATFORM_PATTERNS = [
   { search: /!`([^`]+)`/g, replacement: '(Retrieve by running `$1` with your bash tool)' },
   { search: /(?<![-\w])cc --plugin-dir(?![-\w])/g, replacement: 'agent --plugin-dir', detect: /(?<![-\w])cc --plugin-dir(?![-\w])/, label: 'references "cc --plugin-dir" (platform-specific CLI flag)' },
   { search: /\/tmp\/claude\//g, replacement: '/tmp/agent/', detect: /\/tmp\/claude\//, label: 'references "/tmp/claude/" (platform-specific temp path)' },
+  // Model-tier capability references: replace provider-specific model names used as
+  // agent capability tiers with neutral descriptions.
+  { search: /\bhaiku\s+agent\b/gi, replacement: 'fast lightweight agent', detect: /\bhaiku\s+agent\b/i, label: 'references "haiku agent" (provider-specific model tier)' },
+  { search: /\bsonnet\s+agent\b/gi, replacement: 'standard agent', detect: /\bsonnet\s+agent\b/i, label: 'references "sonnet agent" (provider-specific model tier)' },
+  { search: /\bOpus\s+(?:bug\s+)?agent\b/g, replacement: 'high-capability agent', detect: /\bOpus\s+(?:bug\s+)?agent\b/, label: 'references "Opus agent" (provider-specific model tier)' },
+  { search: /\bOpus\s+subagents?\b/g, replacement: 'high-capability subagents', detect: /\bOpus\s+subagents?\b/, label: 'references "Opus subagents" (provider-specific model tier)' },
+  { search: /\bsonnet\s+agents\b/gi, replacement: 'standard agents', detect: /\bsonnet\s+agents\b/i, label: 'references "sonnet agents" (provider-specific model tier)' },
   // @file reference: matches @path/to/file.ext where the path includes both a directory
   // separator (/) and a file extension (.). This avoids matching npm scoped packages
   // (@scope/name), version tags (@latest, @v1.2.3), model refs (@claude-3.5), email
