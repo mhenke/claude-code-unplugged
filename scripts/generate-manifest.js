@@ -6,6 +6,7 @@ const { parseFrontmatter, stripFrontmatter } = require('./lib/frontmatter');
 
 const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
 const manifestPath = path.resolve(__dirname, '../skills.json');
+const lockPath = path.resolve(__dirname, '../skills-lock.json');
 const defaultSkillVersion = process.env.SKILL_VERSION || '0.1.0';
 
 // Parse --output / -o flag
@@ -43,16 +44,25 @@ for (const name of skills) {
 
 manifest.sort((a, b) => a.name.localeCompare(b.name));
 
-let existing = {};
-if (fs.existsSync(finalManifestPath)) {
+// Read provenance from skills-lock.json
+const provenance = {};
+if (fs.existsSync(lockPath)) {
   try {
-    existing = JSON.parse(fs.readFileSync(finalManifestPath, 'utf8'));
-  } catch {}
+    const lockData = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    if (lockData.generated) {
+      if (lockData.generated.sourceCommit) {
+        provenance.sourceCommit = lockData.generated.sourceCommit;
+      }
+      if (lockData.generated.sourceRepository) {
+        provenance.sourceRepository = lockData.generated.sourceRepository;
+      }
+    }
+  } catch (e) {
+    console.warn('Warning: Could not parse skills-lock.json for provenance:', e.message);
+  }
 }
 
-const provenance = {
-  ...(existing.provenance || {}),
-};
+// Environment variables override lockfile values (useful for CI)
 if (process.env.SOURCE_REPOSITORY) provenance.sourceRepository = process.env.SOURCE_REPOSITORY;
 if (process.env.SOURCE_COMMIT) provenance.sourceCommit = process.env.SOURCE_COMMIT;
 
@@ -69,4 +79,5 @@ fs.writeFileSync(
   JSON.stringify(output, null, 2) + '\n'
 );
 
-console.log(`Generated skills.json with ${manifest.length} skills.`);
+const provInfo = Object.keys(provenance).length > 0 ? ` (provenance: ${JSON.stringify(provenance)})` : ' (no provenance)';
+console.log(`Generated skills.json with ${manifest.length} skills${provInfo}.`);

@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const { buildGate } = require('../../lib/gates');
+const { buildGate, listGateSkills } = require('../../lib/gates');
 
 describe('gates.js buildGate', () => {
   it('returns security gate for security-guidance', () => {
@@ -56,6 +56,17 @@ describe('gates.js buildGate', () => {
     assert.notStrictEqual(hookify, ralph);
     assert.notStrictEqual(security, hookify);
     assert.notStrictEqual(security, ralph);
+  });
+
+  it('listGateSkills returns all 6 gated skill names', () => {
+    const gated = listGateSkills();
+    assert.strictEqual(gated.length, 6);
+    assert.ok(gated.includes('security-guidance'));
+    assert.ok(gated.includes('commit-commands'));
+    assert.ok(gated.includes('code-review'));
+    assert.ok(gated.includes('feature-dev'));
+    assert.ok(gated.includes('hookify'));
+    assert.ok(gated.includes('ralph-wiggum'));
   });
 
   it('verifies no accidental GATE_BUILDERS overlap with non-gate skills', () => {

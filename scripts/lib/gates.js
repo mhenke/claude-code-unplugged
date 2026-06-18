@@ -85,4 +85,12 @@ function buildGate(skillName) {
   return builder ? builder() : '';
 }
 
-module.exports = { buildGate };
+/**
+ * Return an array of skill names that have verification gates defined.
+ * @returns {string[]}
+ */
+function listGateSkills() {
+  return Array.from(GATE_BUILDERS.keys());
+}
+
+module.exports = { buildGate, listGateSkills };

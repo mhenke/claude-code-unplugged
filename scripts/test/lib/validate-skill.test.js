@@ -94,6 +94,20 @@ describe('validateSkill()', () => {
     assert.deepStrictEqual(result.errors, []);
   });
 
+  it('accepts platformExempt frontmatter field', () => {
+    const content = '---\nname: exempt-skill\ndescription: Exempt skill\nplatformExempt: true\n---\n\nThis mentions Opus 4.5 and Haiku directly.';
+    const result = validateSkill('exempt-skill', content);
+    assert.strictEqual(result.valid, true);
+    assert.deepStrictEqual(result.errors, []);
+  });
+
+  it('still rejects unsupported frontmatter fields alongside platformExempt', () => {
+    const content = '---\nname: bad-skill\ndescription: Bad\nplatformExempt: true\nversion: 1.0\n---\n\nBody';
+    const result = validateSkill('bad-skill', content);
+    assert.strictEqual(result.valid, false);
+    assert.ok(result.errors.some(e => e.includes('version')));
+  });
+
   it('handles content without three-dash but with parseable fields', () => {
     const content = 'name: test-skill\ndescription: Test';
     const result = validateSkill('test-skill', content);

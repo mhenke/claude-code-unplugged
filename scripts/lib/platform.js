@@ -115,13 +115,22 @@ const SLASH_COMMAND_REPLACE_REGEX = new RegExp(`\`/(${SLASH_COMMANDS.join('|')})
 const SLASH_COMMAND_DETECT_REGEX = new RegExp(`\`/(${SLASH_COMMANDS.join('|')})`);
 
 /**
+ * Add a skill name to the model-tier exemption set at runtime.
+ * Useful when the exemption list should be populated from frontmatter scanning.
+ * @param {string} skillName
+ */
+function addModelTierExemption(skillName) {
+  if (skillName) MODEL_TIER_EXEMPT_SKILLS.add(skillName);
+}
+
+/**
  * Clean and neutralize platform-specific content.
  * Replaces Claude Code references, hooks.json, $CLAUDE_PLUGIN_ROOT,
  * .claude/ paths, and slash commands with neutral equivalents.
  */
 function cleanAndNeutralize(content, options = {}) {
-  const { skillName } = options;
-  const skipModelTier = skillName && MODEL_TIER_EXEMPT_SKILLS.has(skillName);
+  const { skillName, platformExempt } = options;
+  const skipModelTier = (skillName && MODEL_TIER_EXEMPT_SKILLS.has(skillName)) || platformExempt === true;
   let cleaned = content;
   for (const p of PLATFORM_PATTERNS) {
     cleaned = cleaned.replace(p.search, p.replacement);
@@ -141,8 +150,8 @@ function cleanAndNeutralize(content, options = {}) {
  * Returns empty array if no violations found.
  */
 function findNeutralityViolations(content, options = {}) {
-  const { skillName } = options;
-  const skipModelTier = skillName && MODEL_TIER_EXEMPT_SKILLS.has(skillName);
+  const { skillName, platformExempt } = options;
+  const skipModelTier = (skillName && MODEL_TIER_EXEMPT_SKILLS.has(skillName)) || platformExempt === true;
   const issues = [];
 
   for (const p of PLATFORM_PATTERNS) {
@@ -174,4 +183,5 @@ module.exports = {
   cleanAndNeutralize,
   findNeutralityViolations,
   renamePath,
+  addModelTierExemption,
 };

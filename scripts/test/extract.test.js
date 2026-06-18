@@ -174,9 +174,8 @@ describe('lockfile.js generateLockFile + verifyLockStaleness', () => {
     });
 
     assert.strictEqual(lock.version, 2);
-    assert.ok(lock.generated.lastExtracted);
     assert.strictEqual(lock.generated.stalenessThresholdDays, 30);
-    // Provenance (sourceCommit, sourceRepository) lives in skills.json only
+    assert.strictEqual(lock.generated.lastExtracted, undefined);
     assert.strictEqual(lock.generated.sourceCommit, undefined);
     assert.strictEqual(lock.generated.sourceRepository, undefined);
     assert.ok(lock.skills['test-a']);
@@ -235,6 +234,28 @@ describe('lockfile.js generateLockFile + verifyLockStaleness', () => {
     const result = verifyLockStaleness(lockSkillsDir, lock);
     assert.strictEqual(result.stale, true);
     assert.ok(result.missing.includes('new-skill'));
+  });
+
+  it('produces deterministic lock output (no timestamps, no non-deterministic fields)', () => {
+    const lock1 = generateLockFile(lockSkillsDir, { stalenessThresholdDays: 30 });
+    const lock2 = generateLockFile(lockSkillsDir, { stalenessThresholdDays: 30 });
+    assert.deepStrictEqual(lock1, lock2);
+  });
+
+  it('includes sourceCommit and sourceRepository when provided', () => {
+    const lock = generateLockFile(lockSkillsDir, {
+      stalenessThresholdDays: 30,
+      commit: 'abc1234',
+      repository: 'anthropics/claude-code',
+    });
+    assert.strictEqual(lock.generated.sourceCommit, 'abc1234');
+    assert.strictEqual(lock.generated.sourceRepository, 'anthropics/claude-code');
+  });
+
+  it('omits sourceCommit and sourceRepository when not provided', () => {
+    const lock = generateLockFile(lockSkillsDir, {});
+    assert.strictEqual(lock.generated.sourceCommit, undefined);
+    assert.strictEqual(lock.generated.sourceRepository, undefined);
   });
 
   it('detects staleness when threshold exceeded', () => {
