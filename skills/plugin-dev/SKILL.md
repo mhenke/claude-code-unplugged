@@ -213,7 +213,7 @@ Install from coding-assistant-marketplace:
 Or for development, use directly:
 
 ```bash
-cc --plugin-dir /path/to/plugin-dev
+agent --plugin-dir /path/to/plugin-dev
 ```
 
 ## Quick Start
@@ -391,7 +391,7 @@ This plugin is part of the coding-assistant-marketplace. To contribute improveme
 
 1. Fork the marketplace repository
 2. Make changes to plugin-dev/
-3. Test locally with `cc --plugin-dir`
+3. Test locally with `agent --plugin-dir`
 4. Create PR following marketplace-publishing guidelines
 
 ## Version
@@ -689,7 +689,7 @@ Guide the user through creating a complete, high-quality coding assistant plugin
 1. **Installation instructions**:
    - Show user how to test locally:
      ```bash
-     cc --plugin-dir /path/to/plugin-name
+     agent --plugin-dir /path/to/plugin-name
      ```
    - Or copy to `.agent-plugin/` for project testing
 
@@ -898,7 +898,7 @@ When a user describes what they want an agent to do, you will:
      - Edge case handling
 
 3. **Select Configuration**:
-   - **Model**: Use `inherit` unless user specifies (sonnet for complex, haiku for simple)
+   - **Model**: Use `inherit` unless user specifies (standard for complex, fast for simple)
    - **Color**: Choose appropriate color:
      - blue/cyan: Analysis, review
      - green: Generation, creation
@@ -1033,7 +1033,7 @@ You are an expert plugin validator specializing in comprehensive validation of c
        - Frontmatter with `name`, `description`, `model`, `color`
        - Name format (lowercase, hyphens, 3-50 chars)
        - Description includes `<example>` blocks
-       - Model is valid (inherit/sonnet/opus/haiku)
+       - Model is valid (inherit/standard/high-capability/fast)
        - Color is valid (blue/cyan/green/yellow/magenta/red)
        - System prompt exists and is substantial (>20 chars)
 

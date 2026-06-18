@@ -10,7 +10,7 @@ description: Security warnings, patterns scanner, and LLM diff security reviews
 Security review for Claude-generated code. Three layers:
 
 1. **Pattern warnings** — instant regex-based reminders on `Edit`/`Write` for ~25 known-dangerous patterns (`yaml.load`, `torch.load(weights_only=False)`, `pickle.load` on untrusted data, raw `innerHTML`, hardcoded secrets, etc.).
-2. **LLM diff review** — when Claude finishes a turn, the plugin sends the diff to a fast LLM call (Opus 4.7 by default) and feeds high-severity findings back to Claude so it can fix them before you see the response.
+2. **LLM diff review** — when Claude finishes a turn, the plugin sends the diff to a fast LLM call (high-capability model by default) and feeds high-severity findings back to Claude so it can fix them before you see the response.
 3. **Agentic commit review** — on `git commit`, an SDK-driven reviewer reads related files (`Read`/`Grep`/`Glob`) to trace data flow across the codebase, catching multi-file vulnerabilities pattern matching misses (IDOR, auth bypass, cross-file SSRF).
 
 Findings cover common web-vulnerability classes — injection, XSS, SSRF, hardcoded secrets, IDOR, auth bypass, unsafe deserialization, and path traversal among others.
@@ -106,11 +106,11 @@ This is a best-effort assistive tool, not a guarantee. Treat findings as suggest
 
 ## Troubleshooting
 
-**Plugin doesn't seem to fire** — check that `~/.agent/security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with `--debug-file /tmp/claude/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
+**Plugin doesn't seem to fire** — check that `~/.agent/security-guidance.md` (or hook activity) shows in debug logs. Run coding assistant with `--debug-file /tmp/agent/debug.txt` and grep for `security_reminder_hook`. The plugin also writes its own log to `~/.agent/security/log.txt`.
 
 **Review never finds anything** — verify your API path works. On 3P providers, check `SECURITY_REVIEW_MODEL` is set to a provider-specific id (not a bare `claude-opus-4-7`). On LLM gateways, check the gateway's logs for `POST /v1/messages` traffic from the plugin.
 
-**Too many false positives** — drop `SECURITY_REVIEW_MODEL` to a cheaper model (`claude-sonnet-4-6`) and re-evaluate; if precision is the priority, stay on Opus 4.7.
+**Too many false positives** — drop `SECURITY_REVIEW_MODEL` to a cheaper model (`claude-sonnet-4-6`) and re-evaluate; if precision is the priority, stay on high-capability model.
 
 **Want to silence a specific finding** — add a comment to the line explaining why it's safe; the LLM reviewer treats inline justifications as exclusions. For systemic exclusions, document them in your `security-guidance.md`.
 

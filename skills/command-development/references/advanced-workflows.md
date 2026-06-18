@@ -22,10 +22,10 @@ allowed-tools: Bash(gh:*), Read, Grep
 # PR Review Workflow for #$1
 
 ## Step 1: Fetch PR Details
-!`gh pr view $1 --json title,body,author,files`
+(Retrieve by running `gh pr view $1 --json title,body,author,files` with your bash tool)
 
 ## Step 2: Review Files
-Files changed: !`gh pr diff $1 --name-only`
+Files changed: (Retrieve by running `gh pr diff $1 --name-only` with your bash tool)
 
 For each file:
 - Check code quality
@@ -33,7 +33,7 @@ For each file:
 - Review documentation
 
 ## Step 3: Run Checks
-Test status: !`gh pr checks $1`
+Test status: (Retrieve by running `gh pr checks $1` with your bash tool)
 
 Verify:
 - All tests passing
@@ -75,8 +75,8 @@ allowed-tools: Write, Bash(git:*)
 
 Creating deployment tracking file...
 
-Current branch: !`git branch --show-current`
-Latest commit: !`git log -1 --format=%H`
+Current branch: (Retrieve by running `git branch --show-current` with your bash tool)
+Latest commit: (Retrieve by running `git log -1 --format=%H` with your bash tool)
 
 Deployment state saved to `.agent/deployment-state.local.md`:
 
@@ -112,7 +112,7 @@ allowed-tools: Read, Bash(npm:*)
 
 Reading deployment state from `.agent/deployment-state.local.md`...
 
-Running tests: !`npm test`
+Running tests: (Retrieve by running `npm test` with your bash tool)
 
 Updating state to 'tested'...
 
@@ -140,8 +140,8 @@ allowed-tools: Bash(git:*), Bash(npm:*), Read
 
 ## Pre-flight Checks
 
-Branch: !`git branch --show-current`
-Status: !`git status --short`
+Branch: (Retrieve by running `git branch --show-current` with your bash tool)
+Status: (Retrieve by running `git status --short` with your bash tool)
 
 **Checking conditions:**
 
@@ -151,7 +151,7 @@ Status: !`git status --short`
    - If hotfix: Fast-track process
 
 2. Tests:
-   !`npm test`
+   (Retrieve by running `npm test` with your bash tool)
    - If tests fail: STOP - fix tests first
    - If tests pass: Continue
 
@@ -322,7 +322,7 @@ allowed-tools: Read, Write
 
 Reading workflow state from .agent/plugin-name-workflow.local.md...
 
-Current stage: @.agent/plugin-name-workflow.local.md
+Current stage: (see .agent/plugin-name-workflow.local.md)
 
 [Parse YAML frontmatter to determine next step]
 
@@ -343,7 +343,7 @@ allowed-tools: Read
 
 Checking for interrupted workflow...
 
-State file: @.agent/plugin-name-workflow.local.md
+State file: (see .agent/plugin-name-workflow.local.md)
 
 **Workflow found:**
 - Started: [timestamp]
@@ -528,7 +528,7 @@ description: Resilient deployment workflow
 Running steps with error handling...
 
 ## Step 1: Tests
-!`npm test`
+(Retrieve by running `npm test` with your bash tool)
 
 if [ $? -ne 0 ]; then
   ERROR: Tests failed
@@ -557,17 +557,17 @@ description: Deployment with rollback
 # Deploy with Rollback
 
 Saving current state for rollback...
-Previous version: !`current-version.sh`
+Previous version: (Retrieve by running `current-version.sh` with your bash tool)
 
 Deploying new version...
 
-!`deploy.sh`
+(Retrieve by running `deploy.sh` with your bash tool)
 
 if [ $? -ne 0 ]; then
   DEPLOYMENT FAILED
 
   Initiating automatic rollback...
-  !`rollback.sh`
+  (Retrieve by running `rollback.sh` with your bash tool)
 
   Rolled back to previous version.
   Check logs for failure details.
@@ -586,15 +586,15 @@ description: Workflow with checkpoints
 # Multi-Stage Deployment
 
 ## Checkpoint 1: Validation
-!`validate.sh`
+(Retrieve by running `validate.sh` with your bash tool)
 echo "checkpoint:validation" >> .agent/deployment-checkpoints.log
 
 ## Checkpoint 2: Build
-!`build.sh`
+(Retrieve by running `build.sh` with your bash tool)
 echo "checkpoint:build" >> .agent/deployment-checkpoints.log
 
 ## Checkpoint 3: Deploy
-!`deploy.sh`
+(Retrieve by running `deploy.sh` with your bash tool)
 echo "checkpoint:deploy" >> .agent/deployment-checkpoints.log
 
 If any step fails, resume with:
@@ -653,10 +653,10 @@ Creating workflow state...
 ---
 workflow: deployment
 environment: $1
-branch: !`git branch --show-current`
-commit: !`git rev-parse HEAD`
+branch: (Retrieve by running `git branch --show-current` with your bash tool)
+commit: (Retrieve by running `git rev-parse HEAD` with your bash tool)
 stage: initialized
-timestamp: !`date -u +%Y-%m-%dT%H:%M:%SZ`
+timestamp: (Retrieve by running `date -u +%Y-%m-%dT%H:%M:%SZ` with your bash tool)
 ---
 \`\`\`
 
@@ -673,7 +673,7 @@ description: Validate deployment
 allowed-tools: Read, Bash
 ---
 
-Reading state: @.agent/deployment-state.local.md
+Reading state: (see .agent/deployment-state.local.md)
 
 Running validation...
 - Branch check: PASS
@@ -693,11 +693,11 @@ description: Execute deployment
 allowed-tools: Read, Bash, Write
 ---
 
-Reading state: @.agent/deployment-state.local.md
+Reading state: (see .agent/deployment-state.local.md)
 
 Executing deployment to [environment]...
 
-!`deploy.sh [environment]`
+(Retrieve by running `deploy.sh [environment]` with your bash tool)
 
 Deployment complete.
 Updating state to 'completed'...

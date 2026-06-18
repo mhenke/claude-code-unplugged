@@ -32,7 +32,7 @@ allowed-tools: Bash(node:*), Read
 
 Analyze @$1 using plugin's quality checker:
 
-!`node PLUGIN_ROOT/scripts/quality-check.js $1`
+(Retrieve by running `node PLUGIN_ROOT/scripts/quality-check.js $1` with your bash tool)
 
 Review the analysis output and provide:
 1. Summary of findings
@@ -59,19 +59,19 @@ Review the analysis output and provide:
 description: Complete code audit using plugin suite
 argument-hint: [directory]
 allowed-tools: Bash(*)
-model: sonnet
+model: standard
 ---
 
 Running complete audit on $1:
 
 **Security scan:**
-!`bash PLUGIN_ROOT/scripts/security-scan.sh $1`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/security-scan.sh $1` with your bash tool)
 
 **Performance analysis:**
-!`bash PLUGIN_ROOT/scripts/perf-analyze.sh $1`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/perf-analyze.sh $1` with your bash tool)
 
 **Best practices check:**
-!`bash PLUGIN_ROOT/scripts/best-practices.sh $1`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/best-practices.sh $1` with your bash tool)
 
 Analyze all results and create comprehensive report including:
 - Critical issues requiring immediate attention
@@ -100,7 +100,7 @@ description: Generate API documentation from template
 argument-hint: [api-file]
 ---
 
-Template structure: @PLUGIN_ROOT/templates/api-documentation.md
+Template structure: (see PLUGIN_ROOT/templates/api-documentation.md)
 
 API implementation: @$1
 
@@ -141,16 +141,16 @@ allowed-tools: Bash(*), Read
 Executing release workflow for version $1:
 
 **Step 1 - Pre-release validation:**
-!`bash PLUGIN_ROOT/scripts/pre-release-check.sh $1`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/pre-release-check.sh $1` with your bash tool)
 
 **Step 2 - Build artifacts:**
-!`bash PLUGIN_ROOT/scripts/build-release.sh $1`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/build-release.sh $1` with your bash tool)
 
 **Step 3 - Run test suite:**
-!`bash PLUGIN_ROOT/scripts/run-tests.sh`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/run-tests.sh` with your bash tool)
 
 **Step 4 - Package release:**
-!`bash PLUGIN_ROOT/scripts/package.sh $1`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/package.sh $1` with your bash tool)
 
 Review all step outputs and report:
 1. Any failures or warnings
@@ -181,11 +181,11 @@ argument-hint: [environment]
 allowed-tools: Read, Bash(*)
 ---
 
-Deployment configuration for $1: @PLUGIN_ROOT/config/$1-deploy.json
+Deployment configuration for $1: (see PLUGIN_ROOT/config/$1-deploy.json)
 
-Current git state: !`git rev-parse --short HEAD`
+Current git state: (Retrieve by running `git rev-parse --short HEAD` with your bash tool)
 
-Build info: !`cat package.json | grep -E '(name|version)'`
+Build info: (Retrieve by running `cat package.json | grep -E '(name|version)'` with your bash tool)
 
 Execute deployment to $1 environment using configuration above.
 
@@ -304,7 +304,7 @@ Target file: @$1
 Execute comprehensive review workflow:
 
 **Phase 1: Automated Analysis**
-Run plugin analyzer: !`node PLUGIN_ROOT/scripts/analyze.js $1`
+Run plugin analyzer: (Retrieve by running `node PLUGIN_ROOT/scripts/analyze.js $1` with your bash tool)
 
 **Phase 2: Deep Review (Agent)**
 Launch the code-quality-reviewer agent for detailed analysis.
@@ -322,7 +322,7 @@ Use the coding-standards skill to validate:
 - Framework-specific patterns
 
 **Phase 4: Report Generation**
-Template: @PLUGIN_ROOT/templates/review-report.md
+Template: (see PLUGIN_ROOT/templates/review-report.md)
 
 Compile all findings into comprehensive report following template.
 
@@ -356,19 +356,19 @@ argument-hint: [environment]
 allowed-tools: Bash(*)
 ---
 
-Validate environment argument: !`echo "$1" | grep -E "^(dev|staging|prod)$" && echo "VALID" || echo "INVALID"`
+Validate environment argument: (Retrieve by running `echo "$1" | grep -E "^(dev|staging|prod)$" && echo "VALID" || echo "INVALID"` with your bash tool)
 
-Check build script exists: !`test -x PLUGIN_ROOT/scripts/build.sh && echo "EXISTS" || echo "MISSING"`
+Check build script exists: (Retrieve by running `test -x PLUGIN_ROOT/scripts/build.sh && echo "EXISTS" || echo "MISSING"` with your bash tool)
 
-Verify configuration available: !`test -f PLUGIN_ROOT/config/$1.json && echo "FOUND" || echo "NOT_FOUND"`
+Verify configuration available: (Retrieve by running `test -f PLUGIN_ROOT/config/$1.json && echo "FOUND" || echo "NOT_FOUND"` with your bash tool)
 
 If all validations pass:
 
-**Configuration:** @PLUGIN_ROOT/config/$1.json
+**Configuration:** (see PLUGIN_ROOT/config/$1.json)
 
-**Execute build:** !`bash PLUGIN_ROOT/scripts/build.sh $1 2>&1`
+**Execute build:** (Retrieve by running `bash PLUGIN_ROOT/scripts/build.sh $1 2>&1` with your bash tool)
 
-**Validation results:** !`bash PLUGIN_ROOT/scripts/validate-build.sh $1 2>&1`
+**Validation results:** (Retrieve by running `bash PLUGIN_ROOT/scripts/validate-build.sh $1 2>&1` with your bash tool)
 
 Report build status and any issues.
 
@@ -403,19 +403,19 @@ allowed-tools: Bash(*), Read
 
 Environment: $1
 
-Load environment configuration: @PLUGIN_ROOT/config/$1-checks.json
+Load environment configuration: (see PLUGIN_ROOT/config/$1-checks.json)
 
-Determine check level: !`echo "$1" | grep -E "^prod$" && echo "FULL" || echo "BASIC"`
+Determine check level: (Retrieve by running `echo "$1" | grep -E "^prod$" && echo "FULL" || echo "BASIC"` with your bash tool)
 
 **For production environment:**
-- Full test suite: !`bash PLUGIN_ROOT/scripts/test-full.sh`
-- Security scan: !`bash PLUGIN_ROOT/scripts/security-scan.sh`
-- Performance audit: !`bash PLUGIN_ROOT/scripts/perf-check.sh`
-- Compliance check: !`bash PLUGIN_ROOT/scripts/compliance.sh`
+- Full test suite: (Retrieve by running `bash PLUGIN_ROOT/scripts/test-full.sh` with your bash tool)
+- Security scan: (Retrieve by running `bash PLUGIN_ROOT/scripts/security-scan.sh` with your bash tool)
+- Performance audit: (Retrieve by running `bash PLUGIN_ROOT/scripts/perf-check.sh` with your bash tool)
+- Compliance check: (Retrieve by running `bash PLUGIN_ROOT/scripts/compliance.sh` with your bash tool)
 
 **For non-production environments:**
-- Basic tests: !`bash PLUGIN_ROOT/scripts/test-basic.sh`
-- Quick lint: !`bash PLUGIN_ROOT/scripts/lint.sh`
+- Basic tests: (Retrieve by running `bash PLUGIN_ROOT/scripts/test-basic.sh` with your bash tool)
+- Quick lint: (Retrieve by running `bash PLUGIN_ROOT/scripts/lint.sh` with your bash tool)
 
 Analyze results based on environment requirements:
 
@@ -438,19 +438,19 @@ Report status and recommend proceed/block decision.
 
 ### Pattern: Plugin Script Execution
 ```markdown
-!`node PLUGIN_ROOT/scripts/script-name.js $1`
+(Retrieve by running `node PLUGIN_ROOT/scripts/script-name.js $1` with your bash tool)
 ```
 Use for: Running plugin-provided Node.js scripts
 
 ### Pattern: Plugin Configuration Loading
 ```markdown
-@PLUGIN_ROOT/config/config-name.json
+(see PLUGIN_ROOT/config/config-name.json)
 ```
 Use for: Loading plugin configuration files
 
 ### Pattern: Plugin Template Usage
 ```markdown
-@PLUGIN_ROOT/templates/template-name.md
+(see PLUGIN_ROOT/templates/template-name.md)
 ```
 Use for: Using plugin templates for generation
 
@@ -468,13 +468,13 @@ Use for: Leveraging plugin skills for specialized knowledge
 
 ### Pattern: Input Validation
 ```markdown
-Validate input: !`echo "$1" | grep -E "^pattern$" && echo "OK" || echo "ERROR"`
+Validate input: (Retrieve by running `echo "$1" | grep -E "^pattern$" && echo "OK" || echo "ERROR"` with your bash tool)
 ```
 Use for: Validating command arguments
 
 ### Pattern: Resource Validation
 ```markdown
-Check exists: !`test -f PLUGIN_ROOT/path/file && echo "YES" || echo "NO"`
+Check exists: (Retrieve by running `test -f PLUGIN_ROOT/path/file && echo "YES" || echo "NO"` with your bash tool)
 ```
 Use for: Verifying required plugin files exist
 
@@ -493,7 +493,7 @@ Use for: Verifying required plugin files exist
 2. **Verify PLUGIN_ROOT expansion:**
    ```bash
    # Add debug output to command
-   !`echo "Plugin root: PLUGIN_ROOT"`
+   (Retrieve by running `echo "Plugin root: PLUGIN_ROOT"` with your bash tool)
    ```
 
 3. **Test across different working directories:**
@@ -505,8 +505,8 @@ Use for: Verifying required plugin files exist
 4. **Validate resource availability:**
    ```bash
    # Check all plugin resources exist
-   !`ls -la PLUGIN_ROOT/scripts/`
-   !`ls -la PLUGIN_ROOT/config/`
+   (Retrieve by running `ls -la PLUGIN_ROOT/scripts/` with your bash tool)
+   (Retrieve by running `ls -la PLUGIN_ROOT/config/` with your bash tool)
    ```
 
 ### Common Mistakes to Avoid
@@ -514,22 +514,22 @@ Use for: Verifying required plugin files exist
 1. **Using relative paths instead of PLUGIN_ROOT:**
    ```markdown
    # Wrong
-   !`node ./scripts/analyze.js`
+   (Retrieve by running `node ./scripts/analyze.js` with your bash tool)
 
    # Correct
-   !`node PLUGIN_ROOT/scripts/analyze.js`
+   (Retrieve by running `node PLUGIN_ROOT/scripts/analyze.js` with your bash tool)
    ```
 
 2. **Forgetting to allow required tools:**
    ```markdown
    # Missing allowed-tools
-   !`bash script.sh`  # Will fail without Bash permission
+   (Retrieve by running `bash script.sh` with your bash tool)  # Will fail without Bash permission
 
    # Correct
    ---
    allowed-tools: Bash(*)
    ---
-   !`bash PLUGIN_ROOT/scripts/script.sh`
+   (Retrieve by running `bash PLUGIN_ROOT/scripts/script.sh` with your bash tool)
    ```
 
 3. **Not validating inputs:**
@@ -538,17 +538,17 @@ Use for: Verifying required plugin files exist
    Deploy to $1 environment
 
    # Better - with validation
-   Validate: !`echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"`
+   Validate: (Retrieve by running `echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"` with your bash tool)
    Deploy to $1 environment (if valid)
    ```
 
 4. **Hardcoding plugin paths:**
    ```markdown
    # Wrong - breaks on different installations
-   @/home/user/.agent/plugins/my-plugin/config.json
+   (see /home/user/.agent/plugins/my-plugin/config.json)
 
    # Correct - works everywhere
-   @PLUGIN_ROOT/config.json
+   (see PLUGIN_ROOT/config.json)
    ```
 
 ---

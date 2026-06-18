@@ -403,6 +403,61 @@ describe('model-tier neutralization', () => {
     assert.ok(result.includes('`standard`'));
     assert.ok(!result.includes('`sonnet`'));
   });
+
+  // Bare model tier name replacements
+  it('replaces bare "haiku" with "fast"', () => {
+    const result = cleanAndNeutralize('Use haiku for simple tasks');
+    assert.ok(result.includes('fast'));
+    assert.ok(!result.includes('haiku'));
+  });
+
+  it('replaces bare "sonnet" with "standard"', () => {
+    const result = cleanAndNeutralize('Use sonnet for complex, haiku for simple');
+    assert.ok(result.includes('standard'));
+    assert.ok(result.includes('fast'));
+    assert.ok(!result.includes('sonnet'));
+    assert.ok(!result.includes('haiku'));
+  });
+
+  it('replaces bare "Opus" with "high-capability"', () => {
+    const result = cleanAndNeutralize('Use Opus for analysis');
+    assert.ok(result.includes('high-capability'));
+    assert.ok(!result.includes('Opus'));
+  });
+
+  it('does NOT replace "haiku" inside API IDs like "claude-haiku-4-5"', () => {
+    const input = 'SECURITY_REVIEW_MODEL=claude-haiku-4-5-20251001';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-haiku-4-5'));
+  });
+
+  it('does NOT replace "opus" inside API IDs like "claude-opus-4-7"', () => {
+    const input = 'SECURITY_REVIEW_MODEL=claude-opus-4-7';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-opus-4-7'));
+  });
+
+  it('does NOT replace "sonnet" inside API IDs like "claude-sonnet-4-6"', () => {
+    const input = 'model: claude-sonnet-4-6';
+    const result = cleanAndNeutralize(input);
+    assert.ok(result.includes('claude-sonnet-4-6'));
+  });
+
+  it('replaces bare "haiku" in validation enum context', () => {
+    const result = cleanAndNeutralize('inherit|sonnet|opus|haiku)');
+    assert.ok(result.includes('standard'));
+    assert.ok(result.includes('high-capability'));
+    assert.ok(result.includes('fast'));
+    assert.ok(!result.includes('sonnet'));
+    assert.ok(!result.includes('opus'));
+    assert.ok(!result.includes('haiku'));
+  });
+
+  it('replaces bare "Opus" in prose like "Opus 4.7 by default"', () => {
+    const result = cleanAndNeutralize('Uses Opus 4.7 by default');
+    assert.ok(result.includes('high-capability model'));
+    assert.ok(!result.includes('Opus'));
+  });
 });
 
 describe('findNeutralityViolations with model-tier patterns', () => {

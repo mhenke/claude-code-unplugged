@@ -10,7 +10,7 @@ YAML frontmatter is optional metadata at the start of command files:
 ---
 description: Brief description
 allowed-tools: Read, Write
-model: sonnet
+model: standard
 argument-hint: [arg1] [arg2]
 ---
 
@@ -132,24 +132,24 @@ allowed-tools: "*"
 **Type:** String
 **Required:** No
 **Default:** Inherits from conversation
-**Values:** `sonnet`, `opus`, `haiku`
+**Values:** `standard`, `high-capability`, `fast`
 
 **Purpose:** Specify which Claude model executes the command
 
 **Examples:**
 ```yaml
-model: haiku    # Fast, efficient for simple tasks
+model: fast    # Fast, efficient for simple tasks
 ```
 ```yaml
-model: sonnet   # Balanced performance (default)
+model: standard   # Balanced performance (default)
 ```
 ```yaml
-model: opus     # Maximum capability for complex tasks
+model: high-capability     # Maximum capability for complex tasks
 ```
 
 **When to use:**
 
-**Use `haiku` for:**
+**Use `fast` for:**
 - Simple, formulaic commands
 - Fast execution needed
 - Low complexity tasks
@@ -158,11 +158,11 @@ model: opus     # Maximum capability for complex tasks
 ```yaml
 ---
 description: Format code file
-model: haiku
+model: fast
 ---
 ```
 
-**Use `sonnet` for:**
+**Use `standard` for:**
 - Standard commands (default)
 - Balanced speed/quality
 - Most common use cases
@@ -170,11 +170,11 @@ model: haiku
 ```yaml
 ---
 description: Review code changes
-model: sonnet
+model: standard
 ---
 ```
 
-**Use `opus` for:**
+**Use `high-capability` for:**
 - Complex analysis
 - Architectural decisions
 - Deep code understanding
@@ -183,14 +183,14 @@ model: sonnet
 ```yaml
 ---
 description: Analyze system architecture
-model: opus
+model: high-capability
 ---
 ```
 
 **Best practices:**
 - Omit unless specific need
-- Use `haiku` for speed when possible
-- Reserve `opus` for genuinely complex tasks
+- Use `fast` for speed when possible
+- Reserve `high-capability` for genuinely complex tasks
 - Test with different models to find right balance
 
 ### argument-hint
@@ -353,7 +353,7 @@ description: Review Git changes
 allowed-tools: Bash(git:*), Read
 ---
 
-Current changes: !`git diff --name-only`
+Current changes: (Retrieve by running `git diff --name-only` with your bash tool)
 
 Review each changed file for:
 - Code quality
@@ -370,14 +370,14 @@ All common fields:
 description: Deploy application to environment
 argument-hint: [app-name] [environment] [version]
 allowed-tools: Bash(kubectl:*), Bash(helm:*), Read
-model: sonnet
+model: standard
 ---
 
 Deploy $1 to $2 environment using version $3
 
 Pre-deployment checks:
 - Verify $2 configuration
-- Check cluster status: !`kubectl cluster-info`
+- Check cluster status: (Retrieve by running `kubectl cluster-info` with your bash tool)
 - Validate version $3 exists
 
 Proceed with deployment following deployment runbook.
@@ -402,7 +402,7 @@ This command requires human judgment and cannot be automated.
 
 Review deployment $1 for production approval:
 
-Deployment details: !`gh api /deployments/$1`
+Deployment details: (Retrieve by running `gh api /deployments/$1` with your bash tool)
 
 Verify:
 - All tests passed
@@ -422,7 +422,7 @@ Type "APPROVED" to confirm deployment.
 ---
 description: Missing quote
 allowed-tools: Read, Write
-model: sonnet
+model: standard
 ---  # ❌ Missing closing quote above
 ```
 
@@ -440,7 +440,7 @@ allowed-tools: Bash  # ❌ Missing command filter
 model: gpt4  # ❌ Not a valid Claude model
 ```
 
-**Fix:** Use `sonnet`, `opus`, or `haiku`
+**Fix:** Use `standard`, `high-capability`, or `fast`
 
 ### Validation Checklist
 
@@ -457,7 +457,7 @@ Before committing command:
 1. **Start minimal:** Add frontmatter only when needed
 2. **Document arguments:** Always use argument-hint with arguments
 3. **Restrict tools:** Use most restrictive allowed-tools that works
-4. **Choose right model:** Use haiku for speed, opus for complexity
+4. **Choose right model:** Use fast for speed, high-capability for complexity
 5. **Manual-only sparingly:** Only use disable-model-invocation when necessary
 6. **Clear descriptions:** Make commands discoverable in `help`
 7. **Test thoroughly:** Verify frontmatter works as expected

@@ -16,7 +16,7 @@ The plugin has two layers:
 
 2. **Stop hook (final review)**: When Claude finishes, uses `git diff` against a
    baseline SHA (captured at UserPromptSubmit) to get only the code changed during the
-   session. Runs two Haiku analyses on the diff:
+   session. Runs two fast analyses on the diff:
    a) Concrete vulnerability scan with severity ratings
    b) Areas-of-concern analysis identifying categories to investigate
    Exits with code 2 to force Claude to continue and address findings.
@@ -1701,7 +1701,7 @@ def handle_stop_hook(input_data):
     """
     Handle the Stop hook — final security check using git diff.
     Diffs against the baseline SHA captured at UserPromptSubmit to review
-    only code changed during this turn. Runs two Haiku analyses and
+    only code changed during this turn. Runs two fast analyses and
     exits with code 2 to force Claude to continue and fix issues.
 
     Also sweeps pending pattern warnings to emit a session-level

@@ -169,13 +169,13 @@ fi
 
 # Set up environment
 export CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/tmp/test-project}"
-export CLAUDE_PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(pwd)}"
+export PLUGIN_ROOT="${PLUGIN_ROOT:-$(pwd)}"
 export CLAUDE_ENV_FILE="${CLAUDE_ENV_FILE:-/tmp/test-env-$$}"
 
 if [ "$VERBOSE" = true ]; then
   echo "Environment:"
   echo "  CLAUDE_PROJECT_DIR=PROJECT_DIR"
-  echo "  CLAUDE_PLUGIN_ROOT=PLUGIN_ROOT"
+  echo "  PLUGIN_ROOT=PLUGIN_ROOT"
   echo "  CLAUDE_ENV_FILE=ENV_FILE"
   echo ""
 fi

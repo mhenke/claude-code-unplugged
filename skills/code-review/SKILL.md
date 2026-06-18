@@ -35,7 +35,7 @@ Performs automated code review on a pull request using multiple specialized agen
 
 **Usage:**
 ```bash
-code-review [--comment]
+/code-review [--comment]
 ```
 
 **Options:**
@@ -44,12 +44,12 @@ code-review [--comment]
 **Example workflow:**
 ```bash
 # On a PR branch, run locally (outputs to terminal):
-code-review
+/code-review
 
 # Post review as PR comment:
-code-review --comment
+/code-review --comment
 
-# The coding assistant will:
+# Claude will:
 # - Launch 4 review agents in parallel
 # - Score each issue for confidence
 # - Output issues ≥80 confidence (to terminal or PR depending on flag)
@@ -101,7 +101,7 @@ https://github.com/owner/repo/blob/abc123.../src/utils.ts#L23-L28
 
 ## Installation
 
-This plugin is included in the coding assistant repository. The command is automatically available when using the coding assistant.
+This plugin is included in the coding assistant repository. The command is automatically available when using coding assistant.
 
 ## Best Practices
 
@@ -130,13 +130,13 @@ This plugin is included in the coding assistant repository. The command is autom
 ```bash
 # Create PR with changes
 # Run local review (outputs to terminal)
-code-review
+/code-review
 
 # Review the automated feedback
 # Make any necessary fixes
 
 # Optionally post as PR comment
-code-review --comment
+/code-review --comment
 
 # Merge when ready
 ```
@@ -145,7 +145,7 @@ code-review --comment
 ```bash
 # Trigger on PR creation or update
 # Use --comment flag to post review comments
-code-review --comment
+/code-review --comment
 # Skip if review already exists
 ```
 
@@ -283,11 +283,11 @@ To do this, follow these steps precisely:
    - The pull request is closed
    - The pull request is a draft
    - The pull request does not need code review (e.g. automated PR, trivial change that is obviously correct)
-   - The coding assistant has already commented on this PR (check `gh pr view <PR> --comments` for comments left by the coding assistant)
+   - Claude has already commented on this PR (check `gh pr view <PR> --comments` for comments left by claude)
 
    If any condition is true, stop and do not proceed.
 
-Note: Still review AI-generated PRs.
+Note: Still review Claude generated PR's.
 
 2. Launch a fast lightweight agent to return a list of file paths (not their contents) for all relevant CLAUDE.md files including:
    - The root CLAUDE.md file, if it exists
@@ -300,10 +300,10 @@ Note: Still review AI-generated PRs.
    Agents 1 + 2: CLAUDE.md compliance standard agents
    Audit changes for CLAUDE.md compliance in parallel. Note: When evaluating CLAUDE.md compliance for a file, you should only consider CLAUDE.md files that share a file path with the file or parents.
 
-   Agent 3: High-capability bug agent (parallel subagent with agent 4)
+   Agent 3: high-capability agent (parallel subagent with agent 4)
    Scan for obvious bugs. Focus only on the diff itself without reading extra context. Flag only significant bugs; ignore nitpicks and likely false positives. Do not flag issues that you cannot validate without looking at context outside of the git diff.
 
-   Agent 4: High-capability bug agent (parallel subagent with agent 3)
+   Agent 4: high-capability agent (parallel subagent with agent 3)
    Look for problems that exist in the introduced code. This could be security issues, incorrect logic, etc. Only look for issues that fall within the changed code.
 
    **CRITICAL: We only want HIGH SIGNAL issues.** Flag issues where:
@@ -371,10 +371,14 @@ No issues found. Checked for bugs and CLAUDE.md compliance.
 - When linking to code in inline comments, follow the following format precisely, otherwise the Markdown preview won't render correctly: https://github.com/anthropics/coding-assistant/blob/c21d3c10bc8e898b7ac1a2d745bdc9bc4e423afe/package.json#L10-L15
   - Requires full git sha
   - You must provide the full sha. Commands like `https://github.com/owner/repo/blob/$(git rev-parse HEAD)/foo/bar` will not work, since your comment will be directly rendered in Markdown.
-  - Repo name must match the repo you are code reviewing
+  - Repo name must match the repo you're code reviewing
   - # sign after the file name
   - Line range format is L[start]-L[end]
   - Provide at least 1 line of context before and after, centered on the line you are commenting about (eg. if you are commenting about lines 5-6, you should link to `L4-7`)
+
+---
+
+
 
 ## 🔒 Pre-Execution Verification Gate
 
