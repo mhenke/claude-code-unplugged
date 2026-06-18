@@ -27,7 +27,7 @@ function validateSkill(name, content) {
   const meta = parseFrontmatter(content);
 
   // 2. Check no unsupported frontmatter fields
-  const allowedFields = new Set(['name', 'description']);
+  const allowedFields = new Set(['name', 'description', 'platformExempt']);
   const unsupportedFields = Object.keys(meta).filter(field => !allowedFields.has(field));
   if (unsupportedFields.length > 0) {
     errors.push(`Unsupported frontmatter fields: ${unsupportedFields.join(', ')}`);
@@ -59,8 +59,9 @@ function validateSkill(name, content) {
     errors.push('SKILL.md contains empty instruction body');
   }
 
-  // 8. Platform-neutrality checks
-  const neutralityIssues = findNeutralityViolations(content, { skillName: name });
+  // 8. Platform-neutrality checks (skip if skill declares itself exempt)
+  const platformExempt = meta.platformExempt === 'true' || meta.platformExempt === true;
+  const neutralityIssues = findNeutralityViolations(content, { skillName: name, platformExempt });
   neutralityIssues.forEach(issue => {
     errors.push(`Platform-neutrality violation: ${issue}`);
   });

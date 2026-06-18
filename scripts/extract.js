@@ -7,6 +7,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const cp = require('child_process');
 const { printUsage, parseArgs } = require('./lib/cli');
 const { copyDirectSkills } = require('./pipeline/copy-direct');
 const { mergeCommandsAndAgents } = require('./pipeline/merge-commands');
@@ -14,6 +15,19 @@ const { processOutputStyles } = require('./pipeline/output-styles');
 const { processSecurityGuidance } = require('./pipeline/security-guidance');
 const { processGitHubManagement } = require('./pipeline/github-management');
 const { generateLockFile } = require('./lib/lockfile');
+
+function resolveCommit(commit, sourcePath) {
+  if (!commit) return '';
+  if (commit === 'auto') {
+    try {
+      return cp.execSync('git rev-parse HEAD', { cwd: sourcePath, encoding: 'utf8' }).trim();
+    } catch {
+      console.warn('Warning: Could not auto-detect commit from source directory. Proceeding without commit.');
+      return '';
+    }
+  }
+  return commit;
+}
 
 function main() {
   const args = process.argv.slice(2);
@@ -58,6 +72,11 @@ function main() {
     process.exit(1);
   }
 
+  const commit = resolveCommit(options.commit, sourcePath);
+  if (commit) {
+    console.log(`Source commit: ${commit}`);
+  }
+
   const skillsDestDir = path.join(targetPath, 'skills');
   fs.mkdirSync(skillsDestDir, { recursive: true });
 
@@ -97,8 +116,10 @@ function main() {
   console.log('\n--- Generating skills-lock.json ---');
   const lockData = generateLockFile(skillsDestDir, {
     stalenessThresholdDays: 30,
+    commit: commit || undefined,
+    repository: 'anthropics/claude-code',
   });
-  const lockPath = path.resolve(cwd, 'skills-lock.json');
+  const lockPath = path.join(targetPath, 'skills-lock.json');
   fs.writeFileSync(lockPath, JSON.stringify(lockData, null, 2) + '\n', 'utf8');
   console.log(`Wrote lock file to ${lockPath}`);
 

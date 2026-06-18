@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "Portable agent skills, workflows, commands, and automation scripts extracted from Claude Code",
   "scripts": {
-    "test": "node --test scripts/test/validate.test.js && node --test scripts/test/generate-manifest.test.js && node --test scripts/test/extract.test.js"
+    "test": "node --test scripts/test/validate.test.js && node --test scripts/test/generate-manifest.test.js && node --test scripts/test/extract.test.js",
+    "test:all": "node --test scripts/test/**/*.test.js",
+    "validate": "node scripts/validate.js",
+    "check-lock": "node scripts/check-lock-staleness.js",
+    "extract": "node scripts/extract.js",
+    "generate-manifest": "node scripts/generate-manifest.js"
   },
   "keywords": [
     "agent-skills",

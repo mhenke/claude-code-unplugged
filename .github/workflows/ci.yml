@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate skills
+        run: node scripts/validate.js
+      - name: Check skills-lock.json staleness
+        run: node scripts/check-lock-staleness.js
+      - name: Run tests
+        run: npm test

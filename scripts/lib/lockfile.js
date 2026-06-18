@@ -2,7 +2,7 @@
  * Lock file generation for skills extraction staleness tracking.
  * Computes SHA-256 hashes of ALL tracked files per skill directory and generates
  * a v2 skills-lock.json with per-skill file hashes for staleness verification.
- * Provenance (sourceCommit, sourceRepository) lives in skills.json only.
+ * Provenance (sourceCommit, sourceRepository) lives in skills-lock.json.
  * Also provides staleness verification against the current skills tree.
  */
 const fs = require('fs');
@@ -68,7 +68,7 @@ function computeHash(filePath) {
 /**
  * Generate the full lock file object, hashing ALL tracked files per skill.
  * @param {string} skillsDir - Path to the skills directory
- * @param {object} metadata - { stalenessThresholdDays? }
+ * @param {object} metadata - { stalenessThresholdDays?, commit?, repository? }
  * @returns {object} lock file content
  */
 function generateLockFile(skillsDir, metadata = {}) {
@@ -89,7 +89,6 @@ function generateLockFile(skillsDir, metadata = {}) {
 
     skills[entry.name] = {
       fileHashes,
-      // Combined hash of all tracked file hashes (sorted for determinism)
       combinedHash: crypto.createHash('sha256')
         .update(
           Object.entries(fileHashes)
@@ -102,12 +101,15 @@ function generateLockFile(skillsDir, metadata = {}) {
     };
   }
 
+  const generated = {
+    stalenessThresholdDays: metadata.stalenessThresholdDays || 30,
+  };
+  if (metadata.commit) generated.sourceCommit = metadata.commit;
+  if (metadata.repository) generated.sourceRepository = metadata.repository;
+
   return {
     version: 2,
-    generated: {
-      lastExtracted: new Date().toISOString(),
-      stalenessThresholdDays: metadata.stalenessThresholdDays || 30,
-    },
+    generated,
     skills,
   };
 }
