@@ -53,7 +53,7 @@ Tests individual hook scripts with sample input before deploying to coding assis
 ```
 
 **Features:**
-- Sets up proper environment variables (CLAUDE_PROJECT_DIR, CLAUDE_PLUGIN_ROOT)
+- Sets up proper environment variables (CLAUDE_PROJECT_DIR, PLUGIN_ROOT)
 - Measures execution time
 - Validates output JSON
 - Shows exit codes and their meanings

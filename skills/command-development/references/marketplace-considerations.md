@@ -49,7 +49,7 @@ fi
 
 ```markdown
 <!-- BAD: macOS-specific -->
-!`pbcopy < file.txt`
+(Retrieve by running `pbcopy < file.txt` with your bash tool)
 
 <!-- GOOD: Platform detection -->
 if command -v pbcopy > /dev/null; then

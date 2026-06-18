@@ -301,7 +301,7 @@ This plugin is part of the coding assistant Marketplace. It should be auto-disco
 
 **Manual testing:**
 ```bash
-cc --plugin-dir /path/to/hookify
+agent --plugin-dir /path/to/hookify
 ```
 
 ## Requirements

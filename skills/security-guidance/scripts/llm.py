@@ -236,7 +236,7 @@ def _model_supports_adaptive_thinking(model: str) -> bool:
         return True
     # Default to adaptive for unknown future models — newer models are
     # adaptive-trained and the 400 from a wrong guess is recoverable
-    # (the dual_or fallback retries with sonnet).
+    # (the dual_or fallback retries with standard).
     return True
 
 
@@ -387,7 +387,7 @@ def _call_claude(prompt, output_schema, thinking_budget=10000, max_tokens=16000,
                  retry_5xx=True):
     """
     Call the configured LLM model with extended thinking and structured outputs.
-    Model defaults to Sonnet 4.6 but can be overridden via SECURITY_REVIEW_MODEL env var.
+    Model defaults to standard model but can be overridden via SECURITY_REVIEW_MODEL env var.
     Returns parsed JSON response or None on failure.
     On failure, sets module-level _last_call_claude_http_error to the HTTP status
     (or -1 for network/timeout) so callers can distinguish API failure from an
@@ -513,7 +513,7 @@ def _dual_or_enabled() -> bool:
     Default OFF — the second call roughly doubles API spend for the review.
     For users paying their own API bills that's rarely the right tradeoff;
     the single-call path still gets the model's primary judgment plus a
-    sonnet fallback on transient errors. Opt in with SG_DUAL_OR=on (or =1).
+    standard fallback on transient errors. Opt in with SG_DUAL_OR=on (or =1).
     """
     return os.environ.get("SG_DUAL_OR", "").strip().lower() in ("1", "on", "true", "yes")
 
@@ -529,7 +529,7 @@ def _call_claude_dual_or(prompt, output_schema, *, bool_key: str, list_key: str,
 
     bool_key/list_key name the schema's flag-field and findings-array. The
     merge unions the two arrays (exact-dict dedup) and ORs the flag. Each leg
-    falls back to sonnet (with retries) independently if its primary call fails —
+    falls back to standard (with retries) independently if its primary call fails —
     529s are common under load and a single None leg would otherwise drop
     one of the two samples on that case. Honors SECURITY_REVIEW_MODEL override
     for both calls without fallback.
@@ -545,12 +545,12 @@ def _call_claude_dual_or(prompt, output_schema, *, bool_key: str, list_key: str,
     primary = explicit or SECURITY_REVIEW_MODEL
 
     if not _dual_or_enabled():
-        # Single-call path. Reuse the same sonnet-fallback retry as a dual_or
+        # Single-call path. Reuse the same standard-fallback retry as a dual_or
         # leg so a 529/400 on the primary doesn't drop recall to zero.
         r = _call_claude(prompt, output_schema, thinking_budget=thinking_budget,
                          max_tokens=max_tokens, model=primary, retry_5xx=False)
         if r is None and not explicit:
-            debug_log(f"single: {primary} failed, falling back to sonnet")
+            debug_log(f"single: {primary} failed, falling back to standard")
             r = _call_claude(prompt, output_schema, thinking_budget=thinking_budget,
                              max_tokens=max_tokens, model="claude-sonnet-4-6",
                              retry_5xx=True)
@@ -560,7 +560,7 @@ def _call_claude_dual_or(prompt, output_schema, *, bool_key: str, list_key: str,
         r = _call_claude(prompt, output_schema, thinking_budget=thinking_budget,
                          max_tokens=max_tokens, model=primary, retry_5xx=False)
         if r is None and not explicit:
-            debug_log(f"dual_or: {primary} leg failed, falling back to sonnet")
+            debug_log(f"dual_or: {primary} leg failed, falling back to standard")
             r = _call_claude(prompt, output_schema, thinking_budget=thinking_budget,
                              max_tokens=max_tokens, model="claude-sonnet-4-6",
                              retry_5xx=True)
@@ -709,7 +709,7 @@ def _dedup_against_state(session_id: str, vulns: List[Dict[str, Any]],
 
 def analyze_code_security(files: List[Tuple[str, str]], is_diff: bool = False, previous_findings: Optional[List[str]] = None) -> Tuple[Optional[str], List[Dict[str, Any]]]:
     """
-    Use Haiku to perform a security review of code.
+    Use fast to perform a security review of code.
     files: list of (file_path, content_or_diff) tuples
     is_diff: if True, the content is a unified diff rather than full file contents
     previous_findings: list of category strings from earlier stop hook firings this turn,
@@ -1225,7 +1225,7 @@ def agentic_review(
             output_format={"type": "json_schema", "schema": schema},
             # 529-overload on the primary leaves structured_output empty; the
             # SDK's fallback_model is honored only when the primary is an
-            # Opus model unless FALLBACK_FOR_ALL_PRIMARY_MODELS is set; the
+            # high-capability model unless FALLBACK_FOR_ALL_PRIMARY_MODELS is set; the
             # primary needs the env override.
             #
             # Identical --model/--fallback-model is rejected by the inner CLI

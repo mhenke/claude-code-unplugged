@@ -96,8 +96,8 @@ fi
 # Check 'model' field if present
 if echo "$FRONTMATTER" | grep -q "^model:"; then
   MODEL=$(echo "$FRONTMATTER" | grep "^model:" | cut -d: -f2 | tr -d ' ')
-  if ! echo "sonnet opus haiku" | grep -qw "$MODEL"; then
-    echo "ERROR: Invalid model '$MODEL' (must be sonnet, opus, or haiku)"
+  if ! echo "standard high-capability fast" | grep -qw "$MODEL"; then
+    echo "ERROR: Invalid model '$MODEL' (must be standard, high-capability, or fast)"
     exit 1
   fi
   echo "✓ Model field valid: $MODEL"
@@ -246,14 +246,14 @@ rm /tmp/test-file*.txt /tmp/large-file.bin
 ### Level 6: Bash Execution Testing
 
 **What to test:**
-- !` commands execute correctly
+- (Retrieve by running ` commands execute correctly
 - Command output included in prompt
 - Command failures handled
 - Security: only allowed commands run
 
 **Test procedure:**
 
-```bash
+` with your bash tool)``bash
 # Create test command with bash execution
 cat > .agent/commands/test-bash.md << 'EOF'
 ---
@@ -261,8 +261,8 @@ description: Test bash execution
 allowed-tools: Bash(echo:*), Bash(date:*)
 ---
 
-Current date: !`date`
-Test output: !`echo "Hello from bash"`
+Current date: (Retrieve by running `date` with your bash tool)
+Test output: (Retrieve by running `echo "Hello from bash"` with your bash tool)
 
 Analysis of output above...
 EOF
@@ -281,7 +281,7 @@ description: Test forbidden command
 allowed-tools: Bash(echo:*)
 ---
 
-Trying forbidden: !`ls -la /`
+Trying forbidden: (Retrieve by running `ls -la /` with your bash tool)
 EOF
 
 > /test-forbidden
@@ -486,14 +486,14 @@ jobs:
 **Bash command edge cases:**
 ```markdown
 # Commands that might fail
-!`exit 1`
-!`false`
-!`command-that-does-not-exist`
+(Retrieve by running `exit 1` with your bash tool)
+(Retrieve by running `false` with your bash tool)
+(Retrieve by running `command-that-does-not-exist` with your bash tool)
 
 # Commands with special output
-!`echo ""`
-!`cat /dev/null`
-!`yes | head -n 1000000`
+(Retrieve by running `echo ""` with your bash tool)
+(Retrieve by running `cat /dev/null` with your bash tool)
+(Retrieve by running `yes | head -n 1000000` with your bash tool)
 ```
 
 ## Performance Testing

@@ -117,9 +117,9 @@ Which model the agent should use.
 
 **Options:**
 - `inherit` - Use same model as parent (recommended)
-- `sonnet` - Claude Sonnet (balanced)
-- `opus` - Claude Opus (most capable, expensive)
-- `haiku` - Claude Haiku (fast, cheap)
+- `standard` - Claude standard (balanced)
+- `high-capability` - Claude high-capability (most capable, expensive)
+- `fast` - Claude fast (fast, cheap)
 
 **Recommendation:** Use `inherit` unless agent needs specific model capabilities.
 
@@ -351,7 +351,7 @@ Output: [What to provide]
 |-------|----------|--------|---------|
 | name | Yes | lowercase-hyphens | code-reviewer |
 | description | Yes | Text + examples | Use when... <example>... |
-| model | Yes | inherit/sonnet/opus/haiku | inherit |
+| model | Yes | inherit/standard/high-capability/fast | inherit |
 | color | Yes | Color name | blue |
 | tools | No | Array of tool names | ["Read", "Grep"] |
 

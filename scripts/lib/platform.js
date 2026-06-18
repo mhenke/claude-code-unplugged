@@ -85,12 +85,20 @@ const MODEL_TIER_PATTERNS = [
 
   // Enum sequences (provider-specific model tier value lists)
   { search: /inherit\/sonnet\/opus\/haiku/gi, replacement: 'inherit/standard/high-capability/fast', detect: /inherit\/sonnet\/opus\/haiku/i, label: 'references "inherit/sonnet/opus/haiku" (provider-specific model tier enum)' },
+  { search: /inherit\|sonnet\|opus\|haiku/gi, replacement: 'inherit|standard|high-capability|fast', detect: /inherit\|sonnet\|opus\|haiku/i, label: 'references "inherit|sonnet|opus|haiku" (provider-specific model tier enum)' },
   { search: /sonnet,\s*opus,\s*haiku/gi, replacement: 'standard, high-capability, fast', detect: /sonnet,\s*opus,\s*haiku/i, label: 'references "sonnet, opus, haiku" (provider-specific model tier enum)' },
 
   // Versioned model prose references (Opus 4.7, Sonnet 4.5, Haiku 4.5)
   { search: /\bOpus\s+\d+\.\d+/g, replacement: 'high-capability model', detect: /\bOpus\s+\d+\.\d+/, label: 'references "Opus X.Y" (provider-specific model version)' },
   { search: /\bSonnet\s+\d+\.\d+/g, replacement: 'standard model', detect: /\bSonnet\s+\d+\.\d+/, label: 'references "Sonnet X.Y" (provider-specific model version)' },
   { search: /\bHaiku\s+\d+\.\d+/g, replacement: 'fast model', detect: /\bHaiku\s+\d+\.\d+/, label: 'references "Haiku X.Y" (provider-specific model version)' },
+
+  // Bare model tier names (provider-specific references in prose, lists, and descriptions)
+  // These match standalone haiku/sonnet/opus but NOT inside hyphenated API IDs like claude-opus-4-7
+  // Negative lookbehind (?<!-) ensures we don't match the "opus" in "claude-opus-4-7"
+  { search: /(?<!-)haiku\b/gi, replacement: 'fast', detect: /(?<!-)haiku\b/i, label: 'references "haiku" (provider-specific model tier)' },
+  { search: /(?<!-)sonnet\b/gi, replacement: 'standard', detect: /(?<!-)sonnet\b/i, label: 'references "sonnet" (provider-specific model tier)' },
+  { search: /(?<!-)opus\b/gi, replacement: 'high-capability', detect: /(?<!-)opus\b/i, label: 'references "opus" (provider-specific model tier)' },
 ];
 
 /** Skills exempt from model-tier neutralization (their content is about specific model versions). */

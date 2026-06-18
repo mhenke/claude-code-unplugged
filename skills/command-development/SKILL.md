@@ -102,7 +102,7 @@ Add configuration using YAML frontmatter:
 ---
 description: Review code for security issues
 allowed-tools: Read, Grep, Bash(git:*)
-model: sonnet
+model: standard
 ---
 
 Review this code for security vulnerabilities...
@@ -146,19 +146,19 @@ allowed-tools: Read, Write, Edit, Bash(git:*)
 ### model
 
 **Purpose:** Specify model for command execution
-**Type:** String (sonnet, opus, haiku)
+**Type:** String (standard, high-capability, fast)
 **Default:** Inherits from conversation
 
 ```yaml
 ---
-model: haiku
+model: fast
 ---
 ```
 
 **Use cases:**
-- `haiku` - Fast, simple commands
-- `sonnet` - Standard workflows
-- `opus` - Complex analysis
+- `fast` - Fast, simple commands
+- `standard` - Standard workflows
+- `high-capability` - Complex analysis
 
 ### argument-hint
 
@@ -291,7 +291,7 @@ Review @$1 for:
 Reference multiple files:
 
 ```markdown
-Compare @src/old-version.js with @src/new-version.js
+Compare (see src/old-version.js) with (see src/new-version.js)
 
 Identify:
 - Breaking changes
@@ -440,7 +440,7 @@ description: Review code changes
 allowed-tools: Read, Bash(git:*)
 ---
 
-Files changed: !`git diff --name-only`
+Files changed: (Retrieve by running `git diff --name-only` with your bash tool)
 
 Review each file for:
 1. Code quality and style
@@ -460,7 +460,7 @@ argument-hint: [test-file]
 allowed-tools: Bash(npm:*)
 ---
 
-Run tests: !`npm test $1`
+Run tests: (Retrieve by running `npm test $1` with your bash tool)
 
 Analyze results and suggest fixes for failures.
 ```
@@ -492,7 +492,7 @@ allowed-tools: Bash(gh:*), Read
 
 PR #$1 Workflow:
 
-1. Fetch PR: !`gh pr view $1`
+1. Fetch PR: (Retrieve by running `gh pr view $1` with your bash tool)
 2. Review changes
 3. Run checks
 4. Approve or request changes
@@ -525,7 +525,7 @@ PR #$1 Workflow:
 
 ## Plugin-Specific Features
 
-### CLAUDE_PLUGIN_ROOT Variable
+### PLUGIN_ROOT Variable
 
 Plugin commands have access to `PLUGIN_ROOT`, an environment variable that resolves to the plugin's absolute path.
 
@@ -543,7 +543,7 @@ description: Analyze using plugin script
 allowed-tools: Bash(node:*)
 ---
 
-Run analysis: !`node PLUGIN_ROOT/scripts/analyze.js $1`
+Run analysis: (Retrieve by running `node PLUGIN_ROOT/scripts/analyze.js $1` with your bash tool)
 
 Review results and report findings.
 ```
@@ -552,16 +552,16 @@ Review results and report findings.
 
 ```markdown
 # Execute plugin script
-!`bash PLUGIN_ROOT/scripts/script.sh`
+(Retrieve by running `bash PLUGIN_ROOT/scripts/script.sh` with your bash tool)
 
 # Load plugin configuration
-@PLUGIN_ROOT/config/settings.json
+(see PLUGIN_ROOT/config/settings.json)
 
 # Use plugin template
-@PLUGIN_ROOT/templates/report.md
+(see PLUGIN_ROOT/templates/report.md)
 
 # Access plugin resources
-@PLUGIN_ROOT/docs/reference.md
+(see PLUGIN_ROOT/docs/reference.md)
 ```
 
 **Why use it:**
@@ -607,7 +607,7 @@ argument-hint: [environment]
 allowed-tools: Read, Bash(*)
 ---
 
-Load configuration: @PLUGIN_ROOT/config/$1-deploy.json
+Load configuration: (see PLUGIN_ROOT/config/$1-deploy.json)
 
 Deploy to $1 using configuration settings.
 Monitor deployment and report status.
@@ -621,7 +621,7 @@ description: Generate docs from template
 argument-hint: [component]
 ---
 
-Template: @PLUGIN_ROOT/templates/docs.md
+Template: (see PLUGIN_ROOT/templates/docs.md)
 
 Generate documentation for $1 following template structure.
 ```
@@ -634,9 +634,9 @@ description: Complete build workflow
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash PLUGIN_ROOT/scripts/build.sh`
-Test: !`bash PLUGIN_ROOT/scripts/test.sh`
-Package: !`bash PLUGIN_ROOT/scripts/package.sh`
+Build: (Retrieve by running `bash PLUGIN_ROOT/scripts/build.sh` with your bash tool)
+Test: (Retrieve by running `bash PLUGIN_ROOT/scripts/test.sh` with your bash tool)
+Package: (Retrieve by running `bash PLUGIN_ROOT/scripts/package.sh` with your bash tool)
 
 Review outputs and report workflow status.
 ```
@@ -727,7 +727,7 @@ allowed-tools: Bash(node:*), Read
 Target: @$1
 
 Phase 1 - Static Analysis:
-!`node PLUGIN_ROOT/scripts/lint.js $1`
+(Retrieve by running `node PLUGIN_ROOT/scripts/lint.js $1` with your bash tool)
 
 Phase 2 - Deep Review:
 Launch code-reviewer agent for detailed analysis.
@@ -736,7 +736,7 @@ Phase 3 - Standards Check:
 Use coding-standards skill for validation.
 
 Phase 4 - Report:
-Template: @PLUGIN_ROOT/templates/review.md
+Template: (see PLUGIN_ROOT/templates/review.md)
 
 Compile findings into report following template.
 ```
@@ -759,7 +759,7 @@ description: Deploy with validation
 argument-hint: [environment]
 ---
 
-Validate environment: !`echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"`
+Validate environment: (Retrieve by running `echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"` with your bash tool)
 
 If $1 is valid environment:
   Deploy to $1
@@ -776,7 +776,7 @@ description: Process configuration
 argument-hint: [config-file]
 ---
 
-Check file exists: !`test -f $1 && echo "EXISTS" || echo "MISSING"`
+Check file exists: (Retrieve by running `test -f $1 && echo "EXISTS" || echo "MISSING"` with your bash tool)
 
 If file exists:
   Process configuration: @$1
@@ -795,8 +795,8 @@ allowed-tools: Bash(test:*)
 ---
 
 Validate plugin setup:
-- Script: !`test -x PLUGIN_ROOT/bin/analyze && echo "✓" || echo "✗"`
-- Config: !`test -f PLUGIN_ROOT/config.json && echo "✓" || echo "✗"`
+- Script: (Retrieve by running `test -x PLUGIN_ROOT/bin/analyze && echo "✓" || echo "✗"` with your bash tool)
+- Config: (Retrieve by running `test -f PLUGIN_ROOT/config.json && echo "✓" || echo "✗"` with your bash tool)
 
 If all checks pass, run analysis.
 Otherwise, report missing components.
@@ -810,7 +810,7 @@ description: Build with error handling
 allowed-tools: Bash(*)
 ---
 
-Execute build: !`bash PLUGIN_ROOT/scripts/build.sh 2>&1 || echo "BUILD_FAILED"`
+Execute build: (Retrieve by running `bash PLUGIN_ROOT/scripts/build.sh 2>&1 || echo "BUILD_FAILED"` with your bash tool)
 
 If build succeeded:
   Report success and output location

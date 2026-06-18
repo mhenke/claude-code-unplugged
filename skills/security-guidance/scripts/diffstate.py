@@ -117,7 +117,7 @@ def restore_unreviewed_stop_state(session_id, paths, baseline_sha):
     """Put consumed touched_paths back so the next Stop reviews them.
 
     consume_stop_state cleared touched_paths on disk; if Stop then exits
-    early for a transient reason (CCR API unreachable, Haiku HTTP error)
+    early for a transient reason (CCR API unreachable, fast HTTP error)
     the next UPS would see an empty list, fall through the preservation
     guard, and re-baseline past the unreviewed edits. Restoring keeps the
     guard armed. Prepend+dedupe so any concurrent next-turn PostToolUse

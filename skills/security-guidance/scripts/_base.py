@@ -94,7 +94,7 @@ _USAGE_LOCK = threading.Lock()
 
 # $/Mtok (input, output). Used only for the raw-HTTP path; the SDK path
 # reports total_cost_usd directly. Cache reads/writes are priced at the
-# canonical 0.1×/1.25× of input. Unknown models fall back to sonnet pricing
+# canonical 0.1×/1.25× of input. Unknown models fall back to standard pricing
 # so cost_usd is never silently zero. Re-pricing downstream from the raw tok_*
 # fields is the source of truth — cost_usd here is a convenience rollup.
 _PRICE_PER_MTOK = {
@@ -111,7 +111,7 @@ def _record_usage(usage, model, cost_usd=None):
     `usage` dict (HTTP) or the SDK ResultMessage.usage dict — both use the
     same key names. `cost_usd` (SDK-provided) is preferred when present;
     otherwise computed from _PRICE_PER_MTOK keyed on the response model id
-    (longest-prefix match so `claude-sonnet-4-6-20251015` → sonnet row)."""
+    (longest-prefix match so `claude-sonnet-4-6-20251015` → standard row)."""
     if not usage and cost_usd is None:
         return
     u = usage or {}
