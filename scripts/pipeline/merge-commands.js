@@ -6,8 +6,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { parseFrontmatter, stripFrontmatter } = require('../lib/frontmatter');
-const { cleanAndNeutralize } = require('../lib/platform');
+const { parseSkillFrontmatter } = require('../lib/frontmatter');
+const { cleanAndNeutralize, renamePath } = require('../lib/platform');
 const { writeSkillMd } = require('../lib/skill-md');
 const { copyRecursiveSync } = require('../lib/files');
 
@@ -59,10 +59,10 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
       const files = fs.readdirSync(commandsPath).filter(f => f.endsWith('.md'));
       for (const file of files) {
         const fileContent = fs.readFileSync(path.join(commandsPath, file), 'utf8');
-        const meta = parseFrontmatter(fileContent);
-        let commandBody = stripFrontmatter(fileContent);
+        const parsed = parseSkillFrontmatter(fileContent);
+        let commandBody = parsed.body;
         const name = path.basename(file, '.md');
-        const desc = meta.description || 'No description provided.';
+        const desc = parsed.description || 'No description provided.';
 
         body += `### Command: \`/${name}\`\n`;
         body += `*Description*: ${desc}\n\n`;
@@ -77,10 +77,10 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
       const files = fs.readdirSync(agentsPath).filter(f => f.endsWith('.md'));
       for (const file of files) {
         const fileContent = fs.readFileSync(path.join(agentsPath, file), 'utf8');
-        const meta = parseFrontmatter(fileContent);
-        let agentBody = stripFrontmatter(fileContent);
-        const name = meta.name || path.basename(file, '.md');
-        const desc = meta.description || 'Specialized development subagent.';
+        const parsed = parseSkillFrontmatter(fileContent);
+        let agentBody = parsed.body;
+        const name = parsed.name || path.basename(file, '.md');
+        const desc = parsed.description || 'Specialized development subagent.';
 
         body += `### Persona: \`${name}\`\n`;
         body += `*Description*: ${desc}\n\n`;
@@ -96,12 +96,14 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
       const scriptSrc = path.join(pluginPath, 'scripts');
       if (fs.existsSync(scriptSrc)) {
         copyRecursiveSync(scriptSrc, path.join(destSkillDir, 'scripts'), {
+          mapDest: (destPath) => renamePath(destPath),
           transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
       const hooksSrc = path.join(pluginPath, 'hooks');
       if (fs.existsSync(hooksSrc)) {
         copyRecursiveSync(hooksSrc, path.join(destSkillDir, 'scripts'), {
+          mapDest: (destPath) => renamePath(destPath),
           transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
@@ -112,18 +114,21 @@ function mergeCommandsAndAgents(sourcePath, skillsDestDir) {
       const hooksSrc = path.join(pluginPath, 'hooks');
       if (fs.existsSync(hooksSrc)) {
         copyRecursiveSync(hooksSrc, path.join(destSkillDir, 'scripts'), {
+          mapDest: (destPath) => renamePath(destPath),
           transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
       const coreSrc = path.join(pluginPath, 'core');
       if (fs.existsSync(coreSrc)) {
         copyRecursiveSync(coreSrc, path.join(destSkillDir, 'scripts', 'core'), {
+          mapDest: (destPath) => renamePath(destPath),
           transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }
       const examplesSrc = path.join(pluginPath, 'examples');
       if (fs.existsSync(examplesSrc)) {
         copyRecursiveSync(examplesSrc, path.join(destSkillDir, 'examples'), {
+          mapDest: (destPath) => renamePath(destPath),
           transform: (content) => cleanAndNeutralize(content, { skillName: config.skill }),
         });
       }

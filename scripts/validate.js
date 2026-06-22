@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { discoverSkills } = require('./lib/discover-skills');
 const { validateSkill } = require('./lib/validate-skill');
-const { parseFrontmatter } = require('./lib/frontmatter');
+const { parseSkillFrontmatter } = require('./lib/frontmatter');
 
 function validateSkills() {
   const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
@@ -49,8 +49,8 @@ function validateSkills() {
       continue;
     }
 
-    const meta = parseFrontmatter(content);
-    console.log(`✅ [${skill}] Valid (${meta.description.slice(0, 50)}...)`);
+    const parsed = parseSkillFrontmatter(content);
+    console.log(`✅ [${skill}] Valid (${parsed.description.slice(0, 50)}...)`);
     successCount++;
   }
 

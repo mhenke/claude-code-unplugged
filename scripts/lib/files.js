@@ -1,7 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { renamePath } = require('./platform');
-
 const TEXT_EXTENSIONS = new Set(['.js', '.ts', '.py', '.sh', '.md', '.json']);
 
 /**
@@ -28,7 +26,6 @@ function copyRecursiveSync(src, dest, opts = {}) {
     });
   } else {
     let finalDest = dest;
-    finalDest = renamePath(finalDest);
     if (opts.mapDest) {
       finalDest = opts.mapDest(finalDest, src);
     }

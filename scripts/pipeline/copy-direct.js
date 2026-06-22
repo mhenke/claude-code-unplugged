@@ -6,9 +6,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const { parseFrontmatter, normalizeSkillFrontmatter } = require('../lib/frontmatter');
-const { cleanAndNeutralize } = require('../lib/platform');
+const { parseSkillFrontmatter } = require('../lib/frontmatter');
+const { cleanAndNeutralize, renamePath } = require('../lib/platform');
 const { copyRecursiveSync } = require('../lib/files');
+const { writeSkillMd } = require('../lib/skill-md');
 
 /**
  * Copy a direct skill directory while normalizing its SKILL.md frontmatter.
@@ -29,18 +30,16 @@ function copySkillNormalized(srcDir, destDir, skillName) {
     const destItem = path.join(destDir, item);
     const stats = fs.statSync(srcItem);
     if (stats.isDirectory()) {
-      copyRecursiveSync(srcItem, destItem, { transform: (content) => cleanAndNeutralize(content, { skillName }) });
+        copyRecursiveSync(srcItem, destItem, { mapDest: (destPath) => renamePath(destPath), transform: (content) => cleanAndNeutralize(content, { skillName }) });
     } else if (item === 'SKILL.md') {
-      let content = fs.readFileSync(srcItem, 'utf8');
-      const meta = parseFrontmatter(content);
+      const content = fs.readFileSync(srcItem, 'utf8');
+      const meta = parseSkillFrontmatter(content);
       if (meta.name !== skillName) {
         console.log(`  Normalizing name: "${meta.name}" -> "${skillName}"`);
       }
-      content = normalizeSkillFrontmatter(content, skillName);
-      content = cleanAndNeutralize(content, { skillName });
-      fs.writeFileSync(destItem, content, 'utf8');
+      writeSkillMd(destDir, skillName, meta.description || '', meta.body);
     } else {
-      copyRecursiveSync(srcItem, destItem, { transform: (content) => cleanAndNeutralize(content, { skillName }) });
+      copyRecursiveSync(srcItem, destItem, { mapDest: (destPath) => renamePath(destPath), transform: (content) => cleanAndNeutralize(content, { skillName }) });
     }
   }
 }

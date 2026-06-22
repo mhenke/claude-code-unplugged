@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { cleanAndNeutralize } = require('../lib/platform');
+const { cleanAndNeutralize, renamePath } = require('../lib/platform');
 const { writeSkillMd } = require('../lib/skill-md');
 const { copyRecursiveSync } = require('../lib/files');
 
@@ -31,6 +31,7 @@ function processGitHubManagement(sourcePath, skillsDestDir) {
   let listContent = '';
   for (const file of scriptFiles) {
     copyRecursiveSync(path.join(sourceScriptsDir, file), path.join(destMgmtScripts, file), {
+      mapDest: (destPath) => renamePath(destPath),
       transform: (content) => cleanAndNeutralize(content, { skillName: 'github-management' }),
     });
     listContent += `- \`${file}\`: Copied from repository scripts.\n`;

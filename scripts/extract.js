@@ -15,6 +15,7 @@ const { processOutputStyles } = require('./pipeline/output-styles');
 const { processSecurityGuidance } = require('./pipeline/security-guidance');
 const { processGitHubManagement } = require('./pipeline/github-management');
 const { generateLockFile } = require('./lib/lockfile');
+const { runPipeline } = require('./lib/pipeline-registry');
 
 function resolveCommit(commit, sourcePath) {
   if (!commit) return '';
@@ -80,38 +81,23 @@ function main() {
   const skillsDestDir = path.join(targetPath, 'skills');
   fs.mkdirSync(skillsDestDir, { recursive: true });
 
-  // -------------------------------------------------------------
-  // 1. Copy Direct Skills
-  // -------------------------------------------------------------
-  console.log('\n--- Copying Direct Skills ---');
-  copyDirectSkills(sourcePath, skillsDestDir);
+  const stages = [
+    { name: 'Copying Direct Skills', fn: copyDirectSkills },
+    { name: 'Merging Commands and Agents', fn: mergeCommandsAndAgents },
+    { name: 'Processing Output Styles', fn: processOutputStyles },
+    { name: 'Translating Security Guidance', fn: processSecurityGuidance },
+    { name: 'Packaging GitHub Management Skill', fn: processGitHubManagement },
+  ];
+
+  const { errors } = runPipeline(stages, sourcePath, skillsDestDir);
+
+  if (errors.length > 0) {
+    console.error(`\n${errors.length} stage(s) failed. Aborting lockfile generation.`);
+    process.exit(1);
+  }
 
   // -------------------------------------------------------------
-  // 2. Merged Skills (Commands + Agents)
-  // -------------------------------------------------------------
-  console.log('\n--- Merging Commands and Agents ---');
-  mergeCommandsAndAgents(sourcePath, skillsDestDir);
-
-  // -------------------------------------------------------------
-  // 3. Translate Output Styles
-  // -------------------------------------------------------------
-  console.log('\n--- Processing Output Styles ---');
-  processOutputStyles(sourcePath, skillsDestDir);
-
-  // -------------------------------------------------------------
-  // 4. Translate Security Guidance
-  // -------------------------------------------------------------
-  console.log('\n--- Translating Security Guidance ---');
-  processSecurityGuidance(sourcePath, skillsDestDir);
-
-  // -------------------------------------------------------------
-  // 5. Github Management Skill
-  // -------------------------------------------------------------
-  console.log('\n--- Packaging GitHub Management Skill ---');
-  processGitHubManagement(sourcePath, skillsDestDir);
-
-  // -------------------------------------------------------------
-  // 6. Generate skills-lock.json
+  // Generate skills-lock.json
   // -------------------------------------------------------------
   console.log('\n--- Generating skills-lock.json ---');
   const lockData = generateLockFile(skillsDestDir, {
