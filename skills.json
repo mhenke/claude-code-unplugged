@@ -60,10 +60,10 @@
     },
     {
       "name": "frontend-design",
-      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.",
+      "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
       "path": "skills/frontend-design",
       "version": "0.1.0",
-      "bodyLength": 3956
+      "bodyLength": 7961
     },
     {
       "name": "github-management",
@@ -158,7 +158,7 @@
     }
   ],
   "provenance": {
-    "sourceCommit": "d84cee8e40bfed1f3d37541e787c62754dfc554a",
+    "sourceCommit": "cd7c91013ba4791aaf506b5bd2dadcc4e4bc69de",
     "sourceRepository": "anthropics/claude-code"
   }
 }
