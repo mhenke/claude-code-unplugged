@@ -2,7 +2,7 @@
   "version": 2,
   "generated": {
     "stalenessThresholdDays": 30,
-    "sourceCommit": "d84cee8e40bfed1f3d37541e787c62754dfc554a",
+    "sourceCommit": "cd7c91013ba4791aaf506b5bd2dadcc4e4bc69de",
     "sourceRepository": "anthropics/claude-code"
   },
   "skills": {
@@ -73,9 +73,9 @@
     },
     "frontend-design": {
       "fileHashes": {
-        "SKILL.md": "a63fca2ea314529c555d3e3282769d04205db236c3b5de61cd377da4e370a755"
+        "SKILL.md": "ea6d9edc2ec658ca01de7ec1660d63c4a6543c993c7d59b4e5c13a0101d3747a"
       },
-      "combinedHash": "35aec40bd14b6cd87a38472796c24ab3c621efcfc00445cb37f67d15e9481811"
+      "combinedHash": "65cc582bf625536f832b042ac4c7bc96a40f07f912c0bc32efbca82a89cc8c87"
     },
     "github-management": {
       "fileHashes": {
