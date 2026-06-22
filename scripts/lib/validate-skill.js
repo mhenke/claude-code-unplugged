@@ -7,7 +7,7 @@
  * empty body, and platform-neutrality violations.
  */
 
-const { parseFrontmatter } = require('./frontmatter');
+const { parseSkillFrontmatter } = require('./frontmatter');
 const { findNeutralityViolations } = require('./platform');
 
 /**
@@ -24,43 +24,43 @@ function validateSkill(name, content) {
   }
 
   // Parse frontmatter for field checks (returns {} safely for non-frontmatter content)
-  const meta = parseFrontmatter(content);
+  const parsed = parseSkillFrontmatter(content);
 
   // 2. Check no unsupported frontmatter fields
   const allowedFields = new Set(['name', 'description', 'platformExempt']);
-  const unsupportedFields = Object.keys(meta).filter(field => !allowedFields.has(field));
+  const unsupportedFields = Object.keys(parsed.meta).filter(field => !allowedFields.has(field));
   if (unsupportedFields.length > 0) {
     errors.push(`Unsupported frontmatter fields: ${unsupportedFields.join(', ')}`);
   }
 
   // 3. Check name field exists
-  if (!meta.name) {
+  if (!parsed.name) {
     errors.push('Missing "name" field in frontmatter');
   }
 
   // 4. Check name matches the directory name
-  if (meta.name && meta.name !== name) {
-    errors.push(`Frontmatter name "${meta.name}" does not match folder name "${name}"`);
+  if (parsed.name && parsed.name !== name) {
+    errors.push(`Frontmatter name "${parsed.name}" does not match folder name "${name}"`);
   }
 
   // 5. Check description field exists
-  if (!meta.description) {
+  if (!parsed.description) {
     errors.push('Missing "description" field in frontmatter');
   }
 
   // 6. Check name is a valid slug (only check if name is present)
-  if (meta.name && !/^[a-z0-9-]+$/.test(meta.name)) {
-    errors.push(`Name "${meta.name}" is not a valid slug (must contain only lowercase letters, numbers, and dashes)`);
+  if (parsed.name && !/^[a-z0-9-]+$/.test(parsed.name)) {
+    errors.push(`Name "${parsed.name}" is not a valid slug (must contain only lowercase letters, numbers, and dashes)`);
   }
 
   // 7. Check body content is non-empty after stripping frontmatter with .trim()
-  const body = content.replace(/^---[\s\S]*?---\r?\n/, '').trim();
+  const body = parsed.body.trim();
   if (body.length === 0) {
     errors.push('SKILL.md contains empty instruction body');
   }
 
   // 8. Platform-neutrality checks (skip if skill declares itself exempt)
-  const platformExempt = meta.platformExempt === 'true' || meta.platformExempt === true;
+  const platformExempt = parsed.platformExempt;
   const neutralityIssues = findNeutralityViolations(content, { skillName: name, platformExempt });
   neutralityIssues.forEach(issue => {
     errors.push(`Platform-neutrality violation: ${issue}`);

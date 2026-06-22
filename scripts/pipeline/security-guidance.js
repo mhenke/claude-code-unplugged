@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { cleanAndNeutralize } = require('../lib/platform');
+const { cleanAndNeutralize, renamePath } = require('../lib/platform');
 const { writeSkillMd } = require('../lib/skill-md');
 const { copyRecursiveSync } = require('../lib/files');
 
@@ -33,6 +33,7 @@ function processSecurityGuidance(sourcePath, skillsDestDir) {
     const destPluginJsonDir = path.join(destSecDir, '.claude-plugin');
     fs.mkdirSync(destPluginJsonDir, { recursive: true });
     copyRecursiveSync(pluginJsonSrc, path.join(destPluginJsonDir, 'plugin.json'), {
+      mapDest: (destPath) => renamePath(destPath),
       transform: (content) => cleanAndNeutralize(content, { skillName: 'security-guidance' }),
     });
     console.log('Copied security-guidance .claude-plugin/plugin.json for script compatibility.');
@@ -48,6 +49,7 @@ function processSecurityGuidance(sourcePath, skillsDestDir) {
     for (const file of files) {
       if (file !== 'hooks.json') {
         copyRecursiveSync(path.join(hooksSrc, file), path.join(destScriptsDir, file), {
+          mapDest: (destPath) => renamePath(destPath),
           transform: (content) => cleanAndNeutralize(content, { skillName: 'security-guidance' }),
         });
       }

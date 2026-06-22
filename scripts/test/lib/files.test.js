@@ -58,6 +58,18 @@ describe('files.js', () => {
     assert.ok(fs.existsSync(path.join(destDir, 'hook-config.json')));
   });
 
+  it('copyRecursiveSync does NOT rename hooks.json without mapDest', () => {
+    const srcDir = path.join(TMP_DIR, 'src-norename');
+    const destDir = path.join(TMP_DIR, 'dest-norename');
+    fs.mkdirSync(srcDir, { recursive: true });
+    fs.writeFileSync(path.join(srcDir, 'hooks.json'), '{"hooks":[]}', 'utf8');
+
+    copyRecursiveSync(srcDir, destDir);
+
+    assert.ok(fs.existsSync(path.join(destDir, 'hooks.json')), 'hooks.json should exist without mapDest');
+    assert.ok(!fs.existsSync(path.join(destDir, 'hook-config.json')), 'hook-config.json should NOT exist without mapDest');
+  });
+
   it('copyRecursiveSync copies binary files without transform', () => {
     const srcDir = path.join(TMP_DIR, 'src-binary');
     const destDir = path.join(TMP_DIR, 'dest-binary');

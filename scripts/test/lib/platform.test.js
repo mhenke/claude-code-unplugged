@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const { cleanAndNeutralize, renamePath } = require('../../lib/platform');
+const { cleanAndNeutralize, renamePath, PLATFORM_PATTERNS, MODEL_TIER_PATTERNS } = require('../../lib/platform');
 
 describe('extract.js cleanAndNeutralize', () => {
   it('replaces "Claude Code" with "coding assistant"', () => {
@@ -193,6 +193,18 @@ describe('extract.js cleanAndNeutralize', () => {
     assert.ok(result.includes('@path') || !result.includes('(see path)'));
   });
 
+  it('!cmd before @file with overlapping input — priority ordering', () => {
+    // !`cmd` (priority 0) runs before @file (priority 30). The @file pattern
+    // matches @path/to/file.ext references preceded by whitespace. After !cmd
+    // transforms the backtick interpolation, @file still processes @ references
+    // in the replacement text (those preceded by whitespace).
+    const result = cleanAndNeutralize('Run !`cat @scripts/build.sh` to build');
+    // !cmd transformation should have run
+    assert.ok(result.includes('Retrieve by running'), '!cmd pattern runs first');
+    // @file should also process @scripts/build.sh (preceded by space in replacement)
+    assert.ok(!result.includes('@scripts'), '@file pattern runs on remaining content after !cmd');
+  });
+
   it('replaces bare CLAUDE_PLUGIN_ROOT (non-$, non-${}) with PLUGIN_ROOT', () => {
     const result = cleanAndNeutralize("os.environ.get('CLAUDE_PLUGIN_ROOT')");
     assert.ok(result.includes("os.environ.get('PLUGIN_ROOT')"));
@@ -226,6 +238,14 @@ describe('extract.js cleanAndNeutralize', () => {
     assert.ok(!result.includes('CLAUDE_PLUGIN_ROOT'));
     // Both should be PLUGIN_ROOT now
     assert.strictEqual(result, 'PLUGIN_ROOT and PLUGIN_ROOT');
+  });
+
+  it('bare CLAUDE_PLUGIN_ROOT before PLUGIN_ROOT/hooks/ — priority ordering', () => {
+    // Bare CLAUDE_PLUGIN_ROOT (priority 11) runs before PLUGIN_ROOT/hooks/ (priority 20),
+    // so CLAUDE_PLUGIN_ROOT/hooks/stop.sh becomes PLUGIN_ROOT/hooks/stop.sh first,
+    // then PLUGIN_ROOT/hooks/stop.sh becomes PLUGIN_ROOT/scripts/stop.sh
+    const result = cleanAndNeutralize('CLAUDE_PLUGIN_ROOT/hooks/stop.sh');
+    assert.strictEqual(result, 'PLUGIN_ROOT/scripts/stop.sh');
   });
 
   it('replacements work on claude-code skill text references', () => {
@@ -499,5 +519,45 @@ describe('renamePath', () => {
 
   it('leaves non-JSON files unchanged', () => {
     assert.strictEqual(renamePath('/some/path/skill.md'), '/some/path/skill.md');
+  });
+});
+
+describe('pattern sorting by priority', () => {
+  it('PLATFORM_PATTERNS sorted by priority — explicit priorities first in order', () => {
+    const sorted = [...PLATFORM_PATTERNS].sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100));
+    assert.strictEqual(sorted[0].priority, 0, '!`cmd` should be first (priority 0)');
+    assert.strictEqual(sorted[1].priority, 10, '${CLAUDE_PLUGIN_ROOT} should be priority 10');
+    assert.strictEqual(sorted[2].priority, 10, '$CLAUDE_PLUGIN_ROOT should be priority 10');
+    assert.strictEqual(sorted[3].priority, 11, '\\bCLAUDE_PLUGIN_ROOT\\b should be priority 11');
+    assert.strictEqual(sorted[4].priority, 20, 'PLUGIN_ROOT/hooks/ should be priority 20');
+    assert.strictEqual(sorted[5].priority, 30, '@file should be priority 30');
+    // Remaining entries have no priority (default 100), maintain declaration order
+    for (let i = 6; i < sorted.length; i++) {
+      assert.strictEqual(sorted[i].priority, undefined, `entry ${i} should have no explicit priority`);
+    }
+  });
+
+  it('MODEL_TIER_PATTERNS sorted by priority — specific before catch-all', () => {
+    const sorted = [...MODEL_TIER_PATTERNS].sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100));
+    // First 17 specific patterns have priority 20
+    for (let i = 0; i < 17; i++) {
+      assert.strictEqual(sorted[i].priority, 20, `entry ${i} should be priority 20 (specific pattern)`);
+    }
+    // Next 3 bare catch-all patterns have priority 50
+    for (let i = 17; i < 20; i++) {
+      assert.strictEqual(sorted[i].priority, 50, `entry ${i} should be priority 50 (catch-all pattern)`);
+    }
+  });
+
+  it('sorting does not mutate original PLATFORM_PATTERNS', () => {
+    const originalFirst = PLATFORM_PATTERNS[0].search.source;
+    [...PLATFORM_PATTERNS].sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100));
+    assert.strictEqual(PLATFORM_PATTERNS[0].search.source, originalFirst, 'original array should be unmodified');
+  });
+
+  it('sorting does not mutate original MODEL_TIER_PATTERNS', () => {
+    const originalFirst = MODEL_TIER_PATTERNS[0].search.source;
+    [...MODEL_TIER_PATTERNS].sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100));
+    assert.strictEqual(MODEL_TIER_PATTERNS[0].search.source, originalFirst, 'original array should be unmodified');
   });
 });

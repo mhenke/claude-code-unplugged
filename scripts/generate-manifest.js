@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { discoverSkills } = require('./lib/discover-skills');
-const { parseFrontmatter, stripFrontmatter } = require('./lib/frontmatter');
+const { parseSkillFrontmatter } = require('./lib/frontmatter');
 
 const skillsDir = process.env.SKILLS_DIR || path.resolve(__dirname, '../skills');
 const manifestPath = path.resolve(__dirname, '../skills.json');
@@ -26,18 +26,17 @@ for (const name of skills) {
   const mdPath = path.join(skillsDir, name, 'SKILL.md');
   const content = fs.readFileSync(mdPath, 'utf8');
   
-  const meta = parseFrontmatter(content);
-  if (Object.keys(meta).length === 0) continue;
+  const parsed = parseSkillFrontmatter(content);
+  if (Object.keys(parsed.meta).length === 0) continue;
 
   const entry = {
     name,
-    description: meta.description || '',
+    description: parsed.description || '',
     path: `skills/${name}`,
     version: defaultSkillVersion,
   };
 
-  const body = stripFrontmatter(content).trim();
-  entry.bodyLength = body.length;
+  entry.bodyLength = parsed.body.trim().length;
 
   manifest.push(entry);
 }
