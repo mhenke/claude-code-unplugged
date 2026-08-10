@@ -158,7 +158,7 @@
     }
   ],
   "provenance": {
-    "sourceCommit": "cd7c91013ba4791aaf506b5bd2dadcc4e4bc69de",
-    "sourceRepository": "anthropics/claude-code"
+    "sourceCommit": "2bb60696142b493eafaeacfe00eac51d16c50c4f",
+    "sourceRepository": "https://github.com/anthropics/claude-code.git"
   }
 }
