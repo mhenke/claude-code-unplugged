@@ -63,7 +63,7 @@
       "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
       "path": "skills/frontend-design",
       "version": "0.1.0",
-      "bodyLength": 7961
+      "bodyLength": 9074
     },
     {
       "name": "github-management",
@@ -158,7 +158,7 @@
     }
   ],
   "provenance": {
-    "sourceCommit": "cd7c91013ba4791aaf506b5bd2dadcc4e4bc69de",
-    "sourceRepository": "anthropics/claude-code"
+    "sourceCommit": "2bfb629dfaff0c8318047a4beb93cf1dc5b58b18",
+    "sourceRepository": "https://github.com/anthropics/claude-code.git"
   }
 }
